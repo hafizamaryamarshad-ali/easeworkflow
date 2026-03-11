@@ -22,10 +22,13 @@ export default function Hero() {
   }, []);
 
   const floatingIcons = [
-    { Icon: FaStethoscope, size: 60, top: "10%", left: "5%", speed: 10 },
-    { Icon: FaPills, size: 50, top: "30%", left: "50%", speed: 7 },
-    { Icon: FaHeart, size: 70, top: "70%", left: "10%", speed: 12 },
-    { Icon: FaSyringe, size: 55, top: "50%", left: "80%", speed: 9 },
+    { Icon: FaStethoscope, size: 68, top: "8%",  left: "6%",  speed: 11, opacity: 0.18 },
+    { Icon: FaPills,       size: 46, top: "22%", left: "92%", speed: 8,  opacity: 0.13 },
+    { Icon: FaHeart,       size: 75, top: "78%", left: "4%",  speed: 13, opacity: 0.16 },
+    { Icon: FaSyringe,     size: 54, top: "85%", left: "88%", speed: 9,  opacity: 0.14 },
+    { Icon: FaStethoscope, size: 42, top: "45%", left: "2%",  speed: 10, opacity: 0.11 },
+    { Icon: FaPills,       size: 38, top: "60%", left: "94%", speed: 12, opacity: 0.12 },
+    { Icon: FaHeart,       size: 50, top: "15%", left: "88%", speed: 14, opacity: 0.15 },
   ];
 
   return (
@@ -191,7 +194,7 @@ export default function Hero() {
             top: icon.top,
             left: icon.left,
             fontSize: icon.size,
-            opacity: 0.25,
+            opacity: icon.opacity,
             pointerEvents: "none",
             color: "#0ea5e9",
             textShadow: "0 0 12px #0ea5e9, 0 0 24px #3b82f6",
