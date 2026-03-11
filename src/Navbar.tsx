@@ -2,17 +2,26 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FiHome, FiInfo, FiActivity, FiTool, FiHexagon, FiPenTool, FiMail, FiPhone, FiSun, FiMoon } from "react-icons/fi";
+import { FiHome, FiInfo, FiActivity, FiTool, FiHexagon, FiPenTool, FiMail, FiPhone, FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("/");
   const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
@@ -64,6 +73,7 @@ export default function Navbar() {
         maxWidth: "1400px",
         margin: "0 auto",
         transition: "all 0.4s ease",
+        flexWrap: "wrap",
       }}
     >
       {/* Logo */}
@@ -90,7 +100,8 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* Nav Links */}
+      {/* Nav Links — desktop only */}
+      {!isMobile && (
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
         {navLinks.map((link) => (
           <Link
@@ -129,8 +140,10 @@ export default function Navbar() {
           </Link>
         ))}
       </div>
+      )}
 
-      {/* Right Buttons */}
+      {/* Right Buttons — desktop only */}
+      {!isMobile && (
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
         {/* Theme Toggle */}
         <button
@@ -192,6 +205,108 @@ export default function Navbar() {
           <FiPhone size={16} />
         </Link>
       </div>
+      )}
+
+      {/* Burger button — mobile only */}
+      {isMobile && (
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: mainColor,
+            display: "flex",
+            alignItems: "center",
+            padding: "4px",
+          }}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <FiX size={26} /> : <FiMenu size={26} />}
+        </button>
+      )}
+
+      {/* Mobile dropdown menu */}
+      {isMobile && menuOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            background: theme === "dark" ? "rgba(10,15,43,0.97)" : "rgba(255,255,255,0.97)",
+            backdropFilter: "blur(16px)",
+            borderRadius: "0 0 12px 12px",
+            padding: "16px 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            zIndex: 998,
+          }}
+        >
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => { setActive(link.href); setMenuOpen(false); }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                color: active === link.href ? mainColor : navTextColor,
+                fontWeight: 600,
+                fontSize: "1rem",
+                textDecoration: "none",
+                padding: "10px 8px",
+                borderRadius: "8px",
+                borderBottom: `1px solid ${theme === "dark" ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)"}`,
+              }}
+            >
+              {link.icon} {link.name}
+            </Link>
+          ))}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "12px" }}>
+            <button
+              onClick={toggleTheme}
+              style={{
+                flex: 1,
+                padding: "8px 12px",
+                borderRadius: "12px",
+                background: theme === "dark" ? "#fff" : mainColor,
+                color: theme === "dark" ? "#0f172a" : "#fff",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+              }}
+            >
+              {theme === "dark" ? <FiSun /> : <FiMoon />}
+              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </button>
+            <Link
+              href="/contact"
+              onClick={() => { setActive("/contact"); setMenuOpen(false); }}
+              style={{
+                flex: 2,
+                padding: "8px 16px",
+                fontSize: "0.88rem",
+                fontWeight: 600,
+                borderRadius: "12px",
+                background: mainColor,
+                color: "#fff",
+                textDecoration: "none",
+                textAlign: "center",
+              }}
+            >
+              Book Consultation
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
