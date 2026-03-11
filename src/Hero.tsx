@@ -109,7 +109,7 @@ export default function Hero() {
         }}
       >
         EaseWorkflow provides smart healthcare automation solutions that save
-        time, reduce the errors, and help your clinic scale internationally.
+        time, reduce errors, and help your clinic scale internationally.
       </motion.p>
 
       {/* CTA Buttons */}
