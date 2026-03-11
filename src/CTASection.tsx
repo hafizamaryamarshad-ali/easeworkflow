@@ -19,7 +19,10 @@ export default function CTA() {
   // Floating particles
   useEffect(() => {
     const temp: typeof particles = [];
-    for (let i = 0; i < 30; i++) {
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 15 : 30;
+    
+    for (let i = 0; i < particleCount; i++) {
       temp.push({
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -31,10 +34,11 @@ export default function CTA() {
   }, []);
 
   const floatingIcons = [
-    { Icon: FaStethoscope, size: 50, top: "15%", left: "10%", speed: 10 },
-    { Icon: FaPills, size: 40, top: "40%", left: "60%", speed: 7 },
-    { Icon: FaHeart, size: 60, top: "75%", left: "20%", speed: 12 },
-    { Icon: FaSyringe, size: 45, top: "50%", left: "80%", speed: 9 },
+    { Icon: FaStethoscope, size: 52, top: "12%", left: "5%",  speed: 10, opacity: 0.16 },
+    { Icon: FaPills,       size: 42, top: "20%", left: "92%", speed: 7,  opacity: 0.12 },
+    { Icon: FaHeart,       size: 62, top: "75%", left: "6%",  speed: 12, opacity: 0.14 },
+    { Icon: FaSyringe,     size: 46, top: "68%", left: "90%", speed: 9,  opacity: 0.13 },
+    { Icon: FaStethoscope, size: 38, top: "50%", left: "3%",  speed: 11, opacity: 0.11 },
   ];
 
   return (
@@ -48,7 +52,7 @@ export default function CTA() {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
-        padding: "60px 20px",
+        padding: "clamp(40px, 6vw, 60px) 20px",
         color: "#ffffff",
         background: `linear-gradient(${gradientPos}deg,#0ea5e9,#3b82f6)`,
         transition: "background 0.5s linear",
@@ -84,9 +88,10 @@ export default function CTA() {
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 1 }}
         style={{
-          fontSize: "2.8rem",
+          fontSize: "clamp(2rem, 4.5vw, 2.8rem)",
           fontWeight: 900,
           marginBottom: "20px",
           maxWidth: "800px",
@@ -102,9 +107,10 @@ export default function CTA() {
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 1, delay: 0.3 }}
         style={{
-          fontSize: "1.25rem",
+          fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
           marginBottom: "40px",
           maxWidth: "700px",
           lineHeight: "1.5",
@@ -120,10 +126,11 @@ export default function CTA() {
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
         transition={{ duration: 1, delay: 0.6 }}
         style={{
           display: "flex",
-          gap: "24px",
+          gap: "16px",
           flexWrap: "wrap",
           justifyContent: "center",
           zIndex: 2,
@@ -134,13 +141,15 @@ export default function CTA() {
           style={{
             padding: "16px 36px",
             fontWeight: 700,
-            fontSize: "1rem",
+            fontSize: "clamp(0.9rem, 2vw, 1rem)",
             borderRadius: "24px",
             background: "#ffffff",
             color: "#0ea5e9",
             textDecoration: "none",
             boxShadow: "0 12px 28px rgba(0,0,0,0.35)",
             transition: "all 0.3s ease",
+            minWidth: "200px",
+            textAlign: "center",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.boxShadow = "0 16px 36px rgba(0,0,0,0.5)";
@@ -155,17 +164,19 @@ export default function CTA() {
         </a>
 
         <a
-          href="/services"
+          href="/healthcare-automation"
           style={{
             padding: "16px 36px",
             fontWeight: 700,
-            fontSize: "1rem",
+            fontSize: "clamp(0.9rem, 2vw, 1rem)",
             borderRadius: "24px",
             border: "2px solid #ffffff",
             background: "transparent",
             color: "#ffffff",
             textDecoration: "none",
             transition: "all 0.3s ease",
+            minWidth: "200px",
+            textAlign: "center",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "#ffffff";
@@ -197,7 +208,7 @@ export default function CTA() {
             top: icon.top,
             left: icon.left,
             fontSize: icon.size,
-            opacity: 0.15,
+            opacity: icon.opacity,
             pointerEvents: "none",
             color: "#ffffff",
           }}

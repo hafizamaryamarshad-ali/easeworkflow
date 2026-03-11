@@ -10,7 +10,10 @@ export default function Hero() {
   // Generate floating particles
   useEffect(() => {
     const temp: typeof particles = [];
-    for (let i = 0; i < 40; i++) {
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 20 : 40;
+    
+    for (let i = 0; i < particleCount; i++) {
       temp.push({
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -81,8 +84,9 @@ export default function Hero() {
          initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 1 }}
+  viewport={{ once: true }}
   style={{
-    fontSize: "3rem",
+    fontSize: "clamp(2rem, 5vw, 3rem)",
     fontWeight: 900,
     lineHeight: "1.2",
     maxWidth: "900px",
@@ -98,8 +102,9 @@ export default function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.3 }}
+        viewport={{ once: true }}
         style={{
-          fontSize: "1.25rem",
+          fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
           marginTop: "20px",
           maxWidth: "700px",
           lineHeight: "1.5",
@@ -117,10 +122,11 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.6 }}
+        viewport={{ once: true }}
         style={{
           marginTop: "40px",
           display: "flex",
-          gap: "24px",
+          gap: "16px",
           flexWrap: "wrap",
           justifyContent: "center",
           zIndex: 2,
@@ -131,13 +137,15 @@ export default function Hero() {
           style={{
             padding: "14px 32px",
             fontWeight: 700,
-            fontSize: "1rem",
+            fontSize: "clamp(0.9rem, 2vw, 1rem)",
             borderRadius: "24px",
             background: "linear-gradient(90deg,#0ea5e9,#3b82f6)",
             color: "#f8fafc",
             textDecoration: "none",
             boxShadow: "0 12px 28px rgba(0,198,255,0.35)",
             transition: "all 0.3s ease",
+            minWidth: "200px",
+            textAlign: "center",
           }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.boxShadow = "0 0 20px #0ea5e9, 0 0 40px #3b82f6")
@@ -150,17 +158,19 @@ export default function Hero() {
         </a>
 
         <a
-          href="/services"
+          href="/healthcare-automation"
           style={{
             padding: "14px 32px",
             fontWeight: 700,
-            fontSize: "1rem",
+            fontSize: "clamp(0.9rem, 2vw, 1rem)",
             borderRadius: "24px",
             border: "2px solid #0ea5e9",
             background: "transparent",
             color: "#0ea5e9",
             textDecoration: "none",
             transition: "all 0.3s ease",
+            minWidth: "200px",
+            textAlign: "center",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "#0ea5e9";

@@ -12,44 +12,22 @@ export default function Home() {
     <>
       <main>
         {/* Hero Section */}
-       <section
-  style={{
-    position: "relative",
-    padding: "80px 20px",
-    minHeight: "100vh",
-    textAlign: "center",
-    color: "#fff",
-    overflow: "hidden",
-    background: "transparent", // <-- removed extra gradient
-  }}
->
-          <Hero />
-        </section>
+        <Hero />
 
         {/* Pain Points */}
-        <section style={{ padding: "80px 20px" }}>
-          <PainPoints />
-        </section>
+        <PainPoints />
 
         {/* Services */}
-        <section style={{ padding: "80px 20px" }}>
-          <ServicesCards />
-        </section>
+        <ServicesCards />
 
         {/* Case Study */}
-        <section style={{ padding: "80px 20px" }}>
-          <CaseStudyPreview />
-        </section>
+        <CaseStudyPreview />
 
         {/* Why EaseWorkflow */}
-        <section style={{ padding: "80px 20px" }}>
-          <WhyEaseWorkflow />
-        </section>
+        <WhyEaseWorkflow />
 
         {/* CTA */}
-        <section style={{ padding: "80px 20px" }}>
-          <CTASection />
-        </section>
+        <CTASection />
       </main>
 
       {/* Gradient Animation */}

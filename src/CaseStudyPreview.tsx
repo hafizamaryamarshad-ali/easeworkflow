@@ -28,7 +28,7 @@ export default function CaseStudy() {
     <section
       style={{
         minHeight: "80vh",
-        padding: "80px 20px",
+        padding: "clamp(40px, 8vw, 80px) 20px",
         background: "#0f172a",
         color: "#f8fafc",
         textAlign: "center",
@@ -40,8 +40,9 @@ export default function CaseStudy() {
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 1 }}
-        style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "60px" }}
+        style={{ fontSize: "clamp(2rem, 4vw, 2.5rem)", fontWeight: 900, marginBottom: "60px" }}
       >
         Success Stories
       </motion.h2>
@@ -60,6 +61,7 @@ export default function CaseStudy() {
             key={i}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8, delay: i * 0.2 }}
             style={{
               background: "#1e293b",
