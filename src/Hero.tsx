@@ -6,6 +6,7 @@ import { FaStethoscope, FaPills, FaHeart, FaSyringe } from "react-icons/fa";
 
 export default function Hero() {
   const [particles, setParticles] = useState<{ x: number; y: number; size: number; opacity: number }[]>([]);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   // Generate floating particles
   useEffect(() => {
@@ -21,6 +22,17 @@ export default function Hero() {
     setParticles(temp);
   }, []);
 
+  // Listen for body theme from Navbar
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const bg = getComputedStyle(document.body).background;
+      if (bg.includes("linear-gradient(145deg")) setTheme("dark");
+      else setTheme("light");
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+    return () => observer.disconnect();
+  }, []);
+
   const floatingIcons = [
     { Icon: FaStethoscope, size: 68, top: "8%",  left: "6%",  speed: 11, opacity: 0.18 },
     { Icon: FaPills,       size: 46, top: "22%", left: "92%", speed: 8,  opacity: 0.13 },
@@ -30,6 +42,27 @@ export default function Hero() {
     { Icon: FaPills,       size: 38, top: "60%", left: "94%", speed: 12, opacity: 0.12 },
     { Icon: FaHeart,       size: 50, top: "15%", left: "88%", speed: 14, opacity: 0.15 },
   ];
+
+  const bgColors = {
+    dark: "linear-gradient(45deg, #0f172a, #1e293b, #334155)",
+    light: "#f5f7fa",
+  };
+  const textColors = {
+    dark: "#f8fafc",
+    light: "#0f172a",
+  };
+  const subTextColors = {
+    dark: "#cbd5e1",
+    light: "#1e293b",
+  };
+  const btnGradient = {
+    dark: "linear-gradient(90deg,#0ea5e9,#3b82f6)",
+    light: "linear-gradient(90deg,#3b82f6,#60a5fa)",
+  };
+  const btnOutlineColor = {
+    dark: "#0ea5e9",
+    light: "#3b82f6",
+  };
 
   return (
     <section
@@ -43,10 +76,10 @@ export default function Hero() {
         alignItems: "center",
         padding: "0 20px",
         textAlign: "center",
-
-        backgroundImage: `linear-gradient(45deg, #0f172a, #1e293b, #334155)`, // Colors unchanged
+        background: theme === "dark" ? bgColors.dark : bgColors.light,
         backgroundSize: "600% 600%",
-        color: "#f8fafc",
+        color: textColors[theme],
+        transition: "all 0.5s ease",
       }}
     >
       {/* Tech particles */}
@@ -69,7 +102,7 @@ export default function Hero() {
             height: p.size,
             borderRadius: "50%",
             background: "#0ea5e9",
-            boxShadow: "0 0 4px #0ea5e9, 0 0 12px #3b82f6", // subtle tech glow
+            boxShadow: "0 0 4px #0ea5e9, 0 0 12px #3b82f6",
             opacity: p.opacity,
             pointerEvents: "none",
           }}
@@ -78,18 +111,17 @@ export default function Hero() {
 
       {/* Headline */}
       <motion.h1
-         initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 1 }}
-  style={{
-    fontSize: "3rem",
-    fontWeight: 900,
-    lineHeight: "1.2",
-    maxWidth: "900px",
-    zIndex: 2,
-    // textShadow removed
-  }}
->
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        style={{
+          fontSize: "3rem",
+          fontWeight: 900,
+          lineHeight: "1.2",
+          maxWidth: "900px",
+          zIndex: 2,
+        }}
+      >
         Automate Your Clinic. Maximize Efficiency.
       </motion.h1>
 
@@ -103,9 +135,9 @@ export default function Hero() {
           marginTop: "20px",
           maxWidth: "700px",
           lineHeight: "1.5",
-          color: "#cbd5e1",
+          color: subTextColors[theme],
           zIndex: 2,
-          textShadow: "0 0 6px rgba(0,198,255,0.2)",
+          textShadow: theme === "dark" ? "0 0 6px rgba(0,198,255,0.2)" : "none",
         }}
       >
         EaseWorkflow provides smart healthcare automation solutions that save
@@ -133,17 +165,21 @@ export default function Hero() {
             fontWeight: 700,
             fontSize: "1rem",
             borderRadius: "24px",
-            background: "linear-gradient(90deg,#0ea5e9,#3b82f6)",
-            color: "#f8fafc",
+            background: btnGradient[theme],
+            color: textColors[theme],
             textDecoration: "none",
-            boxShadow: "0 12px 28px rgba(0,198,255,0.35)",
+            boxShadow: theme === "dark" ? "0 12px 28px rgba(0,198,255,0.35)" : "0 12px 28px rgba(59,130,246,0.35)",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={(e) =>
-            (e.currentTarget.style.boxShadow = "0 0 20px #0ea5e9, 0 0 40px #3b82f6")
+            (e.currentTarget.style.boxShadow = theme === "dark"
+              ? "0 0 20px #0ea5e9, 0 0 40px #3b82f6"
+              : "0 0 20px #3b82f6, 0 0 40px #60a5fa")
           }
           onMouseLeave={(e) =>
-            (e.currentTarget.style.boxShadow = "0 12px 28px rgba(0,198,255,0.35)")
+            (e.currentTarget.style.boxShadow = theme === "dark"
+              ? "0 12px 28px rgba(0,198,255,0.35)"
+              : "0 12px 28px rgba(59,130,246,0.35)")
           }
         >
           Book Free Consultation
@@ -156,20 +192,22 @@ export default function Hero() {
             fontWeight: 700,
             fontSize: "1rem",
             borderRadius: "24px",
-            border: "2px solid #0ea5e9",
+            border: `2px solid ${btnOutlineColor[theme]}`,
             background: "transparent",
-            color: "#0ea5e9",
+            color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
             textDecoration: "none",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#0ea5e9";
-            e.currentTarget.style.color = "#f8fafc";
-            e.currentTarget.style.boxShadow = "0 0 20px #0ea5e9, 0 0 40px #3b82f6";
+            e.currentTarget.style.background = theme === "dark" ? "#0ea5e9" : "#3b82f6";
+            e.currentTarget.style.color = theme === "dark" ? "#f8fafc" : "#f9fafb";
+            e.currentTarget.style.boxShadow = theme === "dark"
+              ? "0 0 20px #0ea5e9, 0 0 40px #3b82f6"
+              : "0 0 20px #3b82f6, 0 0 40px #60a5fa";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "#0ea5e9";
+            e.currentTarget.style.color = theme === "dark" ? "#0ea5e9" : "#3b82f6";
             e.currentTarget.style.boxShadow = "none";
           }}
         >
@@ -196,8 +234,8 @@ export default function Hero() {
             fontSize: icon.size,
             opacity: icon.opacity,
             pointerEvents: "none",
-            color: "#0ea5e9",
-            textShadow: "0 0 12px #0ea5e9, 0 0 24px #3b82f6",
+            color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
+            textShadow: theme === "dark" ? "0 0 12px #0ea5e9, 0 0 24px #3b82f6" : "none",
           }}
         >
           <icon.Icon />

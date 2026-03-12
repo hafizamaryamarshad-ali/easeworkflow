@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const caseStudies = [
   {
@@ -24,17 +25,38 @@ const caseStudies = [
 ];
 
 export default function CaseStudy() {
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+
+  // Listen for body theme from Navbar
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const bg = getComputedStyle(document.body).background;
+      if (bg.includes("linear-gradient(145deg")) setTheme("dark");
+      else setTheme("light");
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const bgColors = { dark: "#0f172a", light: "#f5f7fa" };
+  const textColors = { dark: "#f8fafc", light: "#0f172a" };
+  const cardBg = { dark: "#1e293b", light: "#e0f2fe" };
+  const cardTitleColor = { dark: "#0ea5e9", light: "#2563eb" };
+  const cardMetricColor = { dark: "#f8fafc", light: "#0f172a" };
+  const cardDescColor = { dark: "#cbd5e1", light: "#1e293b" };
+
   return (
     <section
       style={{
         minHeight: "80vh",
         padding: "80px 20px",
-        background: "#0f172a",
-        color: "#f8fafc",
+        background: bgColors[theme],
+        color: textColors[theme],
         textAlign: "center",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        transition: "all 0.5s ease",
       }}
     >
       <motion.h2
@@ -62,29 +84,24 @@ export default function CaseStudy() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: i * 0.2 }}
             style={{
-              background: "#1e293b",
+              background: cardBg[theme],
               padding: "30px",
               borderRadius: "24px",
-              boxShadow: "0 12px 28px rgba(0,0,0,0.35)",
+              boxShadow: theme === "dark" ? "0 12px 28px rgba(0,0,0,0.35)" : "0 12px 28px rgba(59,130,246,0.2)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               gap: "16px",
+              transition: "all 0.5s ease",
             }}
           >
-            <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#0ea5e9" }}>
+            <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: cardTitleColor[theme] }}>
               {caseStudy.title}
             </h3>
-            <p
-              style={{
-                fontSize: "1.25rem",
-                fontWeight: 800,
-                color: "#f8fafc",
-              }}
-            >
+            <p style={{ fontSize: "1.25rem", fontWeight: 800, color: cardMetricColor[theme] }}>
               {caseStudy.metric}
             </p>
-            <p style={{ fontSize: "1rem", color: "#cbd5e1", lineHeight: "1.5" }}>
+            <p style={{ fontSize: "1rem", color: cardDescColor[theme], lineHeight: "1.5" }}>
               {caseStudy.description}
             </p>
           </motion.div>
