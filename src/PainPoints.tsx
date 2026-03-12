@@ -8,126 +8,221 @@ const points = [
   {
     Icon: FaClock,
     title: "Missed Appointments",
-    description: "Automate scheduling to reduce no-shows and save time for both staff and patients.",
+    description:
+      "Automate scheduling to reduce no-shows and save time for both staff and patients.",
   },
   {
     Icon: FaUserMd,
     title: "Staff Overload",
-    description: "Let smart workflows handle repetitive tasks so your medical staff can focus on patients.",
+    description:
+      "Let smart workflows handle repetitive tasks so your medical staff can focus on patients.",
   },
   {
     Icon: FaFileMedical,
     title: "EMR Inefficiencies",
-    description: "Streamline Electronic Medical Records with smart data entry and retrieval.",
+    description:
+      "Streamline Electronic Medical Records with smart data entry and retrieval.",
   },
   {
     Icon: FaLaptopMedical,
     title: "Manual Follow-ups",
-    description: "Automated reminders keep patients informed and engaged without manual effort.",
+    description:
+      "Automated reminders keep patients informed and engaged without manual effort.",
   },
 ];
 
 export default function PainPoints() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
-  // Track body background like Hero
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const bg = getComputedStyle(document.body).background;
       if (bg.includes("linear-gradient")) setTheme("dark");
       else setTheme("light");
     });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+
     return () => observer.disconnect();
   }, []);
 
-  const bgColors = {
-    dark: "#0f172a",
-    light: "#f5f7fa",
+  const bg = {
+    dark: "#020617",
+    light: "#f8fafc",
   };
-  const cardBg = {
-    dark: "#1e293b",
-    light: "#ffffff",
-  };
-  const textColor = {
+
+  const text = {
     dark: "#f8fafc",
-    light: "#111",
+    light: "#0f172a",
   };
-  const subTextColor = {
-    dark: "#cbd5e1",
-    light: "#334155",
-  };
-  const iconColor = {
-    dark: "#0ea5e9",
-    light: "#3b82f6",
-  };
-  const boxShadow = {
-    dark: "0 12px 28px rgba(0,0,0,0.35)",
-    light: "0 12px 28px rgba(0,0,0,0.1)",
+
+  const sub = {
+    dark: "#cbd5f5",
+    light: "#475569",
   };
 
   return (
     <section
       style={{
-        minHeight: "80vh",
-        padding: "80px 20px",
-        background: bgColors[theme],
-        color: textColor[theme],
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        transition: "all 0.5s ease",
+        position: "relative",
+        padding: "130px 20px",
+        background: bg[theme],
+        overflow: "hidden",
+        color: text[theme],
       }}
     >
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+      {/* Animated Background Glow */}
+      <motion.div
+        animate={{ x: [0, 60, 0], y: [0, -60, 0] }}
+        transition={{ duration: 18, repeat: Infinity }}
         style={{
-          fontSize: "2.5rem",
+          position: "absolute",
+          width: "600px",
+          height: "600px",
+          background: "radial-gradient(circle,#2563eb55,transparent)",
+          filter: "blur(140px)",
+          top: "-200px",
+          left: "-200px",
+        }}
+      />
+
+      <motion.div
+        animate={{ x: [0, -60, 0], y: [0, 60, 0] }}
+        transition={{ duration: 20, repeat: Infinity }}
+        style={{
+          position: "absolute",
+          width: "500px",
+          height: "500px",
+          background: "radial-gradient(circle,#06b6d455,transparent)",
+          filter: "blur(140px)",
+          bottom: "-200px",
+          right: "-200px",
+        }}
+      />
+
+      {/* Title */}
+      <motion.h2
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        style={{
+          textAlign: "center",
+          fontSize: "2.8rem",
           fontWeight: 900,
-          marginBottom: "60px",
-          color: textColor[theme],
+          marginBottom: "110px",
+          position: "relative",
+          zIndex: 2,
         }}
       >
         Common Clinic Challenges
       </motion.h2>
 
+      {/* Content */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "40px",
-          width: "100%",
-          maxWidth: "1200px",
+          maxWidth: "1050px",
+          margin: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "70px",
+          position: "relative",
+          zIndex: 2,
         }}
       >
         {points.map((point, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: i * 0.2 }}
+            initial={{ opacity: 0, x: i % 2 === 0 ? -80 : 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
             style={{
-              background: cardBg[theme],
-              padding: "30px",
-              borderRadius: "24px",
-              boxShadow: boxShadow[theme],
               display: "flex",
-              flexDirection: "column",
+              flexDirection: i % 2 === 0 ? "row" : "row-reverse",
               alignItems: "center",
-              gap: "16px",
-              transition: "all 0.5s ease",
+              gap: "40px",
             }}
           >
-            <point.Icon style={{ fontSize: "48px", color: iconColor[theme] }} />
-            <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: textColor[theme] }}>
-              {point.title}
-            </h3>
-            <p style={{ fontSize: "1rem", color: subTextColor[theme], lineHeight: "1.5" }}>
-              {point.description}
-            </p>
+            {/* Icon */}
+            <div
+              style={{
+                minWidth: "95px",
+                height: "95px",
+                borderRadius: "50%",
+                background:
+                  "linear-gradient(135deg,#0ea5e9,#2563eb)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow:
+                  "0 20px 40px rgba(59,130,246,0.6)",
+              }}
+            >
+              <point.Icon
+                style={{
+                  fontSize: "36px",
+                  color: "#fff",
+                }}
+              />
+            </div>
+
+            {/* Card */}
+            <motion.div
+              whileHover={{
+                y: -6,
+                scale: 1.02,
+              }}
+              style={{
+                flex: 1,
+                padding: "40px",
+                borderRadius: "22px",
+                background:
+                  "linear-gradient(145deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))",
+                backdropFilter: "blur(14px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow:
+                  "0 25px 50px rgba(0,0,0,0.45)",
+                transition: "all 0.35s ease",
+                position: "relative",
+              }}
+            >
+              {/* subtle gradient border */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: "-1px",
+                  borderRadius: "22px",
+                  background:
+                    "linear-gradient(120deg,#0ea5e9,transparent,transparent)",
+                  opacity: 0.15,
+                  zIndex: 0,
+                }}
+              />
+
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <h3
+                  style={{
+                    fontSize: "1.55rem",
+                    fontWeight: 700,
+                    marginBottom: "10px",
+                  }}
+                >
+                  {point.title}
+                </h3>
+
+                <p
+                  style={{
+                    fontSize: "1rem",
+                    lineHeight: "1.7",
+                    color: sub[theme],
+                  }}
+                >
+                  {point.description}
+                </p>
+              </div>
+            </motion.div>
           </motion.div>
         ))}
       </div>
