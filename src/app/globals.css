@@ -1,5 +1,5 @@
 /* ================================
-   GLOBAL STYLES (Professional BG)
+   GLOBAL STYLES (Professional)
 ================================= */
 body {
   margin: 0;
@@ -7,28 +7,17 @@ body {
   color: #fff;
   overflow-x: hidden;
   min-height: 100vh;
-  position: relative;
-  
-  /* Professional & modern gradient */
-  background: linear-gradient(145deg, #0a0f2b, #0f172a, #1e40af, #22d3ee);
-  background-size: 400% 400%;
-  animation: gradientBG 40s ease infinite;
 }
 
-/* Section wrapper */
 section {
-  padding: 60px 20px;
-  max-width: 1200px;
-  margin: auto;
+  padding: 100px 20px;
+  width: 100%; /* Full width */
   position: relative;
-  z-index: 1;
+  box-sizing: border-box; /* Ensure padding doesn't cause horizontal scroll */
 }
 
-/* ================================
-   HEADINGS
-================================= */
 h1 {
-  font-size: 3.5rem;
+  font-size: clamp(2.3rem, 5vw, 3.5rem);
   font-weight: 900;
   line-height: 1.1;
   background: linear-gradient(90deg, #0ea5e9, #3b82f6);
@@ -37,67 +26,50 @@ h1 {
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   background: linear-gradient(90deg, #0ea5e9, #3b82f6);
   -webkit-background-clip: text;
   color: transparent;
 }
 
 h3 {
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin-bottom: 12px;
+  font-size: 1.4rem;
+  font-weight: 700;
 }
 
-/* ================================
-   BUTTONS
-================================= */
 button, a.button {
-  padding: 16px 36px;
+  padding: 14px 32px;
   border: none;
+  border-radius: 20px;
   background: linear-gradient(90deg, #0ea5e9, #3b82f6);
-  color: #fff;
+  color: white;
   font-weight: 700;
   cursor: pointer;
-  border-radius: 16px;
-  font-size: 1.1rem;
-  transition: transform 0.3s, box-shadow 0.3s;
   text-decoration: none;
-  display: inline-block;
+  transition: all .3s ease;
 }
 
 button:hover, a.button:hover {
-  transform: scale(1.08);
-  box-shadow: 0 14px 35px rgba(0,0,0,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.4);
 }
 
-/* ================================
-   CARDS
-================================= */
 .card {
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(25px);
-  padding: 28px 32px;
-  border-radius: 18px;
-  margin: 15px;
-  min-width: 300px;
-  max-width: 380px;
-  min-height: 220px;
-  box-shadow: 0 14px 35px rgba(0,0,0,0.25);
-  transition: transform 0.3s, box-shadow 0.3s;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  transition: .3s;
 }
 
 .card:hover {
-  transform: translateY(-12px) scale(1.07) rotateX(1.8deg);
-  box-shadow: 0 24px 55px rgba(0,0,0,0.38);
+  transform: translateY(-6px);
 }
 
-/* ================================
-   FLOATING PARALLAX SHAPES
-================================= */
+/* Floating shapes */
 .shape {
   position: absolute;
   border-radius: 50%;
@@ -118,11 +90,9 @@ button:hover, a.button:hover {
   100% { transform: translateY(0px) translateX(0px);}
 }
 
-/* ================================
-   BACKGROUND ANIMATION
-================================= */
+/* Gradient Animation Keyframes (for sections with gradients) */
 @keyframes gradientBG {
-  0% { background-position:0% 50%; }
-  50% { background-position:100% 50%; }
-  100% { background-position:0% 50%; }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
