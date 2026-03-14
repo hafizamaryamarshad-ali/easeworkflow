@@ -4,7 +4,7 @@ import Hero from "../Hero";
 import PainPoints from "../PainPoints";
 import ServicesCards from "../ServicesCards";
 import CaseStudyPreview from "../CaseStudyPreview";
-import WhyEaseWorkflow from "../WhyEaseWorkflow";
+import WhyEaseWorkflow from "../FeaturedProjects";
 import CTASection from "../CTASection";
 
 export default function Home() {

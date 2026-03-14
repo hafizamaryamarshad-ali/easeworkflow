@@ -54,7 +54,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/", icon: <FiHome size={14} /> },
     { name: "About", href: "/about", icon: <FiInfo size={14} /> },
-    { name: "Healthcare", href: "/healthcare-automation", icon: <FiActivity size={14} /> },
+    //{ name: "Healthcare", href: "/healthcare-automation", icon: <FiActivity size={14} /> },
     { name: "Projects", href: "/projects", icon: <FiHexagon size={14} /> },
     { name: "Case Studies", href: "/case-studies", icon: <FiTool size={14} /> },
     { name: "Blog", href: "/blog", icon: <FiPenTool size={14} /> },
