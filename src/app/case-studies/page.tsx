@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { caseStudies } from "../../data/caseStudies";
 import { motion } from "framer-motion";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 export default function CaseStudiesPage() {
+  const router = useRouter();
+
   return (
     <section
       style={{
@@ -16,8 +19,41 @@ export default function CaseStudiesPage() {
         backgroundSize: "400% 400%",
         animation: "gradientBG 30s ease infinite",
         textAlign: "center",
+        position: "relative",
       }}
     >
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          padding: "6px 12px",
+          fontSize: "0.85rem",
+          borderRadius: "8px",
+          border: "1px solid rgba(0,198,255,0.5)",
+          background: "rgba(255,255,255,0.08)",
+          backdropFilter: "blur(10px)",
+          color: "#00c6ff",
+          cursor: "pointer",
+          fontWeight: 600,
+          transition: "0.3s ease",
+        }}
+        onMouseOver={(e) =>
+          (e.currentTarget.style.background = "rgba(0,198,255,0.2)")
+        }
+        onMouseOut={(e) =>
+          (e.currentTarget.style.background = "rgba(255,255,255,0.08)")
+        }
+      >
+        <FiArrowLeft size={14} />
+        Back
+      </button>
+
       {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: -30 }}
@@ -64,7 +100,6 @@ export default function CaseStudiesPage() {
               textAlign: "left",
             }}
           >
-            {/* Featured Image */}
             {study.featuredImage && (
               <img
                 src={study.featuredImage}
@@ -78,7 +113,6 @@ export default function CaseStudiesPage() {
             )}
 
             <div style={{ padding: "25px" }}>
-              {/* Title */}
               <h2
                 style={{
                   fontSize: "1.3rem",
@@ -89,7 +123,6 @@ export default function CaseStudiesPage() {
                 {study.title}
               </h2>
 
-              {/* Summary */}
               <p
                 style={{
                   fontSize: "0.95rem",
@@ -101,44 +134,6 @@ export default function CaseStudiesPage() {
                 {study.summary}
               </p>
 
-              {/* Tools */}
-              <div style={{ marginBottom: "15px" }}>
-                {study.tools?.map((tool, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      display: "inline-block",
-                      fontSize: "0.75rem",
-                      padding: "4px 10px",
-                      marginRight: "6px",
-                      marginBottom: "6px",
-                      borderRadius: "12px",
-                      background: "rgba(0,198,255,0.2)",
-                      color: "#00c6ff",
-                    }}
-                  >
-                    {tool}
-                  </span>
-                ))}
-              </div>
-
-              {/* Results Preview */}
-              <div style={{ marginBottom: "20px" }}>
-                {study.results?.slice(0, 2).map((result, index) => (
-                  <p
-                    key={index}
-                    style={{
-                      fontSize: "0.85rem",
-                      opacity: 0.85,
-                      marginBottom: "4px",
-                    }}
-                  >
-                    • {result}
-                  </p>
-                ))}
-              </div>
-
-              {/* Link */}
               <Link
                 href={`/case-studies/${study.slug}`}
                 style={{
@@ -157,7 +152,6 @@ export default function CaseStudiesPage() {
         ))}
       </div>
 
-      {/* Animation */}
       <style jsx>{`
         @keyframes gradientBG {
           0% {
@@ -173,4 +167,4 @@ export default function CaseStudiesPage() {
       `}</style>
     </section>
   );
-}
+} 
