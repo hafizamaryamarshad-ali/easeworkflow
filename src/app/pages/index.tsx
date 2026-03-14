@@ -1,4 +1,4 @@
-import FeaturedProjects from "../src/FeaturedProjects";
+import FeaturedProjects from "../../FeaturedProjects";
 
 export default function HomePage() {
   return (

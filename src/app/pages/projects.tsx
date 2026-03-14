@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { projects } from "../src/FeaturedProjects";
+import { projects } from "../../FeaturedProjects";
 
 export default function ProjectsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
