@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 const services = [
@@ -32,8 +32,19 @@ const services = [
 
 export default function Services() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
-  const [soundEnabled, setSoundEnabled] = useState<number | null>(null); // track which video to unmute
+  const [soundEnabled, setSoundEnabled] = useState<number | null>(null);
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>(
+    Array(services.length).fill(null)
+  );
 
+  // Force slider update
+  const [, forceUpdate] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => forceUpdate((v) => v + 1), 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Theme detection
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const bg = getComputedStyle(document.body).background;
@@ -122,6 +133,7 @@ export default function Services() {
               flexDirection: i % 2 === 0 ? "row" : "row-reverse",
               alignItems: "center",
               gap: "70px",
+              flexWrap: "wrap", // ensures responsiveness on smaller screens
             }}
           >
             {/* Video Card */}
@@ -131,7 +143,8 @@ export default function Services() {
               whileInView={{ scale: 1 }}
               transition={{ duration: 0.6 }}
               style={{
-                flex: 1,
+                flex: "1 1 300px",
+                minHeight: "300px", // ensures video is always visible
                 borderRadius: "26px",
                 overflow: "hidden",
                 position: "relative",
@@ -150,20 +163,27 @@ export default function Services() {
                   zIndex: 2,
                 }}
               />
+
               {/* Video */}
               <video
+                ref={(el) => {
+                  if (el) videoRefs.current[i] = el;
+                }}
                 src={service.video}
                 autoPlay
                 loop
-                muted={soundEnabled !== i} // only unmute if user enabled
+                muted={soundEnabled !== i}
                 playsInline
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
                   display: "block",
+                  zIndex: 1,
+                  position: "relative",
                 }}
               />
+
               {/* Sound button overlay */}
               <button
                 onClick={() =>
@@ -171,7 +191,7 @@ export default function Services() {
                 }
                 style={{
                   position: "absolute",
-                  bottom: "10px",
+                  bottom: "40px",
                   right: "10px",
                   zIndex: 3,
                   padding: "6px 12px",
@@ -186,6 +206,28 @@ export default function Services() {
               >
                 {soundEnabled === i ? "Mute" : "Play Sound"}
               </button>
+
+              {/* Slider for scrubbing */}
+              <input
+                type="range"
+                min={0}
+                max={videoRefs.current[i]?.duration ?? 0}
+                value={videoRefs.current[i]?.currentTime ?? 0}
+                onChange={(e) => {
+                  const video = videoRefs.current[i];
+                  if (video) video.currentTime = Number(e.target.value);
+                }}
+                step={0.01}
+                style={{
+                  position: "absolute",
+                  bottom: "10px",
+                  left: "10px",
+                  right: "10px",
+                  zIndex: 3,
+                  width: "calc(100% - 20px)",
+                  cursor: "pointer",
+                }}
+              />
             </motion.div>
 
             {/* Text Card */}
@@ -194,7 +236,7 @@ export default function Services() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
               style={{
-                flex: 1,
+                flex: "1 1 300px",
                 padding: "45px",
                 borderRadius: "24px",
                 background:
