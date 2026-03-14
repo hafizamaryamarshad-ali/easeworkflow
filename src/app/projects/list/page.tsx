@@ -162,7 +162,7 @@ export default function ProjectsList() {
               <p style={{ fontSize: "0.98rem", lineHeight: 1.6, color: subTextColor[theme], marginBottom: "8px" }}>
                 {project.shortDesc}
               </p>
-              <p style={{ fontSize: "0.9rem", color: subTextColor[theme] }}>
+              <p style={{ fontSize: "0.98rem", color: subTextColor[theme] }}>
                 Client: {project.clientName} <br />
                 Industry: {project.industry} <br />
                 Tech: {project.technologies.join(", ")} <br />
