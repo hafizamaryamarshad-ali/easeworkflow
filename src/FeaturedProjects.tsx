@@ -3,49 +3,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-
-// Static project data
-export const projects = [
-  {
-    id: "p1",
-    title: "Smart Garbage Robot",
-    shortDesc: "Autonomous robot for smart waste collection.",
-    longDesc: "Full details about Smart Garbage Robot, design, AI, sensors...",
-    video: "/videos/garbage-robot.mp4",
-    thumbnail: "/images/garbage-robot.jpg",
-    clientName: "CityTech",
-    industry: "Smart City",
-    technologies: ["AI", "Robotics", "IoT"],
-    updated: "2026-03-10",
-  },
-  {
-    id: "p2",
-    title: "Telemedicine App",
-    shortDesc: "Platform connecting doctors with patients remotely.",
-    longDesc: "Full details about Telemedicine App including features, EMR integration...",
-    video: "/videos/telemedicine.mp4",
-    thumbnail: "/images/telemedicine.jpg",
-    clientName: "HealthCare Inc.",
-    industry: "Healthcare",
-    technologies: ["React", "Node.js", "WebRTC"],
-    updated: "2026-03-05",
-  },
-  {
-    id: "p3",
-    title: "Clinic Dashboard",
-    shortDesc: "Data analytics dashboard for clinic operations.",
-    longDesc: "Full details about Clinic Dashboard with analytics and reporting...",
-    video: "/videos/dashboard.mp4",
-    thumbnail: "/images/dashboard.jpg",
-    clientName: "MediSoft",
-    industry: "Healthcare",
-    technologies: ["Next.js", "Chart.js", "TailwindCSS"],
-    updated: "2026-03-08",
-  },
-];
+import Image from "next/image";
+import { fetchProjects, type Project } from "./lib/fetchProjects";
 
 export default function FeaturedProjects() {
   const router = useRouter();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [windowWidth, setWindowWidth] = useState(0);
 
@@ -60,7 +25,33 @@ export default function FeaturedProjects() {
     });
     observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
 
+    let isMounted = true;
+
+    const loadProjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchProjects();
+        if (isMounted) {
+          setProjects(data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load projects.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProjects();
+    const intervalId = window.setInterval(loadProjects, 60000);
+
     return () => {
+      isMounted = false;
+      window.clearInterval(intervalId);
       window.removeEventListener("resize", handleResize);
       observer.disconnect();
     };
@@ -102,39 +93,61 @@ export default function FeaturedProjects() {
           gap: "25px",
         }}
       >
-        {projects.map((project, i) => (
-          <motion.div
-            key={project.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.15 }}
-            whileHover={{ y: -5, scale: 1.02 }}
-            style={{
-              flex: windowWidth < 640 ? "1 1 100%" : "1 1 280px",
-              maxWidth: "320px",
-              background: cardBg[theme],
-              borderRadius: "20px",
-              overflow: "hidden",
-              boxShadow: boxShadow[theme],
-              cursor: "pointer",
-            }}
-            onClick={() => router.push(`/projects/${project.id}`)}
-          >
-            <img
-              src={project.thumbnail}
-              alt={project.title}
-              style={{ width: "100%", height: "200px", objectFit: "cover" }}
-            />
-            <div style={{ padding: "18px", textAlign: "left" }}>
-              <h3 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "8px" }}>
-                {project.title}
-              </h3>
-              <p style={{ fontSize: "1rem", color: subTextColor[theme], marginBottom: "6px" }}>
-                {project.shortDesc}
-              </p>
-            </div>
-          </motion.div>
-        ))}
+        {loading && (
+          <p style={{ fontSize: "1rem", color: subTextColor[theme] }}>
+            Loading projects...
+          </p>
+        )}
+
+        {!loading && error && (
+          <p style={{ fontSize: "1rem", color: "#ef4444" }}>{error}</p>
+        )}
+
+        {!loading && !error && projects.length === 0 && (
+          <p style={{ fontSize: "1rem", color: subTextColor[theme] }}>No projects found.</p>
+        )}
+
+        {!loading &&
+          !error &&
+          projects.map((project, i) => (
+            <motion.div
+              key={project._id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.15 }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              style={{
+                flex: windowWidth < 640 ? "1 1 100%" : "1 1 280px",
+                maxWidth: "320px",
+                background: cardBg[theme],
+                borderRadius: "20px",
+                overflow: "hidden",
+                boxShadow: boxShadow[theme],
+                cursor: "pointer",
+              }}
+              onClick={() => router.push(`/projects/${project._id}`)}
+            >
+              {project.thumbnailUrl && (
+                <div style={{ position: "relative", width: "100%", height: "200px" }}>
+                  <Image
+                    src={project.thumbnailUrl}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 320px"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              )}
+              <div style={{ padding: "18px", textAlign: "left" }}>
+                <h3 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "8px" }}>
+                  {project.title}
+                </h3>
+                <p style={{ fontSize: "1rem", color: subTextColor[theme], marginBottom: "6px" }}>
+                  {project.shortDesc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
       </div>
 
       <button

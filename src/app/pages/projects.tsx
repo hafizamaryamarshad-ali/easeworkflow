@@ -1,10 +1,71 @@
 "use client";
 
-import { useState } from "react";
-import { projects } from "../../FeaturedProjects";
+import { useEffect, useState } from "react";
+import { fetchProjects, type Project } from "../../lib/fetchProjects";
 
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchProjects();
+        if (isMounted) {
+          setProjects(data);
+          setCurrentIndex(0);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load projects.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProjects();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+        <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
+        <p>Loading projects...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+        <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
+        <p>{error}</p>
+      </section>
+    );
+  }
+
+  if (projects.length === 0) {
+    return (
+      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+        <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
+        <p>No projects found.</p>
+      </section>
+    );
+  }
+
   const project = projects[currentIndex];
 
   const nextProject = () => setCurrentIndex((prev) => (prev + 1) % projects.length);

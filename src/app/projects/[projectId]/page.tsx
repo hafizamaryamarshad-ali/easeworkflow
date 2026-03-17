@@ -1,54 +1,23 @@
 "use client";
 
-import { projects as featuredProjects } from "../../../FeaturedProjects"; // featured projects
+import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-
-// old projects (same as list)
-const oldProjects = [
-  {
-    id: "p1-old",
-    title: "Smart Garbage Robot",
-    shortDesc: "Autonomous robot for smart waste collection.",
-    longDesc: "Full details about Smart Garbage Robot, design, AI, sensors...",
-    video: "/videos/garbage-robot.mp4",
-    thumbnail: "/images/garbage-robot.jpg",
-    clientName: "CityTech",
-    industry: "Smart City",
-    technologies: ["AI", "Robotics", "IoT"],
-    updated: "2026-03-10",
-  },
-  {
-    id: "p2-old",
-    title: "Telemedicine App",
-    shortDesc: "Platform connecting doctors with patients remotely.",
-    longDesc: "Full details about Telemedicine App including features, EMR integration...",
-    video: "/videos/telemedicine.mp4",
-    thumbnail: "/images/telemedicine.jpg",
-    clientName: "HealthCare Inc.",
-    industry: "Healthcare",
-    technologies: ["React", "Node.js", "WebRTC"],
-    updated: "2026-03-05",
-  },
-  {
-    id: "p3-old",
-    title: "Clinic Dashboard",
-    shortDesc: "Data analytics dashboard for clinic operations.",
-    longDesc: "Full details about Clinic Dashboard with analytics and reporting...",
-    video: "/videos/dashboard.mp4",
-    thumbnail: "/images/dashboard.jpg",
-    clientName: "MediSoft",
-    industry: "Healthcare",
-    technologies: ["Next.js", "Chart.js", "TailwindCSS"],
-    updated: "2026-03-08",
-  },
-];
+import { fetchProjects, type Project } from "../../../lib/fetchProjects";
 
 export default function ProjectDetailPage() {
   const params = useParams();
-  const projectId = params.projectId;
+  const routeProjectId = params?.projectId;
+  const projectId = useMemo(() => {
+    if (Array.isArray(routeProjectId)) {
+      return routeProjectId[0];
+    }
+    return routeProjectId;
+  }, [routeProjectId]);
 
+  const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
@@ -56,24 +25,72 @@ export default function ProjectDetailPage() {
       const bg = getComputedStyle(document.body).background;
       setTheme(bg.includes("linear-gradient") ? "dark" : "light");
     });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProject = async () => {
+      if (!projectId) {
+        if (isMounted) {
+          setProject(null);
+          setLoading(false);
+        }
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const allProjects = await fetchProjects();
+        const found = allProjects.find((item) => item._id === projectId);
+
+        if (isMounted) {
+          setProject(found ?? null);
+        }
+      } catch {
+        if (isMounted) {
+          setProject(null);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProject();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [projectId]);
 
   const bgColors = { dark: "#0a0f1e", light: "#f8fafc" };
   const textColors = { dark: "#f8fafc", light: "#0f172a" };
   const subTextColor = { dark: "#cbd5f5", light: "#475569" };
 
-  // merge all projects
-  const allProjects = [...featuredProjects, ...oldProjects];
-  const project = allProjects.find((p) => p.id === projectId);
+  if (loading) {
+    return (
+      <div style={{ color: textColors[theme], textAlign: "center", padding: "50px" }}>
+        Loading project...
+      </div>
+    );
+  }
 
-  if (!project)
+  if (!project) {
     return (
       <div style={{ color: textColors[theme], textAlign: "center", padding: "50px" }}>
         Project not found
       </div>
     );
+  }
 
   return (
     <section
@@ -93,7 +110,6 @@ export default function ProjectDetailPage() {
         overflow: "hidden",
       }}
     >
-      {/* Animated Background Blobs */}
       <motion.div
         animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
         transition={{ duration: 30, repeat: Infinity }}
@@ -108,6 +124,7 @@ export default function ProjectDetailPage() {
           zIndex: 0,
         }}
       />
+
       <motion.div
         animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
         transition={{ duration: 32, repeat: Infinity }}
@@ -123,31 +140,49 @@ export default function ProjectDetailPage() {
         }}
       />
 
-      <div style={{ width: "100%", maxWidth: "1100px", zIndex: 1, display: "flex", flexDirection: "column", gap: "30px" }}>
-        {/* Video */}
-        <video
-          src={project.video}
-          controls
-          style={{
-            width: "100%",
-            borderRadius: "20px",
-            boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
-          }}
-        />
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1100px",
+          zIndex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: "30px",
+        }}
+      >
+        {project.video && (
+          <video
+            src={project.video}
+            controls
+            style={{
+              width: "100%",
+              borderRadius: "20px",
+              boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+            }}
+          />
+        )}
 
-        {/* Image */}
-        <img
-          src={project.thumbnail}
-          alt={project.title}
-          style={{
-            width: "100%",
-            borderRadius: "20px",
-            objectFit: "cover",
-            boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
-          }}
-        />
+        {project.thumbnailUrl && (
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              minHeight: "420px",
+              borderRadius: "20px",
+              overflow: "hidden",
+              boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+            }}
+          >
+            <Image
+              src={project.thumbnailUrl}
+              alt={project.title}
+              fill
+              sizes="100vw"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+        )}
 
-        {/* Title */}
         <h1
           style={{
             fontSize: "3rem",
@@ -159,7 +194,6 @@ export default function ProjectDetailPage() {
           {project.title}
         </h1>
 
-        {/* Short & Long Desc */}
         <p
           style={{
             fontSize: "1.2rem",
@@ -171,6 +205,7 @@ export default function ProjectDetailPage() {
         >
           {project.shortDesc}
         </p>
+
         <p
           style={{
             fontSize: "1rem",
@@ -182,7 +217,6 @@ export default function ProjectDetailPage() {
           {project.longDesc}
         </p>
 
-        {/* Additional Info */}
         <div
           style={{
             fontSize: "1rem",
@@ -193,10 +227,18 @@ export default function ProjectDetailPage() {
             gap: "10px",
           }}
         >
-          <p><strong>Client Name:</strong> {project.clientName}</p>
-          <p><strong>Industry:</strong> {project.industry}</p>
-          <p><strong>Technologies Used:</strong> {project.technologies.join(", ")}</p>
-          <p><strong>Last Updated:</strong> {project.updated}</p>
+          <p>
+            <strong>Client Name:</strong> {project.clientName}
+          </p>
+          <p>
+            <strong>Industry:</strong> {project.industry}
+          </p>
+          <p>
+            <strong>Technologies Used:</strong> {project.technologies?.join(", ") || "-"}
+          </p>
+          <p>
+            <strong>Last Updated:</strong> {project.updated}
+          </p>
         </div>
       </div>
     </section>
