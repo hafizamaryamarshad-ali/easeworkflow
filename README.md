@@ -42,6 +42,7 @@ Notes:
 - Browser data requests are proxied through `/api/sanity/query` in production-safe mode.
 - `NEXT_PUBLIC_SANITY_USE_CDN` defaults to `true`; set it to `false` only when you need uncached reads (for example, private dataset/token debugging).
 - If you still query Sanity directly from browser code elsewhere, add your Vercel domain to Sanity CORS origins.
+- Fallbacks are present for `projectId`/`dataset` (`1nesg9s4` / `production`) to prevent blank deployments, but set env vars in Vercel to avoid cross-project mistakes.
 
 ## Learn More
 

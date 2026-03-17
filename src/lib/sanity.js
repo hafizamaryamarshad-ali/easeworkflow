@@ -1,20 +1,26 @@
 import { createClient } from "next-sanity";
 import { createImageUrlBuilder } from "@sanity/image-url";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim() || "";
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() || "";
+const fallbackProjectId = "1nesg9s4";
+const fallbackDataset = "production";
+
+const envProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim() || "";
+const envDataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() || "";
+
+const projectId = envProjectId || fallbackProjectId;
+const dataset = envDataset || fallbackDataset;
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-02-19";
 const token = process.env.SANITY_API_READ_TOKEN;
 const isProduction = process.env.NODE_ENV === "production";
 const useCdnEnv = process.env.NEXT_PUBLIC_SANITY_USE_CDN;
 
 const isConfigured = Boolean(projectId && dataset);
-const useCdn = useCdnEnv ? useCdnEnv === "true" : true;
+const useCdn = useCdnEnv ? useCdnEnv === "true" : !token;
 
-if (!isConfigured) {
-  console.error(
-    "[Sanity Config] Missing NEXT_PUBLIC_SANITY_PROJECT_ID or NEXT_PUBLIC_SANITY_DATASET. " +
-      "Set them in .env.local and Vercel Project Settings > Environment Variables."
+if (!envProjectId || !envDataset) {
+  console.warn(
+    "[Sanity Config] NEXT_PUBLIC_SANITY_PROJECT_ID or NEXT_PUBLIC_SANITY_DATASET is missing. " +
+      `Using fallback values projectId='${fallbackProjectId}', dataset='${fallbackDataset}'.`
   );
 }
 
@@ -34,6 +40,8 @@ if (isProduction) {
     apiVersion,
     useCdn,
     hasReadToken: Boolean(token),
+    projectIdSource: envProjectId ? "env" : "fallback",
+    datasetSource: envDataset ? "env" : "fallback",
   });
 }
 

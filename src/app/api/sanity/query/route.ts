@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { client, sanityRuntimeConfig } from "../../../../lib/sanity";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request: Request) {
   if (!sanityRuntimeConfig.isConfigured) {
     return NextResponse.json(
