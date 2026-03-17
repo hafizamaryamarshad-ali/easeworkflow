@@ -1,5 +1,5 @@
 import { groq } from "next-sanity";
-import { client, urlFor } from "./sanity";
+import { sanityFetch, sanityRuntimeConfig, urlFor } from "./sanity";
 
 type SanityImage = {
   asset?: {
@@ -82,24 +82,43 @@ const resolveSlug = (slug: SanitySlug): string => {
 };
 
 export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
-  const data = await client.fetch<CaseStudyQueryResult[]>(caseStudiesQuery);
+  try {
+    const data = (await sanityFetch(caseStudiesQuery, {}, "fetchCaseStudies")) as
+      | CaseStudyQueryResult[]
+      | null;
 
-  if (!Array.isArray(data)) {
-    return [];
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    const mapped = data.map((study) => ({
+      _id: study._id,
+      slug: resolveSlug(study.slug),
+      title: study.title,
+      summary: study.summary,
+      featuredImage: study.featuredImage,
+      client: study.client,
+      industry: study.industry,
+      problem: study.problem,
+      solution: study.solution,
+      tools: Array.isArray(study.tools) ? study.tools : [],
+      results: Array.isArray(study.results) ? study.results : [],
+      featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),
+    }));
+
+    if (process.env.NODE_ENV === "production") {
+      console.info("[Sanity] fetchCaseStudies mapped results", {
+        count: mapped.length,
+        projectId: sanityRuntimeConfig.projectId,
+        dataset: sanityRuntimeConfig.dataset,
+        useCdn: sanityRuntimeConfig.useCdn,
+        hasReadToken: sanityRuntimeConfig.hasReadToken,
+      });
+    }
+
+    return mapped;
+  } catch (error) {
+    console.error("[Sanity] fetchCaseStudies failed", error);
+    throw error;
   }
-
-  return data.map((study) => ({
-    _id: study._id,
-    slug: resolveSlug(study.slug),
-    title: study.title,
-    summary: study.summary,
-    featuredImage: study.featuredImage,
-    client: study.client,
-    industry: study.industry,
-    problem: study.problem,
-    solution: study.solution,
-    tools: Array.isArray(study.tools) ? study.tools : [],
-    results: Array.isArray(study.results) ? study.results : [],
-    featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),
-  }));
 };

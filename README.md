@@ -20,6 +20,27 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Sanity Environment Setup
+
+Set these variables in both local `.env.local` and Vercel Project Settings → Environment Variables:
+
+```bash
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-02-19
+```
+
+If your dataset ACL is **private**, also set:
+
+```bash
+SANITY_API_READ_TOKEN=your_server_side_read_token
+```
+
+Notes:
+- `SANITY_API_READ_TOKEN` must not use `NEXT_PUBLIC_`.
+- Browser data requests are proxied through `/api/sanity/query` in production-safe mode.
+- If you still query Sanity directly from browser code elsewhere, add your Vercel domain to Sanity CORS origins.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -1,5 +1,5 @@
 import { groq } from "next-sanity";
-import { client } from "./sanity";
+import { sanityFetch, sanityRuntimeConfig } from "./sanity";
 
 type SanitySlug =
   | string
@@ -123,13 +123,30 @@ const mapBlog = (blog: BlogQueryResult): BlogPost => ({
 });
 
 export const fetchBlogs = async (): Promise<BlogPost[]> => {
-  const data = await client.fetch<BlogQueryResult[]>(blogsQuery);
+  try {
+    const data = (await sanityFetch(blogsQuery, {}, "fetchBlogs")) as BlogQueryResult[] | null;
 
-  if (!Array.isArray(data)) {
-    return [];
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    const mapped = data.map(mapBlog).filter((blog) => Boolean(blog.slug));
+
+    if (process.env.NODE_ENV === "production") {
+      console.info("[Sanity] fetchBlogs mapped results", {
+        count: mapped.length,
+        projectId: sanityRuntimeConfig.projectId,
+        dataset: sanityRuntimeConfig.dataset,
+        useCdn: sanityRuntimeConfig.useCdn,
+        hasReadToken: sanityRuntimeConfig.hasReadToken,
+      });
+    }
+
+    return mapped;
+  } catch (error) {
+    console.error("[Sanity] fetchBlogs failed", error);
+    throw error;
   }
-
-  return data.map(mapBlog).filter((blog) => Boolean(blog.slug));
 };
 
 export const fetchBlogBySlug = async (slug: string): Promise<BlogPost | null> => {
@@ -137,11 +154,37 @@ export const fetchBlogBySlug = async (slug: string): Promise<BlogPost | null> =>
     return null;
   }
 
-  const blog = await client.fetch<BlogQueryResult | null>(blogBySlugQuery, {slug});
+  try {
+    const blog = (await sanityFetch(blogBySlugQuery, { slug }, "fetchBlogBySlug")) as
+      | BlogQueryResult
+      | null;
 
-  if (!blog) {
-    return null;
+    if (!blog) {
+      if (process.env.NODE_ENV === "production") {
+        console.info("[Sanity] fetchBlogBySlug returned no result", {
+          slug,
+          projectId: sanityRuntimeConfig.projectId,
+          dataset: sanityRuntimeConfig.dataset,
+        });
+      }
+
+      return null;
+    }
+
+    const mapped = mapBlog(blog);
+
+    if (process.env.NODE_ENV === "production") {
+      console.info("[Sanity] fetchBlogBySlug mapped result", {
+        slug,
+        id: mapped._id,
+        projectId: sanityRuntimeConfig.projectId,
+        dataset: sanityRuntimeConfig.dataset,
+      });
+    }
+
+    return mapped;
+  } catch (error) {
+    console.error("[Sanity] fetchBlogBySlug failed", { slug, error });
+    throw error;
   }
-
-  return mapBlog(blog);
 };

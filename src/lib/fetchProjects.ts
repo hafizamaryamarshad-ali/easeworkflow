@@ -1,5 +1,5 @@
 import { groq } from "next-sanity";
-import { client, urlFor } from "./sanity";
+import { sanityFetch, sanityRuntimeConfig, urlFor } from "./sanity";
 
 type SanityImage = {
   asset?: {
@@ -54,20 +54,39 @@ const projectsQuery = groq`
 `;
 
 export const fetchProjects = async (): Promise<Project[]> => {
-  const data = await client.fetch<ProjectQueryResult[]>(projectsQuery);
+  try {
+    const data = (await sanityFetch(projectsQuery, {}, "fetchProjects")) as
+      | ProjectQueryResult[]
+      | null;
 
-  if (!Array.isArray(data)) {
-    return [];
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    const mapped = data.map((project) => ({
+      ...project,
+      videoUrl:
+        typeof project.video === "string"
+          ? project.video
+          : project.video?.asset?.url ?? null,
+      thumbnailUrl: project.thumbnail?.asset
+        ? urlFor(project.thumbnail).width(1200).height(800).fit("crop").auto("format").url()
+        : null,
+    }));
+
+    if (process.env.NODE_ENV === "production") {
+      console.info("[Sanity] fetchProjects mapped results", {
+        count: mapped.length,
+        projectId: sanityRuntimeConfig.projectId,
+        dataset: sanityRuntimeConfig.dataset,
+        useCdn: sanityRuntimeConfig.useCdn,
+        hasReadToken: sanityRuntimeConfig.hasReadToken,
+      });
+    }
+
+    return mapped;
+  } catch (error) {
+    console.error("[Sanity] fetchProjects failed", error);
+    throw error;
   }
-
-  return data.map((project) => ({
-    ...project,
-    videoUrl:
-      typeof project.video === "string"
-        ? project.video
-        : project.video?.asset?.url ?? null,
-    thumbnailUrl: project.thumbnail?.asset
-      ? urlFor(project.thumbnail).width(1200).height(800).fit("crop").auto("format").url()
-      : null,
-  }));
 };
