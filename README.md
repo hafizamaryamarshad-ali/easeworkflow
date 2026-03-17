@@ -28,6 +28,7 @@ Set these variables in both local `.env.local` and Vercel Project Settings → E
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2025-02-19
+NEXT_PUBLIC_SANITY_USE_CDN=true
 ```
 
 If your dataset ACL is **private**, also set:
@@ -39,6 +40,7 @@ SANITY_API_READ_TOKEN=your_server_side_read_token
 Notes:
 - `SANITY_API_READ_TOKEN` must not use `NEXT_PUBLIC_`.
 - Browser data requests are proxied through `/api/sanity/query` in production-safe mode.
+- `NEXT_PUBLIC_SANITY_USE_CDN` defaults to `true`; set it to `false` only when you need uncached reads (for example, private dataset/token debugging).
 - If you still query Sanity directly from browser code elsewhere, add your Vercel domain to Sanity CORS origins.
 
 ## Learn More

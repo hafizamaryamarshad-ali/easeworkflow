@@ -6,9 +6,10 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() || "";
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-02-19";
 const token = process.env.SANITY_API_READ_TOKEN;
 const isProduction = process.env.NODE_ENV === "production";
+const useCdnEnv = process.env.NEXT_PUBLIC_SANITY_USE_CDN;
 
 const isConfigured = Boolean(projectId && dataset);
-const useCdn = isProduction && !token;
+const useCdn = useCdnEnv ? useCdnEnv === "true" : true;
 
 if (!isConfigured) {
   console.error(
@@ -25,6 +26,16 @@ export const sanityRuntimeConfig = {
   isConfigured,
   hasReadToken: Boolean(token),
 };
+
+if (isProduction) {
+  console.info("[Sanity Config] Runtime", {
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn,
+    hasReadToken: Boolean(token),
+  });
+}
 
 export const client = createClient({
   projectId,
