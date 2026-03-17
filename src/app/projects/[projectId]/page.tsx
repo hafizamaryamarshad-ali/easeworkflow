@@ -92,6 +92,10 @@ export default function ProjectDetailPage() {
     );
   }
 
+  const videoUrl =
+    project.videoUrl ??
+    (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? null);
+
   return (
     <section
       style={{
@@ -150,9 +154,9 @@ export default function ProjectDetailPage() {
           gap: "30px",
         }}
       >
-        {project.video && (
+        {videoUrl && (
           <video
-            src={project.video}
+            src={videoUrl}
             controls
             style={{
               width: "100%",

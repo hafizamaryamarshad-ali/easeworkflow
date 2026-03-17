@@ -67,6 +67,9 @@ export default function ProjectsPage() {
   }
 
   const project = projects[currentIndex];
+  const videoUrl =
+    project.videoUrl ??
+    (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? null);
 
   const nextProject = () => setCurrentIndex((prev) => (prev + 1) % projects.length);
   const prevProject = () => setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
@@ -76,7 +79,7 @@ export default function ProjectsPage() {
       <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
 
       <div style={{ maxWidth: "800px", margin: "auto" }}>
-        <video src={project.video} controls style={{ width: "100%", borderRadius: "20px" }} />
+        {videoUrl && <video src={videoUrl} controls style={{ width: "100%", borderRadius: "20px" }} />}
         <h3 style={{ fontSize: "2rem", marginTop: "20px" }}>{project.title}</h3>
         <p style={{ fontSize: "1.1rem", color: "#475569" }}>{project.shortDesc}</p>
       </div>
