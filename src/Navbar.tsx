@@ -2,17 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
-  FiHome, FiInfo, FiActivity, FiTool, FiHexagon, FiPenTool,
+  FiHome, FiInfo, FiTool, FiHexagon, FiPenTool,
   FiMail, FiPhone, FiSun, FiMoon, FiMenu, FiX
 } from "react-icons/fi";
+import { useTheme } from "./theme/ThemeProvider";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState("/");
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null); // null for SSR safe
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   // Detect scroll
   useEffect(() => {
@@ -29,27 +31,15 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Load theme from localStorage (client-side only)
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    if (savedTheme) setTheme(savedTheme);
-    else setTheme("dark"); // default
-  }, []);
+    setMenuOpen(false);
+  }, [pathname]);
 
-  // Apply theme & save to localStorage
-  useEffect(() => {
-    if (!theme) return;
-    localStorage.setItem("theme", theme);
-    if (theme === "light") {
-      document.body.style.background = "#f5f7fa";
-      document.body.style.color = "#0f172a";
-    } else {
-      document.body.style.background = "linear-gradient(145deg, #0a0f2b, #0f172a, #1e40af, #22d3ee)";
-      document.body.style.color = "#fff";
-    }
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
+  const isLinkActive = (href: string) => {
+    if (!pathname) return href === "/";
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   const navLinks = [
     { name: "Home", href: "/", icon: <FiHome size={14} /> },
@@ -60,8 +50,6 @@ export default function Navbar() {
     { name: "Blog", href: "/blog", icon: <FiPenTool size={14} /> },
     { name: "Contact", href: "/contact", icon: <FiMail size={14} /> },
   ];
-
-  if (!theme) return null; // prevent flash before hydration
 
   const mainColor = theme === "dark" ? "#00c6ff" : "#3b82f6";
   const navTextColor = theme === "dark" ? "#fff" : "#0f172a";
@@ -93,23 +81,35 @@ export default function Navbar() {
       }}
     >
       {/* Logo */}
-      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          position: "relative",
+          zIndex: 1,
+          flexShrink: 0,
+        }}
+      >
         <FiHexagon size={24} color={mainColor} />
         <Link
           href="/"
-          onClick={() => setActive("/")}
-          key={theme} // forces re-render on theme change
           style={{
+            display: "inline-block",
+            whiteSpace: "nowrap",
             fontSize: "1.5rem",
             fontWeight: 700,
-            background: theme === "dark"
+            backgroundImage: theme === "dark"
               ? "linear-gradient(270deg, #00c6ff, #0072ff)"
               : "linear-gradient(270deg, #3b82f6, #2563eb)",
             backgroundSize: "400% 400%",
+            backgroundClip: "text",
             WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            color: "transparent",
+            color: mainColor,
+            opacity: 1,
+            visibility: "visible",
             textDecoration: "none",
+            textShadow: theme === "dark" ? "0 0 10px rgba(0,198,255,0.2)" : "none",
           }}
         >
           EaseWorkflow
@@ -123,13 +123,12 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              onClick={() => setActive(link.href)}
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "4px",
                 position: "relative",
-                color: active === link.href ? mainColor : navTextColor,
+                color: isLinkActive(link.href) ? mainColor : navTextColor,
                 fontWeight: 600,
                 fontSize: "0.9rem",
                 textDecoration: "none",
@@ -138,7 +137,7 @@ export default function Navbar() {
                 transition: "all 0.25s ease",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = mainColor; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = active === link.href ? mainColor : navTextColor; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = isLinkActive(link.href) ? mainColor : navTextColor; }}
             >
               {link.icon} {link.name}
               <span
@@ -146,7 +145,7 @@ export default function Navbar() {
                   position: "absolute",
                   bottom: -2,
                   left: 0,
-                  width: active === link.href ? "100%" : "0%",
+                  width: isLinkActive(link.href) ? "100%" : "0%",
                   height: "2px",
                   background: mainColor,
                   borderRadius: "2px",
@@ -186,7 +185,6 @@ export default function Navbar() {
           {/* Consultation */}
           <Link
             href="/contact"
-            onClick={() => setActive("/contact")}
             style={{
               padding: "8px 20px",
               fontSize: "0.88rem",
@@ -263,12 +261,12 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => { setActive(link.href); setMenuOpen(false); }}
+                  onClick={() => setMenuOpen(false)}
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
-                    color: active === link.href ? mainColor : navTextColor,
+                    color: isLinkActive(link.href) ? mainColor : navTextColor,
                     fontWeight: 600,
                     fontSize: "1rem",
                     textDecoration: "none",
@@ -306,7 +304,7 @@ export default function Navbar() {
 
                 <Link
                   href="/contact"
-                  onClick={() => { setActive("/contact"); setMenuOpen(false); }}
+                  onClick={() => setMenuOpen(false)}
                   style={{
                     flex: 2,
                     padding: "8px 16px",

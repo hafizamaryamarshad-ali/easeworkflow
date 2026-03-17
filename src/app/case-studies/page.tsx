@@ -1,23 +1,69 @@
 "use client";
 
 import Link from "next/link";
-import { caseStudies } from "../../data/caseStudies";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import { fetchCaseStudies, type CaseStudy } from "../../lib/fetchCaseStudies";
+import { useTheme } from "../../theme/ThemeProvider";
 
 export default function CaseStudiesPage() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const pageBg = {
+    dark: "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)",
+    light: "#f8fafc",
+  };
+  const textColor = { dark: "#f8fafc", light: "#0f172a" };
+  const subTextColor = { dark: "#e2e8f0", light: "#334155" };
+  const accentColor = { dark: "#00c6ff", light: "#2563eb" };
+  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
+  const cardBorder = {
+    dark: "2px solid rgba(0,198,255,0.2)",
+    light: "2px solid rgba(37,99,235,0.15)",
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCaseStudies = async () => {
+      try {
+        const data = await fetchCaseStudies();
+
+        if (isMounted) {
+          setCaseStudies(data.filter((study) => Boolean(study.slug)));
+        }
+      } catch {
+        if (isMounted) {
+          setCaseStudies([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadCaseStudies();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section
       style={{
         padding: "80px 20px",
         minHeight: "100vh",
-        background:
-          "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)",
+        backgroundColor: theme === "dark" ? "#0f1c2c" : pageBg.light,
+        backgroundImage: theme === "dark" ? pageBg.dark : "none",
         backgroundSize: "400% 400%",
-        animation: "gradientBG 30s ease infinite",
+        animation: theme === "dark" ? "gradientBG 30s ease infinite" : "none",
         textAlign: "center",
         position: "relative",
       }}
@@ -35,19 +81,24 @@ export default function CaseStudiesPage() {
           padding: "6px 12px",
           fontSize: "0.85rem",
           borderRadius: "8px",
-          border: "1px solid rgba(0,198,255,0.5)",
-          background: "rgba(255,255,255,0.08)",
-          backdropFilter: "blur(10px)",
-          color: "#00c6ff",
+          border:
+            theme === "dark"
+              ? "1px solid rgba(0,198,255,0.5)"
+              : "1px solid rgba(37,99,235,0.2)",
+          background: theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff",
+          backdropFilter: theme === "dark" ? "blur(10px)" : "none",
+          color: accentColor[theme],
           cursor: "pointer",
           fontWeight: 600,
           transition: "0.3s ease",
         }}
         onMouseOver={(e) =>
-          (e.currentTarget.style.background = "rgba(0,198,255,0.2)")
+          (e.currentTarget.style.background =
+            theme === "dark" ? "rgba(0,198,255,0.2)" : "#eff6ff")
         }
         onMouseOut={(e) =>
-          (e.currentTarget.style.background = "rgba(255,255,255,0.08)")
+          (e.currentTarget.style.background =
+            theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff")
         }
       >
         <FiArrowLeft size={14} />
@@ -63,7 +114,9 @@ export default function CaseStudiesPage() {
           fontSize: "3rem",
           fontWeight: 900,
           marginBottom: "60px",
-          color: "#fff",
+          color: textColor[theme],
+          background: "none",
+          WebkitBackgroundClip: "unset",
         }}
       >
         Case Studies
@@ -78,7 +131,20 @@ export default function CaseStudiesPage() {
           gap: "30px",
         }}
       >
-        {caseStudies.map((study, i) => (
+        {loading && (
+          <p style={{ color: subTextColor[theme], fontSize: "1rem", opacity: 0.9 }}>
+            Loading case studies...
+          </p>
+        )}
+
+        {!loading && caseStudies.length === 0 && (
+          <p style={{ color: subTextColor[theme], fontSize: "1rem", opacity: 0.9 }}>
+            No case studies found.
+          </p>
+        )}
+
+        {!loading &&
+          caseStudies.map((study, i) => (
           <motion.div
             key={study.slug}
             initial={{ opacity: 0, y: 40 }}
@@ -86,23 +152,26 @@ export default function CaseStudiesPage() {
             viewport={{ once: true }}
             whileHover={{
               scale: 1.05,
-              boxShadow: "0 25px 60px rgba(0,198,255,0.45)",
+              boxShadow:
+                theme === "dark"
+                  ? "0 25px 60px rgba(0,198,255,0.45)"
+                  : "0 20px 40px rgba(37,99,235,0.2)",
             }}
             transition={{ duration: 0.5, delay: i * 0.2 }}
             style={{
               width: "320px",
               borderRadius: "20px",
-              background: "rgba(255,255,255,0.08)",
-              backdropFilter: "blur(20px)",
-              border: "2px solid rgba(0,198,255,0.2)",
-              color: "#fff",
+              background: cardBg[theme],
+              backdropFilter: theme === "dark" ? "blur(20px)" : "none",
+              border: cardBorder[theme],
+              color: textColor[theme],
               overflow: "hidden",
               textAlign: "left",
             }}
           >
-            {study.featuredImage && (
+            {study.featuredImageUrl && (
               <img
-                src={study.featuredImage}
+                src={study.featuredImageUrl}
                 alt={study.title}
                 style={{
                   width: "100%",
@@ -129,6 +198,7 @@ export default function CaseStudiesPage() {
                   lineHeight: 1.6,
                   opacity: 0.9,
                   marginBottom: "15px",
+                  color: subTextColor[theme],
                 }}
               >
                 {study.summary}
@@ -140,7 +210,7 @@ export default function CaseStudiesPage() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  color: "#00c6ff",
+                  color: accentColor[theme],
                   fontWeight: 600,
                   textDecoration: "none",
                 }}

@@ -1,22 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiSmartphone, FiDatabase, FiBell } from "react-icons/fi";
+import { useTheme } from "../../theme/ThemeProvider";
 
 export default function HealthcareAutomationPage() {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  // Detect body background theme
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      if (bg.includes("linear-gradient")) setTheme("dark");
-      else setTheme("light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    return () => observer.disconnect();
-  }, []);
+  const { theme } = useTheme();
 
   const sectionBg = { dark: "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)", light: "#f5f7fa" };
   const textColor = { dark: "#f8fafc", light: "#111" };
@@ -43,7 +32,8 @@ export default function HealthcareAutomationPage() {
         textAlign: "center",
         color: textColor[theme],
         overflow: "hidden",
-        background: sectionBg[theme],
+        backgroundColor: theme === "dark" ? "#0f1c2c" : sectionBg.light,
+        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "cover",
         transition: "all 0.5s ease",
       }}

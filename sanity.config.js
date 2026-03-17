@@ -1,5 +1,7 @@
 import { defineConfig } from 'sanity'
 import project from './schemas/project'
+import caseStudy from './schemas/caseStudy'
+import blog from './schemas/blog'
 
 export default defineConfig({
   name: 'default',
@@ -9,6 +11,6 @@ export default defineConfig({
   dataset: 'production',
 
   schema: {
-    types: [project],   // 👈 DIRECT IMPORT
+    types: [project, caseStudy, blog],
   },
 })

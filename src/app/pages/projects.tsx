@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { fetchProjects, type Project } from "../../lib/fetchProjects";
+import { useTheme } from "../../theme/ThemeProvider";
 
 export default function ProjectsPage() {
+  const { theme } = useTheme();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const sectionBg = { dark: "#020617", light: "#f8fafc" };
+  const textColor = { dark: "#f8fafc", light: "#0f172a" };
+  const subTextColor = { dark: "#cbd5e1", light: "#475569" };
 
   useEffect(() => {
     let isMounted = true;
@@ -41,7 +47,7 @@ export default function ProjectsPage() {
 
   if (loading) {
     return (
-      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+      <section style={{ padding: "80px 20px", textAlign: "center", background: sectionBg[theme], color: textColor[theme] }}>
         <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
         <p>Loading projects...</p>
       </section>
@@ -50,7 +56,7 @@ export default function ProjectsPage() {
 
   if (error) {
     return (
-      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+      <section style={{ padding: "80px 20px", textAlign: "center", background: sectionBg[theme], color: textColor[theme] }}>
         <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
         <p>{error}</p>
       </section>
@@ -59,7 +65,7 @@ export default function ProjectsPage() {
 
   if (projects.length === 0) {
     return (
-      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+      <section style={{ padding: "80px 20px", textAlign: "center", background: sectionBg[theme], color: textColor[theme] }}>
         <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
         <p>No projects found.</p>
       </section>
@@ -75,29 +81,52 @@ export default function ProjectsPage() {
   const prevProject = () => setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
 
   return (
-    <section style={{ padding: "80px 20px", textAlign: "center" }}>
+    <section
+      style={{
+        padding: "80px 20px",
+        textAlign: "center",
+        background: sectionBg[theme],
+        color: textColor[theme],
+      }}
+    >
       <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
 
       <div style={{ maxWidth: "800px", margin: "auto" }}>
         {videoUrl && <video src={videoUrl} controls style={{ width: "100%", borderRadius: "20px" }} />}
         <h3 style={{ fontSize: "2rem", marginTop: "20px" }}>{project.title}</h3>
-        <p style={{ fontSize: "1.1rem", color: "#475569" }}>{project.shortDesc}</p>
+        <p style={{ fontSize: "1.1rem", color: subTextColor[theme] }}>{project.shortDesc}</p>
       </div>
 
       <div style={{ marginTop: "40px", display: "flex", justifyContent: "center", gap: "20px" }}>
-        <button style={buttonStyle} onClick={prevProject}>Prev</button>
-        <button style={buttonStyle} onClick={nextProject}>Next</button>
+        <button
+          style={{
+            padding: "10px 25px",
+            borderRadius: "8px",
+            background: theme === "dark" ? "#0ea5e9" : "#2563eb",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+            fontWeight: 700,
+          }}
+          onClick={prevProject}
+        >
+          Prev
+        </button>
+        <button
+          style={{
+            padding: "10px 25px",
+            borderRadius: "8px",
+            background: theme === "dark" ? "#0ea5e9" : "#2563eb",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+            fontWeight: 700,
+          }}
+          onClick={nextProject}
+        >
+          Next
+        </button>
       </div>
     </section>
   );
 }
-
-const buttonStyle = {
-  padding: "10px 25px",
-  borderRadius: "8px",
-  background: "#0ea5e9",
-  color: "#fff",
-  border: "none",
-  cursor: "pointer",
-  fontWeight: 700,
-};

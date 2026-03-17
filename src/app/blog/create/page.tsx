@@ -1,11 +1,5 @@
-"use client";
-
-import BlogForm from "../../../BlogForm";
+import { redirect } from "next/navigation";
 
 export default function CreateBlogPage() {
-  return (
-    <div style={{ padding: "60px" }}>
-      <BlogForm />
-    </div>
-  );
+  redirect("/blog");
 }

@@ -1,5 +1,7 @@
 import "./globals.css";
 import Navbar from "../Navbar";
+import Footer from "../Footer";
+import ThemeProvider from "../theme/ThemeProvider";
 
 export const metadata = {
   title: "EaseWorkflow - Healthcare Automation",
@@ -18,25 +20,15 @@ export default function RootLayout({
         style={{
           margin: 0,
           fontFamily: "'Inter', sans-serif",
-          backgroundColor: "#f9fafb",
-          color: "#111",
         }}
       >
-        <Navbar />
+        <ThemeProvider>
+          <Navbar />
 
-        <main>{children}</main>
+          <main>{children}</main>
 
-        <footer
-          style={{
-            textAlign: "center",
-            padding: "40px 20px",
-            background: "#111",
-            color: "#fff",
-            fontSize: "0.9rem",
-          }}
-        >
-          © {new Date().getFullYear()} EaseWorkflow. All rights reserved.
-        </footer>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

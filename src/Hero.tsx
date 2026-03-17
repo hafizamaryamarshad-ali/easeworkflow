@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaStethoscope, FaPills, FaHeart, FaSyringe } from "react-icons/fa";
+import { useTheme } from "./theme/ThemeProvider";
 
 export default function Hero() {
   const [particles, setParticles] = useState<{ x: number; y: number; size: number; opacity: number }[]>([]);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const { theme } = useTheme();
 
   // Generate floating particles
   useEffect(() => {
@@ -20,17 +21,6 @@ export default function Hero() {
       });
     }
     setParticles(temp);
-  }, []);
-
-  // Listen for body theme from Navbar
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      if (bg.includes("linear-gradient(145deg")) setTheme("dark");
-      else setTheme("light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    return () => observer.disconnect();
   }, []);
 
   const floatingIcons = [
@@ -76,7 +66,8 @@ export default function Hero() {
         alignItems: "center",
         padding: "0 20px",
         textAlign: "center",
-        background: theme === "dark" ? bgColors.dark : bgColors.light,
+        backgroundColor: theme === "dark" ? "#0f172a" : bgColors.light,
+        backgroundImage: theme === "dark" ? bgColors.dark : "none",
         backgroundSize: "600% 600%",
         color: textColors[theme],
         transition: "all 0.5s ease",

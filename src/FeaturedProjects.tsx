@@ -5,25 +5,20 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { fetchProjects, type Project } from "./lib/fetchProjects";
+import { useTheme } from "./theme/ThemeProvider";
 
 export default function FeaturedProjects() {
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const { theme } = useTheme();
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
-
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      setTheme(bg.includes("linear-gradient") ? "dark" : "light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
 
     let isMounted = true;
 
@@ -53,7 +48,6 @@ export default function FeaturedProjects() {
       isMounted = false;
       window.clearInterval(intervalId);
       window.removeEventListener("resize", handleResize);
-      observer.disconnect();
     };
   }, []);
 

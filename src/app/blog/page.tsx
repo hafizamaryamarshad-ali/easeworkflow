@@ -4,15 +4,57 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiFileText } from "react-icons/fi";
+import { fetchBlogs, type BlogPost } from "../../lib/fetchBlogs";
+import { useTheme } from "../../theme/ThemeProvider";
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState<any[]>([]);
+  const { theme } = useTheme();
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const pageBg = {
+    dark: "linear-gradient(135deg,#0f172a,#1e293b)",
+    light: "#f8fafc",
+  };
+  const textColor = { dark: "#f8fafc", light: "#0f172a" };
+  const subTextColor = { dark: "#cbd5e1", light: "#334155" };
+  const accentColor = { dark: "#00c6ff", light: "#2563eb" };
+  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
+  const cardBorder = {
+    dark: "1px solid rgba(0,198,255,0.2)",
+    light: "1px solid rgba(37,99,235,0.15)",
+  };
 
   useEffect(() => {
-    const stored = localStorage.getItem("blogs");
-    if (stored) {
-      setBlogs(JSON.parse(stored));
-    }
+    let isMounted = true;
+
+    const loadBlogs = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchBlogs();
+
+        if (isMounted) {
+          setBlogs(data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load blogs.");
+          setBlogs([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadBlogs();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -20,8 +62,8 @@ export default function BlogPage() {
       style={{
         padding: "50px 20px 80px",
         minHeight: "100vh",
-        background: "linear-gradient(135deg,#0f172a,#1e293b)",
-        color: "#fff",
+        background: pageBg[theme],
+        color: textColor[theme],
         position: "relative",
       }}
     >
@@ -32,9 +74,9 @@ export default function BlogPage() {
             style={{
               padding: "8px 16px",
               borderRadius: "20px",
-              border: "1px solid #00c6ff",
+              border: `1px solid ${accentColor[theme]}`,
               background: "transparent",
-              color: "#00c6ff",
+              color: accentColor[theme],
               cursor: "pointer",
               fontWeight: 600,
             }}
@@ -48,24 +90,6 @@ export default function BlogPage() {
         Our Blog
       </h1>
 
-      <div style={{ textAlign: "center", marginTop: "30px" }}>
-        <Link href="/blog/create">
-          <button
-            style={{
-              padding: "14px 28px",
-              borderRadius: "30px",
-              background: "linear-gradient(90deg,#0072ff,#00c6ff)",
-              color: "#fff",
-              border: "none",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            + Create New Blog
-          </button>
-        </Link>
-      </div>
-
       <div
         style={{
           marginTop: "50px",
@@ -75,12 +99,16 @@ export default function BlogPage() {
           gap: "30px",
         }}
       >
-        {blogs.length === 0 ? (
+        {loading ? (
+          <p>Loading blogs...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : blogs.length === 0 ? (
           <p>No blogs yet.</p>
         ) : (
-          blogs.map((blog: any, i: number) => (
+          blogs.map((blog) => (
             <Link
-              key={i}
+              key={blog._id}
               href={`/blog/${blog.slug}`}
               style={{ textDecoration: "none" }}
             >
@@ -90,20 +118,20 @@ export default function BlogPage() {
                   width: "300px",
                   padding: "30px",
                   borderRadius: "20px",
-                  background: "rgba(255,255,255,0.08)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(0,198,255,0.2)",
+                  background: cardBg[theme],
+                  backdropFilter: theme === "dark" ? "blur(20px)" : "none",
+                  border: cardBorder[theme],
                   cursor: "pointer",
-                  color: "#fff",
+                  color: textColor[theme],
                 }}
               >
-                <FiFileText size={26} color="#00c6ff" />
+                  <FiFileText size={26} color={accentColor[theme]} />
 
                 <h3 style={{ marginTop: "15px", fontWeight: 800 }}>
                   {blog.title}
                 </h3>
 
-                <p style={{ marginTop: "10px", color: "#cbd5e1" }}>
+                <p style={{ marginTop: "10px", color: subTextColor[theme] }}>
                   {blog.excerpt}
                 </p>
               </motion.div>

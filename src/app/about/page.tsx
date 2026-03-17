@@ -3,9 +3,24 @@
 import { motion } from "framer-motion";
 import { FiCpu, FiGlobe, FiShield } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import { useTheme } from "../../theme/ThemeProvider";
 
 export default function AboutPage() {
   const router = useRouter();
+  const { theme } = useTheme();
+
+  const sectionBg = {
+    dark: "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)",
+    light: "#f8fafc",
+  };
+  const textColor = { dark: "#f8fafc", light: "#0f172a" };
+  const subText = { dark: "#e2e8f0", light: "#334155" };
+  const accent = { dark: "#00c6ff", light: "#2563eb" };
+  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
+  const cardBorder = {
+    dark: "2px solid rgba(0,198,255,0.2)",
+    light: "2px solid rgba(37,99,235,0.15)",
+  };
 
   return (
     <section
@@ -13,11 +28,11 @@ export default function AboutPage() {
         position: "relative",
         padding: "100px 20px",
         minHeight: "100vh",
-        color: "#f8fafc",
-        background:
-          "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)",
+        color: textColor[theme],
+        backgroundColor: theme === "dark" ? "#0f1c2c" : sectionBg.light,
+        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "400% 400%",
-        animation: "gradientBG 35s ease infinite",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
       }}
     >
       {/* Back Button */}
@@ -29,10 +44,13 @@ export default function AboutPage() {
           left: "20px",
           padding: "8px 14px",
           borderRadius: "10px",
-          border: "1px solid rgba(0,198,255,0.4)",
-          background: "rgba(255,255,255,0.08)",
-          backdropFilter: "blur(10px)",
-          color: "#00c6ff",
+          border:
+            theme === "dark"
+              ? "1px solid rgba(0,198,255,0.4)"
+              : "1px solid rgba(37,99,235,0.2)",
+          background: theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff",
+          backdropFilter: theme === "dark" ? "blur(10px)" : "none",
+          color: accent[theme],
           cursor: "pointer",
           fontWeight: 600,
         }}
@@ -51,6 +69,9 @@ export default function AboutPage() {
             fontWeight: 900,
             textAlign: "center",
             marginBottom: "30px",
+            color: textColor[theme],
+            background: "none",
+            WebkitBackgroundClip: "unset",
           }}
         >
           About EaseWorkflow
@@ -68,6 +89,7 @@ export default function AboutPage() {
             margin: "auto",
             textAlign: "center",
             opacity: 0.95,
+            color: subText[theme],
           }}
         >
           EaseWorkflow is a premium healthcare automation agency delivering
@@ -94,7 +116,10 @@ export default function AboutPage() {
             style={{
               width: "100%",
               borderRadius: "18px",
-              boxShadow: "0 18px 50px rgba(0,0,0,0.3)",
+              boxShadow:
+                theme === "dark"
+                  ? "0 18px 50px rgba(0,0,0,0.3)"
+                  : "0 12px 30px rgba(15,23,42,0.12)",
             }}
           />
 
@@ -107,7 +132,10 @@ export default function AboutPage() {
             style={{
               width: "100%",
               borderRadius: "18px",
-              boxShadow: "0 18px 50px rgba(0,0,0,0.3)",
+              boxShadow:
+                theme === "dark"
+                  ? "0 18px 50px rgba(0,0,0,0.3)"
+                  : "0 12px 30px rgba(15,23,42,0.12)",
             }}
           />
         </div>
@@ -144,13 +172,13 @@ export default function AboutPage() {
               style={{
                 padding: "32px",
                 borderRadius: "20px",
-                background: "rgba(255,255,255,0.08)",
-                backdropFilter: "blur(20px)",
-                border: "2px solid rgba(0,198,255,0.2)",
+                background: cardBg[theme],
+                backdropFilter: theme === "dark" ? "blur(20px)" : "none",
+                border: cardBorder[theme],
                 textAlign: "left",
               }}
             >
-              <div style={{ color: "#00c6ff", marginBottom: "12px" }}>
+              <div style={{ color: accent[theme], marginBottom: "12px" }}>
                 {item.icon}
               </div>
 
@@ -164,7 +192,7 @@ export default function AboutPage() {
                 {item.title}
               </h3>
 
-              <p style={{ lineHeight: 1.7, opacity: 0.95 }}>
+              <p style={{ lineHeight: 1.7, opacity: 0.95, color: subText[theme] }}>
                 {item.desc}
               </p>
             </motion.div>

@@ -4,53 +4,26 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { FiArrowLeft } from "react-icons/fi";
+import { fetchProjects } from "../../../lib/fetchProjects";
+import { useTheme } from "../../../theme/ThemeProvider";
 
-// Featured projects import
-import { projects as featuredProjects } from "../page";
-
-// Old static projects
-const oldProjects = [
-  {
-    id: "p1-old",
-    title: "Smart Garbage Robot",
-    shortDesc: "Autonomous robot for smart waste collection.",
-    longDesc: "Full details about Smart Garbage Robot, design, AI, sensors...",
-    video: "/videos/garbage-robot.mp4",
-    thumbnail: "/images/garbage-robot.jpg",
-    clientName: "CityTech",
-    industry: "Smart City",
-    technologies: ["AI", "Robotics", "IoT"],
-    updated: "2026-03-10",
-  },
-  {
-    id: "p2-old",
-    title: "Telemedicine App",
-    shortDesc: "Platform connecting doctors with patients remotely.",
-    longDesc: "Full details about Telemedicine App including features, EMR integration...",
-    video: "/videos/telemedicine.mp4",
-    thumbnail: "/images/telemedicine.jpg",
-    clientName: "HealthCare Inc.",
-    industry: "Healthcare",
-    technologies: ["React", "Node.js", "WebRTC"],
-    updated: "2026-03-05",
-  },
-  {
-    id: "p3-old",
-    title: "Clinic Dashboard",
-    shortDesc: "Data analytics dashboard for clinic operations.",
-    longDesc: "Full details about Clinic Dashboard with analytics and reporting...",
-    video: "/videos/dashboard.mp4",
-    thumbnail: "/images/dashboard.jpg",
-    clientName: "MediSoft",
-    industry: "Healthcare",
-    technologies: ["Next.js", "Chart.js", "TailwindCSS"],
-    updated: "2026-03-08",
-  },
-];
+type ProjectCard = {
+  id: string;
+  title: string;
+  shortDesc: string;
+  longDesc: string;
+  video: string;
+  thumbnail: string;
+  clientName: string;
+  industry: string;
+  technologies: string[];
+  updated: string;
+};
 
 export default function ProjectsList() {
   const router = useRouter();
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [projects, setProjects] = useState<ProjectCard[]>([]);
+  const { theme } = useTheme();
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
@@ -58,15 +31,49 @@ export default function ProjectsList() {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
 
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      setTheme(bg.includes("linear-gradient") ? "dark" : "light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-
     return () => {
       window.removeEventListener("resize", handleResize);
-      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProjects = async () => {
+      try {
+        const fetchedProjects = await fetchProjects();
+
+        if (!isMounted) {
+          return;
+        }
+
+        const mappedProjects: ProjectCard[] = fetchedProjects.map((project) => ({
+          id: project._id,
+          title: project.title,
+          shortDesc: project.shortDesc,
+          longDesc: project.longDesc,
+          video:
+            project.videoUrl ??
+            (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? ""),
+          thumbnail: project.thumbnailUrl ?? "",
+          clientName: project.clientName,
+          industry: project.industry,
+          technologies: Array.isArray(project.technologies) ? project.technologies : [],
+          updated: project.updated,
+        }));
+
+        setProjects(mappedProjects);
+      } catch {
+        if (isMounted) {
+          setProjects([]);
+        }
+      }
+    };
+
+    loadProjects();
+
+    return () => {
+      isMounted = false;
     };
   }, []);
 
@@ -75,8 +82,6 @@ export default function ProjectsList() {
   const cardBg = { dark: "rgba(30,41,59,0.85)", light: "#ffffff" };
   const subTextColor = { dark: "#cbd5f5", light: "#475569" };
   const boxShadow = { dark: "0 25px 50px rgba(0,0,0,0.45)", light: "0 12px 28px rgba(59,130,246,0.15)" };
-
-  const allProjects = [...featuredProjects, ...oldProjects];
 
   return (
     <section
@@ -88,7 +93,6 @@ export default function ProjectsList() {
         position: "relative",
       }}
     >
-      {/* Back Button top-left */}
       <button
         onClick={() => router.back()}
         style={{
@@ -125,7 +129,7 @@ export default function ProjectsList() {
           alignItems: "center",
         }}
       >
-        {allProjects.map((project, i) => (
+        {projects.map((project, i) => (
           <motion.div
             key={project.id}
             initial={{ opacity: 0, y: 20 }}
@@ -145,16 +149,18 @@ export default function ProjectsList() {
             }}
             onClick={() => router.push(`/projects/${project.id}`)}
           >
-            <img
-              src={project.thumbnail}
-              alt={project.title}
-              style={{
-                width: windowWidth < 640 ? "100%" : "200px",
-                height: "200px",
-                objectFit: "cover",
-                borderRadius: windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
-              }}
-            />
+            {project.thumbnail && (
+              <img
+                src={project.thumbnail}
+                alt={project.title}
+                style={{
+                  width: windowWidth < 640 ? "100%" : "200px",
+                  height: "200px",
+                  objectFit: "cover",
+                  borderRadius: windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
+                }}
+              />
+            )}
             <div style={{ padding: "15px 20px", textAlign: "left" }}>
               <h3 style={{ fontSize: "1.45rem", fontWeight: 700, marginBottom: "8px" }}>
                 {project.title}

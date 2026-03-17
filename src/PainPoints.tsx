@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaClock, FaUserMd, FaFileMedical, FaLaptopMedical } from "react-icons/fa";
+import { useTheme } from "./theme/ThemeProvider";
 
 const points = [
   {
@@ -32,22 +32,7 @@ const points = [
 ];
 
 export default function PainPoints() {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      if (bg.includes("linear-gradient")) setTheme("dark");
-      else setTheme("light");
-    });
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["style"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const { theme } = useTheme();
 
   const bg = {
     dark: "#020617",

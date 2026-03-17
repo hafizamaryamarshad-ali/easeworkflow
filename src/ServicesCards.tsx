@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "./theme/ThemeProvider";
 
 const services = [
   {
@@ -31,7 +32,7 @@ const services = [
 ];
 
 export default function Services() {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const { theme } = useTheme();
   const [soundEnabled, setSoundEnabled] = useState<number | null>(null);
   const videoRefs = useRef<Array<HTMLVideoElement | null>>(
     Array(services.length).fill(null)
@@ -42,16 +43,6 @@ export default function Services() {
   useEffect(() => {
     const interval = setInterval(() => forceUpdate((v) => v + 1), 100);
     return () => clearInterval(interval);
-  }, []);
-
-  // Theme detection
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      setTheme(bg.includes("linear-gradient") ? "dark" : "light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    return () => observer.disconnect();
   }, []);
 
   const bg = { dark: "#020617", light: "#f8fafc" };

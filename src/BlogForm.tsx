@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { client } from "./lib/sanity";
 
 export default function BlogForm() {
   const router = useRouter();
@@ -34,12 +35,45 @@ export default function BlogForm() {
     });
   };
 
-  const handleSave = () => {
-    const existing = localStorage.getItem("blogs");
-    const blogs = existing ? JSON.parse(existing) : [];
+  const formatSlug = (slugValue: string, titleValue: string) => {
+    const source = (slugValue || titleValue || "").toLowerCase().trim();
 
-    blogs.push(form);
-    localStorage.setItem("blogs", JSON.stringify(blogs));
+    return source
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+  };
+
+  const handleSave = async () => {
+    const slugCurrent = formatSlug(form.slug, form.title);
+    const tagsArray = form.tags
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    await client.create({
+      _type: "blog",
+      title: form.title,
+      slug: {
+        _type: "slug",
+        current: slugCurrent,
+      },
+      excerpt: form.excerpt,
+      content: form.content,
+      category: form.category,
+      tags: tagsArray,
+      authorName: form.authorName,
+      authorBio: form.authorBio,
+      publishDate: form.publishDate,
+      metaTitle: form.metaTitle,
+      metaDescription: form.metaDescription,
+      focusKeyword: form.focusKeyword,
+      canonicalUrl: form.canonicalUrl,
+      featured: Boolean(form.featured),
+      published: Boolean(form.published),
+      allowComments: Boolean(form.allowComments),
+    });
 
     router.push("/blog");
   };

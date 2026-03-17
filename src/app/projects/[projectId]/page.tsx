@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { fetchProjects, type Project } from "../../../lib/fetchProjects";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -18,21 +19,7 @@ export default function ProjectDetailPage() {
 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      setTheme(bg.includes("linear-gradient") ? "dark" : "light");
-    });
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["style"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const { theme } = useTheme();
 
   useEffect(() => {
     let isMounted = true;

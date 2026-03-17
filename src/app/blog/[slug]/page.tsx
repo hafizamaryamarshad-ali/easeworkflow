@@ -1,42 +1,102 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { client } from "../../../lib/sanity";
+import { fetchBlogBySlug, type BlogPost } from "../../../lib/fetchBlogs";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 export default function BlogDetail() {
-  const { slug } = useParams();
+  const params = useParams();
   const router = useRouter();
-  const [blog, setBlog] = useState<any>(null);
+  const { theme } = useTheme();
+  const slugParam = params?.slug;
+  const slug = useMemo(() => {
+    if (Array.isArray(slugParam)) {
+      return slugParam[0];
+    }
+
+    return slugParam;
+  }, [slugParam]);
+
+  const [blog, setBlog] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const pageBg = {
+    dark: "linear-gradient(135deg,#0f172a,#1e293b)",
+    light: "#f8fafc",
+  };
+  const textColor = { dark: "#f8fafc", light: "#0f172a" };
+  const subTextColor = { dark: "#cbd5e1", light: "#334155" };
+  const accentColor = { dark: "#00c6ff", light: "#2563eb" };
 
   useEffect(() => {
-    const stored = localStorage.getItem("blogs");
-    if (stored) {
-      const blogs = JSON.parse(stored);
-      const found = blogs.find((b: any) => b.slug === slug);
-      setBlog(found);
-    }
+    let isMounted = true;
+
+    const loadBlog = async () => {
+      if (!slug) {
+        if (isMounted) {
+          setBlog(null);
+          setLoading(false);
+        }
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const found = await fetchBlogBySlug(slug);
+
+        if (isMounted) {
+          setBlog(found);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load blog.");
+          setBlog(null);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadBlog();
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
-  const handleDelete = () => {
-    const stored = localStorage.getItem("blogs");
-    if (stored) {
-      let blogs = JSON.parse(stored);
-      blogs = blogs.filter((b: any) => b.slug !== slug);
-      localStorage.setItem("blogs", JSON.stringify(blogs));
+  const handleDelete = async () => {
+    if (!blog?._id) {
+      return;
+    }
+
+    try {
+      await client.delete(blog._id);
       router.push("/blog");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete blog.");
     }
   };
 
-  if (!blog) return <p style={{ color: "#fff", padding: "50px" }}>Loading...</p>;
+  if (loading) return <p style={{ color: textColor[theme], padding: "50px" }}>Loading...</p>;
+
+  if (error) return <p style={{ color: textColor[theme], padding: "50px" }}>{error}</p>;
+
+  if (!blog) return <p style={{ color: textColor[theme], padding: "50px" }}>Blog not found.</p>;
 
   return (
     <div
       style={{
         minHeight: "100vh",
         padding: "60px",
-        background: "linear-gradient(135deg,#0f172a,#1e293b)",
-        color: "#fff",
+        background: pageBg[theme],
+        color: textColor[theme],
       }}
     >
       <Link href="/blog">
@@ -44,9 +104,9 @@ export default function BlogDetail() {
           style={{
             padding: "8px 16px",
             borderRadius: "20px",
-            border: "1px solid #00c6ff",
+            border: `1px solid ${accentColor[theme]}`,
             background: "transparent",
-            color: "#00c6ff",
+            color: accentColor[theme],
             cursor: "pointer",
           }}
         >
@@ -58,7 +118,7 @@ export default function BlogDetail() {
         {blog.title}
       </h1>
 
-      <p style={{ marginTop: "20px", color: "#cbd5e1" }}>
+      <p style={{ marginTop: "20px", color: subTextColor[theme] }}>
         {blog.content}
       </p>
 

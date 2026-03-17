@@ -1,22 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
+import { useTheme } from "../../theme/ThemeProvider";
 
 export default function ContactPage() {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  // Detect body background theme
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      if (bg.includes("linear-gradient")) setTheme("dark");
-      else setTheme("light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    return () => observer.disconnect();
-  }, []);
+  const { theme } = useTheme();
 
   const sectionBg = { dark: "linear-gradient(135deg, #1a1f36, #2a3a6e, #00c6ff, #0072ff)", light: "#f5f7fa" };
   const textColor = { dark: "#f8fafc", light: "#111" };
@@ -40,7 +29,8 @@ export default function ContactPage() {
         textAlign: "center",
         color: textColor[theme],
         overflow: "hidden",
-        background: sectionBg[theme],
+        backgroundColor: theme === "dark" ? "#1a1f36" : sectionBg.light,
+        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "200% 200%",
         animation: theme === "dark" ? "gradientBG 60s ease infinite" : "none",
         transition: "all 0.5s ease",

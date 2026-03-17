@@ -2,39 +2,40 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-
-const caseStudies = [
-  {
-    title: "CityCare Clinic",
-    metric: "35% Increase in Patient Flow",
-    description:
-      "By automating appointment scheduling and follow-ups, CityCare Clinic reduced patient wait times and increased daily consultations.",
-  },
-  {
-    title: "HealthyLife Center",
-    metric: "40% Reduction in Billing Errors",
-    description:
-      "Integration with EMR and automated invoicing helped HealthyLife Center minimize manual errors and speed up claim processing.",
-  },
-  {
-    title: "Wellness Plus",
-    metric: "50% Faster Patient Follow-ups",
-    description:
-      "Automated reminders and notifications improved patient engagement and retention significantly for Wellness Plus.",
-  },
-];
+import { fetchCaseStudies, type CaseStudy } from "./lib/fetchCaseStudies";
+import { useTheme } from "./theme/ThemeProvider";
 
 export default function CaseStudy() {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { theme } = useTheme();
 
   useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      if (bg.includes("linear-gradient(145deg")) setTheme("dark");
-      else setTheme("light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    return () => observer.disconnect();
+    let isMounted = true;
+
+    const loadCaseStudies = async () => {
+      try {
+        const data = await fetchCaseStudies();
+
+        if (isMounted) {
+          setCaseStudies(data);
+        }
+      } catch {
+        if (isMounted) {
+          setCaseStudies([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadCaseStudies();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const bgColors = { dark: "#020617", light: "#f8fafc" };
@@ -115,9 +116,17 @@ export default function CaseStudy() {
           zIndex: 2,
         }}
       >
-        {caseStudies.map((caseStudy, i) => (
+        {loading && (
+          <p style={{ color: cardDescColor[theme], fontSize: "1rem" }}>Loading case studies...</p>
+        )}
+
+        {!loading && caseStudies.length === 0 && (
+          <p style={{ color: cardDescColor[theme], fontSize: "1rem" }}>No case studies found.</p>
+        )}
+
+        {!loading && caseStudies.map((caseStudy, i) => (
           <motion.div
-            key={i}
+            key={caseStudy._id}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: i * 0.2 }}
@@ -153,7 +162,7 @@ export default function CaseStudy() {
                 color: cardMetricColor[theme],
               }}
             >
-              {caseStudy.metric}
+              {caseStudy.results[0] || caseStudy.industry}
             </p>
             <p
               style={{
@@ -162,7 +171,7 @@ export default function CaseStudy() {
                 lineHeight: "1.6",
               }}
             >
-              {caseStudy.description}
+              {caseStudy.summary}
             </p>
           </motion.div>
         ))}

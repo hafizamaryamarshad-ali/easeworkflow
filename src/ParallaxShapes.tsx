@@ -1,20 +1,10 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useTheme } from "./theme/ThemeProvider";
 
 export default function ParallaxShapes() {
   const shapeRefs = useRef<HTMLDivElement[]>([]);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
-
-  // Track body background theme like Hero
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const bg = getComputedStyle(document.body).background;
-      if (bg.includes("linear-gradient")) setTheme("dark");
-      else setTheme("light");
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-    return () => observer.disconnect();
-  }, []);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
