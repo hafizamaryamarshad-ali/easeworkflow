@@ -31,9 +31,7 @@ export default function ProjectsList() {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -43,9 +41,7 @@ export default function ProjectsList() {
       try {
         const fetchedProjects = await fetchProjects();
 
-        if (!isMounted) {
-          return;
-        }
+        if (!isMounted) return;
 
         const mappedProjects: ProjectCard[] = fetchedProjects.map((project) => ({
           id: project._id,
@@ -54,19 +50,21 @@ export default function ProjectsList() {
           longDesc: project.longDesc,
           video:
             project.videoUrl ??
-            (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? ""),
+            (typeof project.video === "string"
+              ? project.video
+              : project.video?.asset?.url ?? ""),
           thumbnail: project.thumbnailUrl ?? "",
           clientName: project.clientName,
           industry: project.industry,
-          technologies: Array.isArray(project.technologies) ? project.technologies : [],
+          technologies: Array.isArray(project.technologies)
+            ? project.technologies
+            : [],
           updated: project.updated,
         }));
 
         setProjects(mappedProjects);
       } catch {
-        if (isMounted) {
-          setProjects([]);
-        }
+        if (isMounted) setProjects([]);
       }
     };
 
@@ -77,25 +75,43 @@ export default function ProjectsList() {
     };
   }, []);
 
-  const sectionBg = { dark: "var(--color-page-gradient-dark)", light: "var(--color-bg-light)" };
-  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
-  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
-  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
-  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
-  const cardBorder = {
-    dark: "1px solid var(--color-border-dark)",
-    light: "1px solid var(--color-border-light)",
+  const sectionBg = {
+    dark: "var(--color-page-gradient-dark)",
+    light: "var(--color-bg-light)",
   };
+
+  const textColor = {
+    dark: "var(--color-text-primary)",
+    light: "var(--color-text-dark)",
+  };
+
+  const subText = {
+    dark: "var(--color-text-muted)",
+    light: "var(--color-text-muted-light)",
+  };
+
+  // ✅ Card styles: subtle neutral shadow, more visible
+  const cardBg = {
+    dark: "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(14,165,233,0.05))",
+    light: "linear-gradient(145deg, #e0f2fe, #ffffff)",
+  };
+
+  const cardBorder = {
+    dark: "1px solid rgba(255,255,255,0.15)",
+    light: "1px solid rgba(14,165,233,0.18)",
+  };
+
   const cardShadow = {
-    dark: "var(--shadow-soft-dark)",
-    light: "var(--shadow-soft-light)",
+    dark: "0 8px 20px rgba(0,0,0,0.2)", // subtle dark shadow
+    light: "0 8px 20px rgba(0,0,0,0.1)", // subtle light shadow
   };
 
   return (
     <section
       style={{
-        padding: "50px 15px 80px",
-        backgroundColor: theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
+        padding: "50px 15px 120px",
+        backgroundColor:
+          theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "400% 400%",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
@@ -104,6 +120,7 @@ export default function ProjectsList() {
         position: "relative",
       }}
     >
+      {/* Back Button */}
       <button
         onClick={() => router.back()}
         style={{
@@ -117,13 +134,15 @@ export default function ProjectsList() {
           borderRadius: "10px",
           border:
             theme === "dark"
-              ? "1px solid var(--color-border-dark)"
-              : "1px solid var(--color-border-light)",
+              ? "1px solid rgba(255,255,255,0.2)"
+              : "1px solid rgba(0,0,0,0.15)",
           cursor: "pointer",
           fontWeight: 600,
-          background: theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)",
-          color: accent[theme],
-          transition: "all 0.2s ease",
+          background:
+            theme === "dark"
+              ? "rgba(255,255,255,0.06)"
+              : "rgba(0,0,0,0.04)",
+          color: theme === "dark" ? "#ffffff" : "#111827",
         }}
       >
         <FiArrowLeft size={18} /> Back
@@ -134,7 +153,6 @@ export default function ProjectsList() {
           fontSize: "2.2rem",
           fontWeight: 900,
           marginBottom: "40px",
-          color: textColor[theme],
         }}
       >
         All Projects
@@ -154,16 +172,18 @@ export default function ProjectsList() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            whileHover={{ y: -5, scale: 1.01 }}
+            whileHover={{ y: -6, scale: 1.02 }}
             style={{
               display: "flex",
               flexDirection: windowWidth < 640 ? "column" : "row",
               width: "100%",
               maxWidth: "900px",
+
               background: cardBg[theme],
               borderRadius: "20px",
-              boxShadow: cardShadow[theme],
+              boxShadow: cardShadow[theme], // visible shadow
               border: cardBorder[theme],
+              backdropFilter: theme === "dark" ? "blur(16px)" : "none",
               overflow: "hidden",
               cursor: "pointer",
             }}
@@ -177,25 +197,22 @@ export default function ProjectsList() {
                   width: windowWidth < 640 ? "100%" : "200px",
                   height: "200px",
                   objectFit: "cover",
-                  borderRadius: windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
+                  borderRadius:
+                    windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
                 }}
               />
             )}
+
             <div style={{ padding: "15px 20px", textAlign: "left" }}>
-              <h3 style={{ fontSize: "1.45rem", fontWeight: 700, marginBottom: "8px" }}>
+              <h3 style={{ fontSize: "1.45rem", fontWeight: 700 }}>
                 {project.title}
               </h3>
-              <p
-                style={{
-                  fontSize: "0.98rem",
-                  lineHeight: 1.6,
-                  color: subText[theme],
-                  marginBottom: "8px",
-                }}
-              >
+
+              <p style={{ color: subText[theme], lineHeight: 1.6 }}>
                 {project.shortDesc}
               </p>
-              <p style={{ fontSize: "0.98rem", color: subText[theme] }}>
+
+              <p style={{ color: subText[theme] }}>
                 Client: {project.clientName} <br />
                 Industry: {project.industry} <br />
                 Tech: {project.technologies.join(", ")} <br />

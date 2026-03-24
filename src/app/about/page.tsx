@@ -13,13 +13,31 @@ export default function AboutPage() {
     dark: "var(--color-page-gradient-dark)",
     light: "var(--color-bg-light)",
   };
-  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
-  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
-  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
-  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
+
+  const textColor = {
+    dark: "var(--color-text-primary)",
+    light: "var(--color-text-dark)",
+  };
+
+  const subText = {
+    dark: "var(--color-text-muted)",
+    light: "var(--color-text-muted-light)",
+  };
+
+  const accent = {
+    dark: "var(--color-primary)",
+    light: "var(--color-secondary)",
+  };
+
+  // ✅ Blue-tinted cards (light + dark)
+  const cardBg = {
+    dark: "linear-gradient(145deg, rgba(14,165,233,0.10), rgba(255,255,255,0.02))",
+    light: "linear-gradient(145deg, #e0f2fe, #ffffff)",
+  };
+
   const cardBorder = {
-    dark: "1px solid var(--color-border-dark)",
-    light: "1px solid var(--color-border-light)",
+    dark: "1px solid rgba(14,165,233,0.25)",
+    light: "1px solid rgba(14,165,233,0.18)",
   };
 
   return (
@@ -29,7 +47,8 @@ export default function AboutPage() {
         padding: "100px 20px",
         minHeight: "100vh",
         color: textColor[theme],
-        backgroundColor: theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
+        backgroundColor:
+          theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "400% 400%",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
@@ -46,13 +65,20 @@ export default function AboutPage() {
           borderRadius: "10px",
           border:
             theme === "dark"
-              ? "1px solid var(--color-border-dark)"
-              : "1px solid var(--color-border-light)",
-          background: theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)",
+              ? "1px solid rgba(255,255,255,0.2)"
+              : "1px solid rgba(0,0,0,0.15)",
+          background:
+            theme === "dark"
+              ? "rgba(255,255,255,0.06)"
+              : "rgba(0,0,0,0.04)",
           backdropFilter: theme === "dark" ? "blur(10px)" : "none",
-          color: accent[theme],
+          color: theme === "dark" ? "#ffffff" : "#111827",
           cursor: "pointer",
           fontWeight: 600,
+          boxShadow:
+            theme === "dark"
+              ? "0 4px 20px rgba(0,0,0,0.4)"
+              : "0 4px 15px rgba(0,0,0,0.1)",
         }}
       >
         ← Back
@@ -70,8 +96,6 @@ export default function AboutPage() {
             textAlign: "center",
             marginBottom: "30px",
             color: textColor[theme],
-            background: "none",
-            WebkitBackgroundClip: "unset",
           }}
         >
           About EaseWorkflow
@@ -125,14 +149,19 @@ export default function AboutPage() {
           ].map((item, i) => (
             <motion.div
               key={i}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -6 }}
               style={{
                 padding: "32px",
-                borderRadius: "20px",
+                borderRadius: "22px",
                 background: cardBg[theme],
-                backdropFilter: theme === "dark" ? "blur(20px)" : "none",
                 border: cardBorder[theme],
-                textAlign: "left",
+                backdropFilter: theme === "dark" ? "blur(20px)" : "none",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 25px 50px rgba(14,165,233,0.20)"
+                    : "0 10px 25px rgba(14,165,233,0.12)",
+                position: "relative",
+                transition: "all 0.35s ease",
               }}
             >
               <div style={{ color: accent[theme], marginBottom: "12px" }}>
