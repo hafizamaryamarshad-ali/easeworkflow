@@ -44,11 +44,12 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.setAttribute("data-theme", theme);
 
     if (theme === "dark") {
-      document.body.style.background =
-        "linear-gradient(145deg, #0a0f2b, #0f172a, #1e40af, #22d3ee)";
+      // Match Hero section base background in dark mode
+      document.body.style.background = "#0f172a";
       document.body.style.color = "#f8fafc";
     } else {
-      document.body.style.background = "#f5faff";
+      // Match Hero section base background in light mode
+      document.body.style.background = "#f5f7fa";
       document.body.style.color = "#0f172a";
     }
 
