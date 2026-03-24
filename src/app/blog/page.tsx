@@ -14,16 +14,20 @@ export default function BlogPage() {
   const [error, setError] = useState<string | null>(null);
 
   const pageBg = {
-    dark: "linear-gradient(135deg,#0f172a,#1e293b)",
-    light: "#f8fafc",
+    dark: "var(--color-page-gradient-dark)",
+    light: "var(--color-bg-light)",
   };
-  const textColor = { dark: "#f8fafc", light: "#0f172a" };
-  const subTextColor = { dark: "#cbd5e1", light: "#334155" };
-  const accentColor = { dark: "#00c6ff", light: "#2563eb" };
-  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
   const cardBorder = {
-    dark: "1px solid rgba(0,198,255,0.2)",
-    light: "1px solid rgba(37,99,235,0.15)",
+    dark: "1px solid var(--color-border-dark)",
+    light: "1px solid var(--color-border-light)",
+  };
+  const cardShadow = {
+    dark: "var(--shadow-soft-dark)",
+    light: "var(--shadow-soft-light)",
   };
 
   useEffect(() => {
@@ -62,7 +66,10 @@ export default function BlogPage() {
       style={{
         padding: "50px 20px 80px",
         minHeight: "100vh",
-        background: pageBg[theme],
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
+        backgroundImage: theme === "dark" ? pageBg.dark : "none",
+        backgroundSize: "400% 400%",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColor[theme],
         position: "relative",
       }}
@@ -73,10 +80,13 @@ export default function BlogPage() {
           <button
             style={{
               padding: "8px 16px",
-              borderRadius: "20px",
-              border: `1px solid ${accentColor[theme]}`,
-              background: "transparent",
-              color: accentColor[theme],
+              borderRadius: "10px",
+              border:
+                theme === "dark"
+                  ? "1px solid var(--color-border-dark)"
+                  : "1px solid var(--color-border-light)",
+              background: theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)",
+              color: accent[theme],
               cursor: "pointer",
               fontWeight: 600,
             }}
@@ -86,7 +96,14 @@ export default function BlogPage() {
         </Link>
       </div>
 
-      <h1 style={{ textAlign: "center", fontSize: "3rem", fontWeight: 900 }}>
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "3rem",
+          fontWeight: 900,
+          color: textColor[theme],
+        }}
+      >
         Our Blog
       </h1>
 
@@ -100,11 +117,11 @@ export default function BlogPage() {
         }}
       >
         {loading ? (
-          <p>Loading blogs...</p>
+          <p style={{ color: subText[theme] }}>Loading blogs...</p>
         ) : error ? (
-          <p>{error}</p>
+          <p style={{ color: subText[theme] }}>{error}</p>
         ) : blogs.length === 0 ? (
-          <p>No blogs yet.</p>
+          <p style={{ color: subText[theme] }}>No blogs yet.</p>
         ) : (
           blogs.map((blog) => (
             <Link
@@ -115,23 +132,24 @@ export default function BlogPage() {
               <motion.div
                 whileHover={{ scale: 1.07 }}
                 style={{
-                  width: "300px",
+                  width: "18.75rem",
                   padding: "30px",
                   borderRadius: "20px",
                   background: cardBg[theme],
                   backdropFilter: theme === "dark" ? "blur(20px)" : "none",
                   border: cardBorder[theme],
+                  boxShadow: cardShadow[theme],
                   cursor: "pointer",
                   color: textColor[theme],
                 }}
               >
-                  <FiFileText size={26} color={accentColor[theme]} />
+                  <FiFileText size={26} color={accent[theme]} />
 
                 <h3 style={{ marginTop: "15px", fontWeight: 800 }}>
                   {blog.title}
                 </h3>
 
-                <p style={{ marginTop: "10px", color: subTextColor[theme] }}>
+                <p style={{ marginTop: "10px", color: subText[theme] }}>
                   {blog.excerpt}
                 </p>
               </motion.div>
@@ -139,6 +157,20 @@ export default function BlogPage() {
           ))
         )}
       </div>
+
+      <style jsx>{`
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </div>
   );
 }

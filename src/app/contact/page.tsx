@@ -7,12 +7,19 @@ import { useTheme } from "../../theme/ThemeProvider";
 export default function ContactPage() {
   const { theme } = useTheme();
 
-  const sectionBg = { dark: "linear-gradient(135deg, #1a1f36, #2a3a6e, #00c6ff, #0072ff)", light: "#f5f7fa" };
-  const textColor = { dark: "#f8fafc", light: "#111" };
-  const cardBg = { dark: "rgba(255,255,255,0.12)", light: "#ffffff" };
-  const cardTextColor = { dark: "#fff", light: "#111" };
-  const iconColor = { dark: "#00c6ff", light: "#3b82f6" };
-  const boxShadow = { dark: "0 12px 30px rgba(0,0,0,0.25)", light: "0 8px 20px rgba(0,0,0,0.1)" };
+  const sectionBg = { dark: "var(--color-page-gradient-dark)", light: "var(--color-bg-light)" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
+  const cardBorder = {
+    dark: "1px solid var(--color-border-dark)",
+    light: "1px solid var(--color-border-light)",
+  };
+  const cardShadow = {
+    dark: "var(--shadow-soft-dark)",
+    light: "var(--shadow-soft-light)",
+  };
 
   const contacts = [
     { label: "Email", value: "info@easeworkflow.com", icon: <FiMail size={22} /> },
@@ -29,17 +36,21 @@ export default function ContactPage() {
         textAlign: "center",
         color: textColor[theme],
         overflow: "hidden",
-        backgroundColor: theme === "dark" ? "#1a1f36" : sectionBg.light,
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : sectionBg.light,
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: "200% 200%",
-        animation: theme === "dark" ? "gradientBG 60s ease infinite" : "none",
+        backgroundSize: "400% 400%",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         transition: "all 0.5s ease",
       }}
     >
       {/* Particles */}
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="particle" style={{ "--i": i.toString(), background: iconColor[theme] } as React.CSSProperties}></div>
+          <div
+            key={i}
+            className="particle"
+            style={{ "--i": i.toString(), background: accent[theme] } as React.CSSProperties}
+          ></div>
         ))}
       </div>
 
@@ -54,9 +65,12 @@ export default function ContactPage() {
           fontWeight: 900,
           marginBottom: "40px",
           fontFamily: "'Roboto', sans-serif",
-          background: theme === "dark" ? "linear-gradient(90deg, #00c6ff, #0072ff)" : "none",
+          background:
+            theme === "dark"
+              ? "linear-gradient(90deg, var(--color-primary), var(--color-secondary))"
+              : "none",
           WebkitBackgroundClip: theme === "dark" ? "text" : "unset",
-          color: theme === "dark" ? "transparent" : "#111",
+          color: theme === "dark" ? "transparent" : textColor.light,
           transition: "all 0.5s ease",
         }}
       >
@@ -68,7 +82,14 @@ export default function ContactPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, delay: 0.3 }}
-        style={{ position: "relative", fontSize: "1.2rem", lineHeight: 1.7, maxWidth: "800px", margin: "auto", color: textColor[theme] }}
+        style={{
+          position: "relative",
+          fontSize: "1.2rem",
+          lineHeight: 1.7,
+          maxWidth: "50rem",
+          margin: "auto",
+          color: subText[theme],
+        }}
       >
         Have questions or want a free consultation? Reach out to us and our team will get back to you promptly.
       </motion.p>
@@ -81,8 +102,7 @@ export default function ContactPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{
-              scale: 1.02,
-              boxShadow: theme === "dark" ? "0 15px 40px rgba(0,198,255,0.45)" : "0 10px 30px rgba(59,130,246,0.2)",
+              boxShadow: cardShadow[theme],
             }}
             transition={{ duration: 0.6, delay: i * 0.2 }}
             style={{
@@ -93,16 +113,17 @@ export default function ContactPage() {
               borderRadius: "15px",
               background: cardBg[theme],
               backdropFilter: theme === "dark" ? "blur(20px)" : "none",
-              boxShadow: boxShadow[theme],
-              color: cardTextColor[theme],
-              minWidth: "250px",
-              maxWidth: "400px",
+              boxShadow: cardShadow[theme],
+              border: cardBorder[theme],
+              color: textColor[theme],
+              minWidth: "15.625rem",
+              maxWidth: "25rem",
               transition: "all 0.5s ease",
               cursor: "pointer",
             }}
           >
-            <span style={{ color: iconColor[theme] }}>{item.icon}</span>
-            <p style={{ fontSize: "1rem", margin: 0, color: cardTextColor[theme] }}>
+            <span style={{ color: accent[theme] }}>{item.icon}</span>
+            <p style={{ fontSize: "1rem", margin: 0, color: textColor[theme] }}>
               <strong>{item.label}:</strong> {item.value}
             </p>
           </motion.div>

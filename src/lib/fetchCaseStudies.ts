@@ -81,44 +81,69 @@ const resolveSlug = (slug: SanitySlug): string => {
   return slug?.current ?? "";
 };
 
+const CASE_STUDIES_CACHE_TTL_MS = 60_000;
+
+let caseStudiesCache: CaseStudy[] | null = null;
+let caseStudiesCacheTimestamp = 0;
+let caseStudiesInFlight: Promise<CaseStudy[]> | null = null;
+
 export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
-  try {
-    const data = (await sanityFetch(caseStudiesQuery, {}, "fetchCaseStudies")) as
-      | CaseStudyQueryResult[]
-      | null;
-
-    if (!Array.isArray(data)) {
-      return [];
-    }
-
-    const mapped = data.map((study) => ({
-      _id: study._id,
-      slug: resolveSlug(study.slug),
-      title: study.title,
-      summary: study.summary,
-      featuredImage: study.featuredImage,
-      client: study.client,
-      industry: study.industry,
-      problem: study.problem,
-      solution: study.solution,
-      tools: Array.isArray(study.tools) ? study.tools : [],
-      results: Array.isArray(study.results) ? study.results : [],
-      featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),
-    }));
-
-    if (process.env.NODE_ENV === "production") {
-      console.info("[Sanity] fetchCaseStudies mapped results", {
-        count: mapped.length,
-        projectId: sanityRuntimeConfig.projectId,
-        dataset: sanityRuntimeConfig.dataset,
-        useCdn: sanityRuntimeConfig.useCdn,
-        hasReadToken: sanityRuntimeConfig.hasReadToken,
-      });
-    }
-
-    return mapped;
-  } catch (error) {
-    console.error("[Sanity] fetchCaseStudies failed", error);
-    throw error;
+  if (caseStudiesCache && Date.now() - caseStudiesCacheTimestamp < CASE_STUDIES_CACHE_TTL_MS) {
+    return caseStudiesCache;
   }
+
+  if (caseStudiesInFlight) {
+    return caseStudiesInFlight;
+  }
+
+  caseStudiesInFlight = (async () => {
+    try {
+      const data = (await sanityFetch(caseStudiesQuery, {}, "fetchCaseStudies")) as
+        | CaseStudyQueryResult[]
+        | null;
+
+      if (!Array.isArray(data)) {
+        caseStudiesCache = [];
+        caseStudiesCacheTimestamp = Date.now();
+        return [];
+      }
+
+      const mapped = data.map((study) => ({
+        _id: study._id,
+        slug: resolveSlug(study.slug),
+        title: study.title,
+        summary: study.summary,
+        featuredImage: study.featuredImage,
+        client: study.client,
+        industry: study.industry,
+        problem: study.problem,
+        solution: study.solution,
+        tools: Array.isArray(study.tools) ? study.tools : [],
+        results: Array.isArray(study.results) ? study.results : [],
+        featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),
+      }));
+
+      if (process.env.NODE_ENV === "production") {
+        console.info("[Sanity] fetchCaseStudies mapped results", {
+          count: mapped.length,
+          projectId: sanityRuntimeConfig.projectId,
+          dataset: sanityRuntimeConfig.dataset,
+          useCdn: sanityRuntimeConfig.useCdn,
+          hasReadToken: sanityRuntimeConfig.hasReadToken,
+        });
+      }
+
+      caseStudiesCache = mapped;
+      caseStudiesCacheTimestamp = Date.now();
+
+      return mapped;
+    } catch (error) {
+      console.error("[Sanity] fetchCaseStudies failed", error);
+      throw error;
+    } finally {
+      caseStudiesInFlight = null;
+    }
+  })();
+
+  return caseStudiesInFlight;
 };

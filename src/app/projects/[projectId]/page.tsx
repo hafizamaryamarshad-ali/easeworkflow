@@ -59,13 +59,24 @@ export default function ProjectDetailPage() {
     };
   }, [projectId]);
 
-  const bgColors = { dark: "#0a0f1e", light: "#f8fafc" };
-  const textColors = { dark: "#f8fafc", light: "#0f172a" };
-  const subTextColor = { dark: "#cbd5f5", light: "#475569" };
+  const bgColors = { dark: "var(--color-bg)", light: "var(--color-bg-light)" };
+  const textColors = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subTextColor = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
 
   if (loading) {
     return (
-      <div style={{ color: textColors[theme], textAlign: "center", padding: "50px" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          color: textColors[theme],
+          textAlign: "center",
+          padding: "50px",
+          backgroundColor: bgColors[theme],
+          backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none",
+          backgroundSize: "400% 400%",
+          animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
+        }}
+      >
         Loading project...
       </div>
     );
@@ -73,7 +84,18 @@ export default function ProjectDetailPage() {
 
   if (!project) {
     return (
-      <div style={{ color: textColors[theme], textAlign: "center", padding: "50px" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          color: textColors[theme],
+          textAlign: "center",
+          padding: "50px",
+          backgroundColor: bgColors[theme],
+          backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none",
+          backgroundSize: "400% 400%",
+          animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
+        }}
+      >
         Project not found
       </div>
     );
@@ -90,7 +112,10 @@ export default function ProjectDetailPage() {
         width: "100%",
         padding: "100px 20px",
         boxSizing: "border-box",
-        background: bgColors[theme],
+        backgroundColor: bgColors[theme],
+        backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none",
+        backgroundSize: "400% 400%",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColors[theme],
         display: "flex",
         flexDirection: "column",
@@ -108,7 +133,7 @@ export default function ProjectDetailPage() {
           position: "absolute",
           width: "700px",
           height: "700px",
-          background: "radial-gradient(circle, #0ea5e955, transparent)",
+          background: "var(--glow-primary-soft)",
           filter: "blur(200px)",
           top: "-200px",
           left: "-200px",
@@ -123,7 +148,7 @@ export default function ProjectDetailPage() {
           position: "absolute",
           width: "600px",
           height: "600px",
-          background: "radial-gradient(circle, #2563eb55, transparent)",
+          background: "var(--glow-secondary-soft)",
           filter: "blur(200px)",
           bottom: "-200px",
           right: "-200px",
@@ -148,7 +173,8 @@ export default function ProjectDetailPage() {
             style={{
               width: "100%",
               borderRadius: "20px",
-              boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+              boxShadow: "var(--shadow-media-dark)",
+              border: theme === "dark" ? "1px solid var(--color-border-dark)" : "1px solid var(--color-border-light)",
             }}
           />
         )}
@@ -161,7 +187,8 @@ export default function ProjectDetailPage() {
               minHeight: "420px",
               borderRadius: "20px",
               overflow: "hidden",
-              boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+              boxShadow: "var(--shadow-media-dark)",
+              border: theme === "dark" ? "1px solid var(--color-border-dark)" : "1px solid var(--color-border-light)",
             }}
           >
             <Image
@@ -232,6 +259,20 @@ export default function ProjectDetailPage() {
           </p>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -24,16 +24,16 @@ export default function CaseStudyDetail() {
   const [loading, setLoading] = useState(true);
 
   const pageBg = {
-    dark: "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)",
-    light: "#f8fafc",
+    dark: "var(--color-page-gradient-dark)",
+    light: "var(--color-bg-light)",
   };
-  const textColor = { dark: "#f8fafc", light: "#0f172a" };
-  const subTextColor = { dark: "#e2e8f0", light: "#334155" };
-  const accentColor = { dark: "#00c6ff", light: "#2563eb" };
-  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subTextColor = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accentColor = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
   const cardBorder = {
-    dark: "2px solid rgba(0,198,255,0.2)",
-    light: "2px solid rgba(37,99,235,0.15)",
+    dark: "1px solid var(--color-border-dark)",
+    light: "1px solid var(--color-border-light)",
   };
 
   useEffect(() => {
@@ -79,10 +79,10 @@ export default function CaseStudyDetail() {
         style={{
           padding: "100px 20px",
           minHeight: "100vh",
-          backgroundColor: theme === "dark" ? "#0f1c2c" : pageBg.light,
+          backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
           backgroundImage: theme === "dark" ? pageBg.dark : "none",
           backgroundSize: "400% 400%",
-          animation: theme === "dark" ? "gradientBG 30s ease infinite" : "none",
+          animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
           color: textColor[theme],
           position: "relative",
           textAlign: "center",
@@ -99,10 +99,10 @@ export default function CaseStudyDetail() {
         style={{
           padding: "100px 20px",
           minHeight: "100vh",
-          backgroundColor: theme === "dark" ? "#0f1c2c" : pageBg.light,
+          backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
           backgroundImage: theme === "dark" ? pageBg.dark : "none",
           backgroundSize: "400% 400%",
-          animation: theme === "dark" ? "gradientBG 30s ease infinite" : "none",
+          animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
           color: textColor[theme],
           position: "relative",
           textAlign: "center",
@@ -118,10 +118,10 @@ export default function CaseStudyDetail() {
       style={{
         padding: "100px 20px",
         minHeight: "100vh",
-        backgroundColor: theme === "dark" ? "#0f1c2c" : pageBg.light,
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
         backgroundImage: theme === "dark" ? pageBg.dark : "none",
         backgroundSize: "400% 400%",
-        animation: theme === "dark" ? "gradientBG 30s ease infinite" : "none",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColor[theme],
         position: "relative",
       }}
@@ -140,9 +140,9 @@ export default function CaseStudyDetail() {
           borderRadius: "10px",
           border:
             theme === "dark"
-              ? "1px solid rgba(0,198,255,0.5)"
-              : "1px solid rgba(37,99,235,0.2)",
-          background: theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff",
+              ? "1px solid var(--color-border-dark)"
+              : "1px solid var(--color-border-light)",
+          background: theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)",
           backdropFilter: theme === "dark" ? "blur(10px)" : "none",
           color: accentColor[theme],
           cursor: "pointer",
@@ -151,11 +151,11 @@ export default function CaseStudyDetail() {
         }}
         onMouseOver={(e) =>
           (e.currentTarget.style.background =
-            theme === "dark" ? "rgba(0,198,255,0.2)" : "#eff6ff")
+            theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-light)")
         }
         onMouseOut={(e) =>
           (e.currentTarget.style.background =
-            theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff")
+            theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)")
         }
       >
         <FiArrowLeft />
@@ -194,8 +194,8 @@ export default function CaseStudyDetail() {
             border: cardBorder[theme],
             boxShadow:
               theme === "dark"
-                ? "0 20px 50px rgba(0,0,0,0.3)"
-                : "0 16px 36px rgba(15,23,42,0.12)",
+                ? "var(--shadow-detail-dark)"
+                : "var(--shadow-detail-light)",
           }}
         >
           <p

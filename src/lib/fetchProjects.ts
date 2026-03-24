@@ -53,40 +53,65 @@ const projectsQuery = groq`
   }
 `;
 
+const PROJECTS_CACHE_TTL_MS = 60_000;
+
+let projectsCache: Project[] | null = null;
+let projectsCacheTimestamp = 0;
+let projectsInFlight: Promise<Project[]> | null = null;
+
 export const fetchProjects = async (): Promise<Project[]> => {
-  try {
-    const data = (await sanityFetch(projectsQuery, {}, "fetchProjects")) as
-      | ProjectQueryResult[]
-      | null;
-
-    if (!Array.isArray(data)) {
-      return [];
-    }
-
-    const mapped = data.map((project) => ({
-      ...project,
-      videoUrl:
-        typeof project.video === "string"
-          ? project.video
-          : project.video?.asset?.url ?? null,
-      thumbnailUrl: project.thumbnail?.asset
-        ? urlFor(project.thumbnail).width(1200).height(800).fit("crop").auto("format").url()
-        : null,
-    }));
-
-    if (process.env.NODE_ENV === "production") {
-      console.info("[Sanity] fetchProjects mapped results", {
-        count: mapped.length,
-        projectId: sanityRuntimeConfig.projectId,
-        dataset: sanityRuntimeConfig.dataset,
-        useCdn: sanityRuntimeConfig.useCdn,
-        hasReadToken: sanityRuntimeConfig.hasReadToken,
-      });
-    }
-
-    return mapped;
-  } catch (error) {
-    console.error("[Sanity] fetchProjects failed", error);
-    throw error;
+  if (projectsCache && Date.now() - projectsCacheTimestamp < PROJECTS_CACHE_TTL_MS) {
+    return projectsCache;
   }
+
+  if (projectsInFlight) {
+    return projectsInFlight;
+  }
+
+  projectsInFlight = (async () => {
+    try {
+      const data = (await sanityFetch(projectsQuery, {}, "fetchProjects")) as
+        | ProjectQueryResult[]
+        | null;
+
+      if (!Array.isArray(data)) {
+        projectsCache = [];
+        projectsCacheTimestamp = Date.now();
+        return [];
+      }
+
+      const mapped = data.map((project) => ({
+        ...project,
+        videoUrl:
+          typeof project.video === "string"
+            ? project.video
+            : project.video?.asset?.url ?? null,
+        thumbnailUrl: project.thumbnail?.asset
+          ? urlFor(project.thumbnail).width(1200).height(800).fit("crop").auto("format").url()
+          : null,
+      }));
+
+      if (process.env.NODE_ENV === "production") {
+        console.info("[Sanity] fetchProjects mapped results", {
+          count: mapped.length,
+          projectId: sanityRuntimeConfig.projectId,
+          dataset: sanityRuntimeConfig.dataset,
+          useCdn: sanityRuntimeConfig.useCdn,
+          hasReadToken: sanityRuntimeConfig.hasReadToken,
+        });
+      }
+
+      projectsCache = mapped;
+      projectsCacheTimestamp = Date.now();
+
+      return mapped;
+    } catch (error) {
+      console.error("[Sanity] fetchProjects failed", error);
+      throw error;
+    } finally {
+      projectsInFlight = null;
+    }
+  })();
+
+  return projectsInFlight;
 };

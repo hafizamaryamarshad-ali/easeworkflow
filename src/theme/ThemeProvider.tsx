@@ -48,7 +48,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
         "linear-gradient(145deg, #0a0f2b, #0f172a, #1e40af, #22d3ee)";
       document.body.style.color = "#f8fafc";
     } else {
-      document.body.style.background = "#f5f7fa";
+      document.body.style.background = "#f5faff";
       document.body.style.color = "#0f172a";
     }
 

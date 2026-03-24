@@ -14,17 +14,21 @@ export default function CaseStudiesPage() {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const pageBg = {
-    dark: "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)",
-    light: "#f8fafc",
+  const sectionBg = {
+    dark: "var(--color-page-gradient-dark)",
+    light: "var(--color-bg-light)",
   };
-  const textColor = { dark: "#f8fafc", light: "#0f172a" };
-  const subTextColor = { dark: "#e2e8f0", light: "#334155" };
-  const accentColor = { dark: "#00c6ff", light: "#2563eb" };
-  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
   const cardBorder = {
-    dark: "2px solid rgba(0,198,255,0.2)",
-    light: "2px solid rgba(37,99,235,0.15)",
+    dark: "1px solid var(--color-border-dark)",
+    light: "1px solid var(--color-border-light)",
+  };
+  const cardShadow = {
+    dark: "var(--shadow-soft-dark)",
+    light: "var(--shadow-soft-light)",
   };
 
   useEffect(() => {
@@ -60,10 +64,10 @@ export default function CaseStudiesPage() {
       style={{
         padding: "80px 20px",
         minHeight: "100vh",
-        backgroundColor: theme === "dark" ? "#0f1c2c" : pageBg.light,
-        backgroundImage: theme === "dark" ? pageBg.dark : "none",
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
+        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "400% 400%",
-        animation: theme === "dark" ? "gradientBG 30s ease infinite" : "none",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         textAlign: "center",
         position: "relative",
       }}
@@ -83,23 +87,15 @@ export default function CaseStudiesPage() {
           borderRadius: "8px",
           border:
             theme === "dark"
-              ? "1px solid rgba(0,198,255,0.5)"
-              : "1px solid rgba(37,99,235,0.2)",
-          background: theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff",
+              ? "1px solid var(--color-border-dark)"
+              : "1px solid var(--color-border-light)",
+          background: theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)",
           backdropFilter: theme === "dark" ? "blur(10px)" : "none",
-          color: accentColor[theme],
+          color: accent[theme],
           cursor: "pointer",
           fontWeight: 600,
           transition: "0.3s ease",
         }}
-        onMouseOver={(e) =>
-          (e.currentTarget.style.background =
-            theme === "dark" ? "rgba(0,198,255,0.2)" : "#eff6ff")
-        }
-        onMouseOut={(e) =>
-          (e.currentTarget.style.background =
-            theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff")
-        }
       >
         <FiArrowLeft size={14} />
         Back
@@ -132,13 +128,13 @@ export default function CaseStudiesPage() {
         }}
       >
         {loading && (
-          <p style={{ color: subTextColor[theme], fontSize: "1rem", opacity: 0.9 }}>
+          <p style={{ color: subText[theme], fontSize: "1rem", opacity: 0.9 }}>
             Loading case studies...
           </p>
         )}
 
         {!loading && caseStudies.length === 0 && (
-          <p style={{ color: subTextColor[theme], fontSize: "1rem", opacity: 0.9 }}>
+          <p style={{ color: subText[theme], fontSize: "1rem", opacity: 0.9 }}>
             No case studies found.
           </p>
         )}
@@ -152,10 +148,7 @@ export default function CaseStudiesPage() {
             viewport={{ once: true }}
             whileHover={{
               scale: 1.05,
-              boxShadow:
-                theme === "dark"
-                  ? "0 25px 60px rgba(0,198,255,0.45)"
-                  : "0 20px 40px rgba(37,99,235,0.2)",
+              boxShadow: cardShadow[theme],
             }}
             transition={{ duration: 0.5, delay: i * 0.2 }}
             style={{
@@ -198,7 +191,7 @@ export default function CaseStudiesPage() {
                   lineHeight: 1.6,
                   opacity: 0.9,
                   marginBottom: "15px",
-                  color: subTextColor[theme],
+                  color: subText[theme],
                 }}
               >
                 {study.summary}
@@ -210,7 +203,7 @@ export default function CaseStudiesPage() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  color: accentColor[theme],
+                    color: accent[theme],
                   fontWeight: 600,
                   textDecoration: "none",
                 }}

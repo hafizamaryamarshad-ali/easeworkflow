@@ -11,9 +11,9 @@ export default function ProjectsPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const sectionBg = { dark: "#020617", light: "#f8fafc" };
-  const textColor = { dark: "#f8fafc", light: "#0f172a" };
-  const subTextColor = { dark: "#cbd5e1", light: "#475569" };
+  const sectionBg = { dark: "var(--color-bg)", light: "var(--color-bg-light)" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subTextColor = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
 
   useEffect(() => {
     let isMounted = true;
@@ -47,7 +47,7 @@ export default function ProjectsPage() {
 
   if (loading) {
     return (
-      <section style={{ padding: "80px 20px", textAlign: "center", background: sectionBg[theme], color: textColor[theme] }}>
+      <section style={{ padding: "80px 20px", textAlign: "center", backgroundColor: sectionBg[theme], backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none", backgroundSize: "400% 400%", animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none", color: textColor[theme] }}>
         <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
         <p>Loading projects...</p>
       </section>
@@ -56,7 +56,7 @@ export default function ProjectsPage() {
 
   if (error) {
     return (
-      <section style={{ padding: "80px 20px", textAlign: "center", background: sectionBg[theme], color: textColor[theme] }}>
+      <section style={{ padding: "80px 20px", textAlign: "center", backgroundColor: sectionBg[theme], backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none", backgroundSize: "400% 400%", animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none", color: textColor[theme] }}>
         <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
         <p>{error}</p>
       </section>
@@ -65,7 +65,7 @@ export default function ProjectsPage() {
 
   if (projects.length === 0) {
     return (
-      <section style={{ padding: "80px 20px", textAlign: "center", background: sectionBg[theme], color: textColor[theme] }}>
+      <section style={{ padding: "80px 20px", textAlign: "center", backgroundColor: sectionBg[theme], backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none", backgroundSize: "400% 400%", animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none", color: textColor[theme] }}>
         <h2 style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "40px" }}>All Projects</h2>
         <p>No projects found.</p>
       </section>
@@ -85,7 +85,8 @@ export default function ProjectsPage() {
       style={{
         padding: "80px 20px",
         textAlign: "center",
-        background: sectionBg[theme],
+        backgroundColor: sectionBg[theme],
+        backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none",
         color: textColor[theme],
       }}
     >
@@ -102,8 +103,8 @@ export default function ProjectsPage() {
           style={{
             padding: "10px 25px",
             borderRadius: "8px",
-            background: theme === "dark" ? "#0ea5e9" : "#2563eb",
-            color: "#fff",
+            background: theme === "dark" ? "var(--color-btn-gradient)" : "var(--color-btn-gradient-light)",
+            color: theme === "dark" ? "var(--color-text-primary)" : "var(--color-text-dark)",
             border: "none",
             cursor: "pointer",
             fontWeight: 700,
@@ -116,8 +117,8 @@ export default function ProjectsPage() {
           style={{
             padding: "10px 25px",
             borderRadius: "8px",
-            background: theme === "dark" ? "#0ea5e9" : "#2563eb",
-            color: "#fff",
+            background: theme === "dark" ? "var(--color-btn-gradient)" : "var(--color-btn-gradient-light)",
+            color: theme === "dark" ? "var(--color-text-primary)" : "var(--color-text-dark)",
             border: "none",
             cursor: "pointer",
             fontWeight: 700,

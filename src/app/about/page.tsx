@@ -10,16 +10,16 @@ export default function AboutPage() {
   const { theme } = useTheme();
 
   const sectionBg = {
-    dark: "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)",
-    light: "#f8fafc",
+    dark: "var(--color-page-gradient-dark)",
+    light: "var(--color-bg-light)",
   };
-  const textColor = { dark: "#f8fafc", light: "#0f172a" };
-  const subText = { dark: "#e2e8f0", light: "#334155" };
-  const accent = { dark: "#00c6ff", light: "#2563eb" };
-  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
   const cardBorder = {
-    dark: "2px solid rgba(0,198,255,0.2)",
-    light: "2px solid rgba(37,99,235,0.15)",
+    dark: "1px solid var(--color-border-dark)",
+    light: "1px solid var(--color-border-light)",
   };
 
   return (
@@ -29,7 +29,7 @@ export default function AboutPage() {
         padding: "100px 20px",
         minHeight: "100vh",
         color: textColor[theme],
-        backgroundColor: theme === "dark" ? "#0f1c2c" : sectionBg.light,
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "400% 400%",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
@@ -46,9 +46,9 @@ export default function AboutPage() {
           borderRadius: "10px",
           border:
             theme === "dark"
-              ? "1px solid rgba(0,198,255,0.4)"
-              : "1px solid rgba(37,99,235,0.2)",
-          background: theme === "dark" ? "rgba(255,255,255,0.08)" : "#ffffff",
+              ? "1px solid var(--color-border-dark)"
+              : "1px solid var(--color-border-light)",
+          background: theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)",
           backdropFilter: theme === "dark" ? "blur(10px)" : "none",
           color: accent[theme],
           cursor: "pointer",
@@ -58,7 +58,7 @@ export default function AboutPage() {
         ← Back
       </button>
 
-      <div style={{ maxWidth: "1100px", margin: "auto" }}>
+      <div style={{ maxWidth: "68.75rem", margin: "auto" }}>
         {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
@@ -85,7 +85,7 @@ export default function AboutPage() {
           style={{
             fontSize: "1.15rem",
             lineHeight: 1.8,
-            maxWidth: "850px",
+            maxWidth: "53.125rem",
             margin: "auto",
             textAlign: "center",
             opacity: 0.95,
@@ -96,49 +96,6 @@ export default function AboutPage() {
           AI-driven solutions, workflow optimization, and digital transformation
           to modern healthcare institutions.
         </motion.p>
-
-        {/* Images Row */}
-        <div
-          style={{
-            marginTop: "90px",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "40px",
-            alignItems: "center",
-          }}
-        >
-          <motion.img
-            src="images/about-illustration.png"
-            alt="Healthcare Automation"
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            style={{
-              width: "100%",
-              borderRadius: "18px",
-              boxShadow:
-                theme === "dark"
-                  ? "0 18px 50px rgba(0,0,0,0.3)"
-                  : "0 12px 30px rgba(15,23,42,0.12)",
-            }}
-          />
-
-          <motion.img
-            src="images/team-collaboration.png"
-            alt="Team Collaboration"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            style={{
-              width: "100%",
-              borderRadius: "18px",
-              boxShadow:
-                theme === "dark"
-                  ? "0 18px 50px rgba(0,0,0,0.3)"
-                  : "0 12px 30px rgba(15,23,42,0.12)",
-            }}
-          />
-        </div>
 
         {/* Cards */}
         <div
@@ -197,6 +154,49 @@ export default function AboutPage() {
               </p>
             </motion.div>
           ))}
+        </div>
+
+        {/* Images Row */}
+        <div
+          style={{
+            marginTop: "90px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "40px",
+            alignItems: "center",
+          }}
+        >
+          <motion.img
+            src="images/about-illustration.png"
+            alt="Healthcare Automation"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            style={{
+              width: "100%",
+              borderRadius: "18px",
+              boxShadow:
+                theme === "dark"
+                  ? "var(--shadow-soft-dark)"
+                  : "var(--shadow-soft-light)",
+            }}
+          />
+
+          <motion.img
+            src="images/team-collaboration.png"
+            alt="Team Collaboration"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            style={{
+              width: "100%",
+              borderRadius: "18px",
+              boxShadow:
+                theme === "dark"
+                  ? "var(--shadow-soft-dark)"
+                  : "var(--shadow-soft-light)",
+            }}
+          />
         </div>
       </div>
 

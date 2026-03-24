@@ -25,12 +25,12 @@ export default function BlogDetail() {
   const [error, setError] = useState<string | null>(null);
 
   const pageBg = {
-    dark: "linear-gradient(135deg,#0f172a,#1e293b)",
-    light: "#f8fafc",
+    dark: "var(--color-page-gradient-dark)",
+    light: "var(--color-bg-light)",
   };
-  const textColor = { dark: "#f8fafc", light: "#0f172a" };
-  const subTextColor = { dark: "#cbd5e1", light: "#334155" };
-  const accentColor = { dark: "#00c6ff", light: "#2563eb" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subTextColor = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accentColor = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
 
   useEffect(() => {
     let isMounted = true;
@@ -84,18 +84,69 @@ export default function BlogDetail() {
     }
   };
 
-  if (loading) return <p style={{ color: textColor[theme], padding: "50px" }}>Loading...</p>;
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          padding: "60px",
+          backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
+          backgroundImage: theme === "dark" ? pageBg.dark : "none",
+          backgroundSize: "400% 400%",
+          animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
+          color: textColor[theme],
+        }}
+      >
+        <p style={{ padding: "50px" }}>Loading...</p>
+      </div>
+    );
+  }
 
-  if (error) return <p style={{ color: textColor[theme], padding: "50px" }}>{error}</p>;
+  if (error) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          padding: "60px",
+          backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
+          backgroundImage: theme === "dark" ? pageBg.dark : "none",
+          backgroundSize: "400% 400%",
+          animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
+          color: textColor[theme],
+        }}
+      >
+        <p style={{ padding: "50px" }}>{error}</p>
+      </div>
+    );
+  }
 
-  if (!blog) return <p style={{ color: textColor[theme], padding: "50px" }}>Blog not found.</p>;
+  if (!blog) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          padding: "60px",
+          backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
+          backgroundImage: theme === "dark" ? pageBg.dark : "none",
+          backgroundSize: "400% 400%",
+          animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
+          color: textColor[theme],
+        }}
+      >
+        <p style={{ padding: "50px" }}>Blog not found.</p>
+      </div>
+    );
+  }
 
   return (
     <div
       style={{
         minHeight: "100vh",
         padding: "60px",
-        background: pageBg[theme],
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
+        backgroundImage: theme === "dark" ? pageBg.dark : "none",
+        backgroundSize: "400% 400%",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColor[theme],
       }}
     >
@@ -123,35 +174,24 @@ export default function BlogDetail() {
       </p>
 
       <div style={{ marginTop: "40px" }}>
-        <button
-          onClick={() => router.push(`/blog/edit/${slug}`)}
-          style={{
-            padding: "10px 18px",
-            marginRight: "10px",
-            background: "#0072ff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          Edit
-        </button>
+       
 
-        <button
-          onClick={handleDelete}
-          style={{
-            padding: "10px 18px",
-            background: "#ef4444",
-            color: "#fff",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          Delete
-        </button>
+        
       </div>
+
+      <style jsx>{`
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </div>
   );
 }

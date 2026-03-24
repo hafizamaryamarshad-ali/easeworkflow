@@ -77,18 +77,29 @@ export default function ProjectsList() {
     };
   }, []);
 
-  const bgColors = { dark: "#020617", light: "#f8fafc" };
-  const textColors = { dark: "#f8fafc", light: "#0f172a" };
-  const cardBg = { dark: "rgba(30,41,59,0.85)", light: "#ffffff" };
-  const subTextColor = { dark: "#cbd5f5", light: "#475569" };
-  const boxShadow = { dark: "0 25px 50px rgba(0,0,0,0.45)", light: "0 12px 28px rgba(59,130,246,0.15)" };
+  const sectionBg = { dark: "var(--color-page-gradient-dark)", light: "var(--color-bg-light)" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
+  const cardBorder = {
+    dark: "1px solid var(--color-border-dark)",
+    light: "1px solid var(--color-border-light)",
+  };
+  const cardShadow = {
+    dark: "var(--shadow-soft-dark)",
+    light: "var(--shadow-soft-light)",
+  };
 
   return (
     <section
       style={{
         padding: "50px 15px 80px",
-        background: bgColors[theme],
-        color: textColors[theme],
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
+        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
+        backgroundSize: "400% 400%",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
+        color: textColor[theme],
         textAlign: "center",
         position: "relative",
       }}
@@ -104,20 +115,28 @@ export default function ProjectsList() {
           gap: "6px",
           padding: "6px 12px",
           borderRadius: "10px",
-          border: "none",
+          border:
+            theme === "dark"
+              ? "1px solid var(--color-border-dark)"
+              : "1px solid var(--color-border-light)",
           cursor: "pointer",
           fontWeight: 600,
-          background: theme === "dark" ? "#0f172a" : "#e0f2fe",
-          color: theme === "dark" ? "#fff" : "#0f172a",
+          background: theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)",
+          color: accent[theme],
           transition: "all 0.2s ease",
         }}
-        onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "0.85")}
-        onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "1")}
       >
         <FiArrowLeft size={18} /> Back
       </button>
 
-      <h1 style={{ fontSize: "2.2rem", fontWeight: 900, marginBottom: "40px" }}>
+      <h1
+        style={{
+          fontSize: "2.2rem",
+          fontWeight: 900,
+          marginBottom: "40px",
+          color: textColor[theme],
+        }}
+      >
         All Projects
       </h1>
 
@@ -143,7 +162,8 @@ export default function ProjectsList() {
               maxWidth: "900px",
               background: cardBg[theme],
               borderRadius: "20px",
-              boxShadow: boxShadow[theme],
+              boxShadow: cardShadow[theme],
+              border: cardBorder[theme],
               overflow: "hidden",
               cursor: "pointer",
             }}
@@ -165,10 +185,17 @@ export default function ProjectsList() {
               <h3 style={{ fontSize: "1.45rem", fontWeight: 700, marginBottom: "8px" }}>
                 {project.title}
               </h3>
-              <p style={{ fontSize: "0.98rem", lineHeight: 1.6, color: subTextColor[theme], marginBottom: "8px" }}>
+              <p
+                style={{
+                  fontSize: "0.98rem",
+                  lineHeight: 1.6,
+                  color: subText[theme],
+                  marginBottom: "8px",
+                }}
+              >
                 {project.shortDesc}
               </p>
-              <p style={{ fontSize: "0.98rem", color: subTextColor[theme] }}>
+              <p style={{ fontSize: "0.98rem", color: subText[theme] }}>
                 Client: {project.clientName} <br />
                 Industry: {project.industry} <br />
                 Tech: {project.technologies.join(", ")} <br />
@@ -178,6 +205,20 @@ export default function ProjectsList() {
           </motion.div>
         ))}
       </div>
+
+      <style jsx>{`
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </section>
   );
 }

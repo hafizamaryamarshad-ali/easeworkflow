@@ -122,31 +122,60 @@ const mapBlog = (blog: BlogQueryResult): BlogPost => ({
   allowComments: Boolean(blog.allowComments),
 });
 
+const BLOGS_CACHE_TTL_MS = 60_000;
+const BLOG_BY_SLUG_CACHE_TTL_MS = 60_000;
+
+let blogsCache: BlogPost[] | null = null;
+let blogsCacheTimestamp = 0;
+let blogsInFlight: Promise<BlogPost[]> | null = null;
+
+const blogBySlugCache = new Map<string, { value: BlogPost | null; timestamp: number }>();
+const blogBySlugInFlight = new Map<string, Promise<BlogPost | null>>();
+
 export const fetchBlogs = async (): Promise<BlogPost[]> => {
-  try {
-    const data = (await sanityFetch(blogsQuery, {}, "fetchBlogs")) as BlogQueryResult[] | null;
-
-    if (!Array.isArray(data)) {
-      return [];
-    }
-
-    const mapped = data.map(mapBlog).filter((blog) => Boolean(blog.slug));
-
-    if (process.env.NODE_ENV === "production") {
-      console.info("[Sanity] fetchBlogs mapped results", {
-        count: mapped.length,
-        projectId: sanityRuntimeConfig.projectId,
-        dataset: sanityRuntimeConfig.dataset,
-        useCdn: sanityRuntimeConfig.useCdn,
-        hasReadToken: sanityRuntimeConfig.hasReadToken,
-      });
-    }
-
-    return mapped;
-  } catch (error) {
-    console.error("[Sanity] fetchBlogs failed", error);
-    throw error;
+  if (blogsCache && Date.now() - blogsCacheTimestamp < BLOGS_CACHE_TTL_MS) {
+    return blogsCache;
   }
+
+  if (blogsInFlight) {
+    return blogsInFlight;
+  }
+
+  blogsInFlight = (async () => {
+    try {
+      const data = (await sanityFetch(blogsQuery, {}, "fetchBlogs")) as BlogQueryResult[] | null;
+
+      if (!Array.isArray(data)) {
+        blogsCache = [];
+        blogsCacheTimestamp = Date.now();
+        return [];
+      }
+
+      const mapped = data.map(mapBlog).filter((blog) => Boolean(blog.slug));
+
+      if (process.env.NODE_ENV === "production") {
+        console.info("[Sanity] fetchBlogs mapped results", {
+          count: mapped.length,
+          projectId: sanityRuntimeConfig.projectId,
+          dataset: sanityRuntimeConfig.dataset,
+          useCdn: sanityRuntimeConfig.useCdn,
+          hasReadToken: sanityRuntimeConfig.hasReadToken,
+        });
+      }
+
+      blogsCache = mapped;
+      blogsCacheTimestamp = Date.now();
+
+      return mapped;
+    } catch (error) {
+      console.error("[Sanity] fetchBlogs failed", error);
+      throw error;
+    } finally {
+      blogsInFlight = null;
+    }
+  })();
+
+  return blogsInFlight;
 };
 
 export const fetchBlogBySlug = async (slug: string): Promise<BlogPost | null> => {
@@ -154,37 +183,58 @@ export const fetchBlogBySlug = async (slug: string): Promise<BlogPost | null> =>
     return null;
   }
 
-  try {
-    const blog = (await sanityFetch(blogBySlugQuery, { slug }, "fetchBlogBySlug")) as
-      | BlogQueryResult
-      | null;
+  const normalizedSlug = slug.trim();
+  const cachedBlog = blogBySlugCache.get(normalizedSlug);
+  if (cachedBlog && Date.now() - cachedBlog.timestamp < BLOG_BY_SLUG_CACHE_TTL_MS) {
+    return cachedBlog.value;
+  }
 
-    if (!blog) {
+  const inFlightBlog = blogBySlugInFlight.get(normalizedSlug);
+  if (inFlightBlog) {
+    return inFlightBlog;
+  }
+
+  const request = (async () => {
+    try {
+      const blog = (await sanityFetch(blogBySlugQuery, { slug: normalizedSlug }, "fetchBlogBySlug")) as
+        | BlogQueryResult
+        | null;
+
+      if (!blog) {
+        if (process.env.NODE_ENV === "production") {
+          console.info("[Sanity] fetchBlogBySlug returned no result", {
+            slug: normalizedSlug,
+            projectId: sanityRuntimeConfig.projectId,
+            dataset: sanityRuntimeConfig.dataset,
+          });
+        }
+
+        blogBySlugCache.set(normalizedSlug, { value: null, timestamp: Date.now() });
+        return null;
+      }
+
+      const mapped = mapBlog(blog);
+
       if (process.env.NODE_ENV === "production") {
-        console.info("[Sanity] fetchBlogBySlug returned no result", {
-          slug,
+        console.info("[Sanity] fetchBlogBySlug mapped result", {
+          slug: normalizedSlug,
+          id: mapped._id,
           projectId: sanityRuntimeConfig.projectId,
           dataset: sanityRuntimeConfig.dataset,
         });
       }
 
-      return null;
+      blogBySlugCache.set(normalizedSlug, { value: mapped, timestamp: Date.now() });
+      return mapped;
+    } catch (error) {
+      console.error("[Sanity] fetchBlogBySlug failed", { slug: normalizedSlug, error });
+      throw error;
+    } finally {
+      blogBySlugInFlight.delete(normalizedSlug);
     }
+  })();
 
-    const mapped = mapBlog(blog);
+  blogBySlugInFlight.set(normalizedSlug, request);
 
-    if (process.env.NODE_ENV === "production") {
-      console.info("[Sanity] fetchBlogBySlug mapped result", {
-        slug,
-        id: mapped._id,
-        projectId: sanityRuntimeConfig.projectId,
-        dataset: sanityRuntimeConfig.dataset,
-      });
-    }
-
-    return mapped;
-  } catch (error) {
-    console.error("[Sanity] fetchBlogBySlug failed", { slug, error });
-    throw error;
-  }
+  return request;
 };

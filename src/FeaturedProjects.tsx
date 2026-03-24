@@ -42,11 +42,9 @@ export default function FeaturedProjects() {
     };
 
     loadProjects();
-    const intervalId = window.setInterval(loadProjects, 60000);
 
     return () => {
       isMounted = false;
-      window.clearInterval(intervalId);
       window.removeEventListener("resize", handleResize);
     };
   }, []);

@@ -16,17 +16,14 @@ export default function BlogCardsClient({ posts, theme = "dark" }: BlogCardProps
   const icons = [<FiCpu size={28} />, <FiActivity size={28} />, <FiTrendingUp size={28} />];
 
   if (!posts.length) 
-    return <p style={{ color: theme === "dark" ? "#fff" : "#111" }}>No blog posts found</p>;
+    return <p style={{ color: theme === "dark" ? "var(--color-text-primary)" : "var(--color-text-dark)" }}>No blog posts found</p>;
 
-  const cardBg = theme === "dark" ? "rgba(255,255,255,0.08)" : "#f9fafb";
-  const cardText = theme === "dark" ? "#fff" : "#111";
-  const subText = theme === "dark" ? "#cbd5e1" : "#334155";
-  const iconColor = theme === "dark" ? "#00c6ff" : "#3b82f6";
-  const boxShadow = theme === "dark" ? "0 16px 40px rgba(0,0,0,0.25)" : "0 16px 40px rgba(0,0,0,0.05)";
-  const hoverShadow = theme === "dark"
-    ? "0 25px 60px rgba(0,198,255,0.45)"
-    : "0 25px 60px rgba(59,130,246,0.2)";
-  const iconBg = theme === "dark" ? "rgba(0,198,255,0.2)" : "rgba(59,130,246,0.15)";
+  const cardBg = theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-light)";
+  const cardText = theme === "dark" ? "var(--color-text-primary)" : "var(--color-text-dark)";
+  const subText = theme === "dark" ? "var(--color-text-muted)" : "var(--color-text-muted-light)";
+  const iconColor = theme === "dark" ? "var(--color-primary)" : "var(--color-secondary)";
+  const cardBorder = theme === "dark" ? "1px solid var(--color-border-dark)" : "1px solid var(--color-border-light)";
+  const iconBg = theme === "dark" ? "var(--icon-bg-dark)" : "var(--icon-bg-light)";
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "30px" }}>
@@ -36,7 +33,7 @@ export default function BlogCardsClient({ posts, theme = "dark" }: BlogCardProps
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ scale: 1.05, boxShadow: hoverShadow }}
+            whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.6, delay: i * 0.2 }}
             style={{
               position: "relative",
@@ -45,8 +42,8 @@ export default function BlogCardsClient({ posts, theme = "dark" }: BlogCardProps
               padding: "32px",
               borderRadius: "20px",
               background: cardBg,
-              backdropFilter: theme === "dark" ? "blur(25px)" : "none",
-              boxShadow,
+              backdropFilter: theme === "dark" ? "blur(20px)" : "none",
+              border: cardBorder,
               color: cardText,
               overflow: "hidden",
               cursor: "pointer",

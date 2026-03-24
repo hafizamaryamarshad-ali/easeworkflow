@@ -1,10 +1,60 @@
 /* ================================
    GLOBAL STYLES (Professional)
 ================================= */
+:root {
+  --bg: #0f172a;
+  --bg-gradient: linear-gradient(45deg, #0f172a, #1e293b, #334155);
+  --primary: #0ea5e9;
+  --secondary: #3b82f6;
+  --accent: #60a5fa;
+  --text: #f8fafc;
+  --text-muted: #cbd5e1;
+
+  --color-primary: #0ea5e9;
+  --color-secondary: #3b82f6;
+  --color-tertiary: #60a5fa;
+  --color-bg: #0f172a;
+  --color-bg-light: #f5faff;
+  --color-page-gradient-dark: linear-gradient(45deg, #0f172a, #1e293b, #334155);
+  --color-text-primary: #f8fafc;
+  --color-text-dark: #0f172a;
+  --color-text-muted: #cbd5e1;
+  --color-text-muted-light: #475569;
+  --color-surface: #f8fafc;
+  --color-surface-muted: #1e293b;
+  --color-card-dark: rgba(248, 250, 252, 0.08);
+  --color-card-light: #ffffff;
+  --color-border-dark: rgba(14, 165, 233, 0.25);
+  --color-border-light: rgba(59, 130, 246, 0.18);
+  --color-text-inverse: #f8fafc;
+  --color-btn-gradient: linear-gradient(90deg, #0ea5e9, #3b82f6);
+  --color-btn-gradient-light: linear-gradient(90deg, #3b82f6, #60a5fa);
+  --color-btn-shadow: 0 12px 28px rgba(0, 198, 255, 0.35);
+  --color-btn-shadow-light: 0 12px 28px rgba(59, 130, 246, 0.35);
+  --color-btn-glow: 0 0 20px #0ea5e9, 0 0 40px #3b82f6;
+  --color-btn-glow-light: 0 0 20px #3b82f6, 0 0 40px #60a5fa;
+  --color-hover-dark: rgba(14, 165, 233, 0.18);
+  --color-hover-light: rgba(59, 130, 246, 0.15);
+  --shadow-card-dark: 0 25px 50px rgba(0, 0, 0, 0.45);
+  --shadow-card-light: 0 12px 28px rgba(59, 130, 246, 0.15);
+  --shadow-hover-dark: 0 25px 60px rgba(14, 165, 233, 0.45);
+  --shadow-hover-light: 0 20px 40px rgba(37, 99, 235, 0.2);
+  --shadow-soft-dark: 0 18px 50px rgba(0, 0, 0, 0.3);
+  --shadow-soft-light: 0 12px 30px rgba(15, 23, 42, 0.12);
+  --shadow-media-dark: 0 25px 50px rgba(0, 0, 0, 0.5);
+  --shadow-contact-dark: 0 12px 30px rgba(0, 0, 0, 0.25);
+  --shadow-detail-dark: 0 20px 50px rgba(0, 0, 0, 0.3);
+  --shadow-detail-light: 0 16px 36px rgba(15, 23, 42, 0.12);
+  --icon-bg-dark: rgba(14, 165, 233, 0.2);
+  --icon-bg-light: rgba(59, 130, 246, 0.15);
+  --glow-primary-soft: radial-gradient(circle, rgba(14, 165, 233, 0.33), transparent);
+  --glow-secondary-soft: radial-gradient(circle, rgba(59, 130, 246, 0.33), transparent);
+}
+
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  color: #fff;
+  color: var(--color-text-primary);
   overflow-x: hidden;
   min-height: 100vh;
 }
@@ -20,7 +70,7 @@ h1 {
   font-size: clamp(2.3rem, 5vw, 3.5rem);
   font-weight: 900;
   line-height: 1.1;
-  background: linear-gradient(90deg, #0ea5e9, #3b82f6);
+  background: var(--color-btn-gradient);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -29,7 +79,7 @@ h2 {
   font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 800;
   margin-bottom: 30px;
-  background: linear-gradient(90deg, #0ea5e9, #3b82f6);
+  background: var(--color-btn-gradient);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -43,8 +93,8 @@ button, a.button {
   padding: 14px 32px;
   border: none;
   border-radius: 20px;
-  background: linear-gradient(90deg, #0ea5e9, #3b82f6);
-  color: white;
+  background: var(--color-btn-gradient);
+  color: var(--color-text-inverse);
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
@@ -53,15 +103,15 @@ button, a.button {
 
 button:hover, a.button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0,0,0,.4);
+  box-shadow: var(--shadow-card-dark);
 }
 
 .card {
-  background: rgba(255,255,255,0.08);
+  background: var(--color-card-dark);
   backdrop-filter: blur(18px);
   padding: 28px;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  box-shadow: var(--shadow-soft-dark);
   transition: .3s;
 }
 
