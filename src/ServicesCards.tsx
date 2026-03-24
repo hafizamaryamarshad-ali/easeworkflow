@@ -45,9 +45,9 @@ export default function Services() {
     return () => clearInterval(interval);
   }, []);
 
-  const bg = { dark: "#020617", light: "#f8fafc" };
-  const text = { dark: "#f8fafc", light: "#0f172a" };
-  const sub = { dark: "#cbd5f5", light: "#475569" };
+  const bg = { dark: "var(--color-bg)", light: "var(--color-text-primary)" };
+  const text = { dark: "var(--color-text-primary)", light: "var(--color-text-primary)" };
+  const sub = { dark: "var(--color-text-muted)", light: "var(--color-text-muted)" };
 
   return (
     <section
@@ -65,9 +65,9 @@ export default function Services() {
         transition={{ duration: 18, repeat: Infinity }}
         style={{
           position: "absolute",
-          width: "650px",
-          height: "650px",
-          background: "radial-gradient(circle,#2563eb55,transparent)",
+          width: "40.625rem",
+          height: "40.625rem",
+          background: "radial-gradient(circle,var(--color-secondary)55,transparent)",
           filter: "blur(160px)",
           top: "-200px",
           left: "-200px",
@@ -78,9 +78,9 @@ export default function Services() {
         transition={{ duration: 20, repeat: Infinity }}
         style={{
           position: "absolute",
-          width: "550px",
-          height: "550px",
-          background: "radial-gradient(circle,#06b6d455,transparent)",
+          width: "34.375rem",
+          height: "34.375rem",
+          background: "radial-gradient(circle,var(--color-primary),transparent)",
           filter: "blur(160px)",
           bottom: "-200px",
           right: "-200px",
@@ -105,7 +105,7 @@ export default function Services() {
       {/* Services List */}
       <div
         style={{
-          maxWidth: "1150px",
+          maxWidth: "71.875rem",
           margin: "auto",
           display: "flex",
           flexDirection: "column",
@@ -135,7 +135,7 @@ export default function Services() {
               transition={{ duration: 0.6 }}
               style={{
                 flex: "1 1 300px",
-                minHeight: "300px", // ensures video is always visible
+                minHeight: "18.75rem", // ensures video is always visible
                 borderRadius: "26px",
                 overflow: "hidden",
                 position: "relative",
@@ -149,7 +149,7 @@ export default function Services() {
                   inset: "-2px",
                   borderRadius: "26px",
                   background:
-                    "linear-gradient(120deg,#0ea5e9,transparent,transparent)",
+                    "linear-gradient(120deg,var(--color-primary),transparent,transparent)",
                   opacity: 0.4,
                   zIndex: 2,
                 }}
@@ -189,8 +189,8 @@ export default function Services() {
                   fontSize: "0.85rem",
                   borderRadius: "8px",
                   border: "none",
-                  background: "#0ea5e9aa",
-                  color: "#fff",
+                  background: "var(--color-primary)aa",
+                  color: "var(--color-text-inverse)",
                   cursor: "pointer",
                   backdropFilter: "blur(6px)",
                 }}

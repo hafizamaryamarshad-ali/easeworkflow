@@ -7,15 +7,15 @@ import { useTheme } from "../../theme/ThemeProvider";
 export default function HealthcareAutomationPage() {
   const { theme } = useTheme();
 
-  const sectionBg = { dark: "linear-gradient(135deg, #0f1c2c, #1f2a48, #2a3a6e, #00c6ff)", light: "#f5f7fa" };
-  const textColor = { dark: "#f8fafc", light: "#111" };
-  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "#ffffff" };
-  const cardTextColor = { dark: "#fff", light: "#111" };
+  const sectionBg = { dark: "linear-gradient(135deg, var(--color-bg), var(--color-surface-muted), var(--color-text-muted), var(--color-primary))", light: "var(--color-bg)" };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-primary)" };
+  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "var(--color-surface)" };
+  const cardTextColor = { dark: "var(--color-text-inverse)", light: "var(--color-text-primary)" };
   const iconBg = { dark: "rgba(0,198,255,0.2)", light: "rgba(59,130,246,0.2)" };
-  const iconColor = { dark: "#00c6ff", light: "#3b82f6" };
+  const iconColor = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
   const boxShadow = { dark: "0 16px 40px rgba(0,0,0,0.25)", light: "0 12px 28px rgba(0,0,0,0.1)" };
   const borderColor = { dark: "rgba(0,198,255,0.2)", light: "rgba(59,130,246,0.2)" };
-  const borderHoverColor = { dark: "#00c6ff", light: "#3b82f6" };
+  const borderHoverColor = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
 
   const features = [
     { title: "AI Appointment Scheduling", description: "Automate scheduling with AI to reduce no-shows and free up staff time for patient care.", icon: <FiSmartphone size={28} /> },
@@ -32,7 +32,7 @@ export default function HealthcareAutomationPage() {
         textAlign: "center",
         color: textColor[theme],
         overflow: "hidden",
-        backgroundColor: theme === "dark" ? "#0f1c2c" : sectionBg.light,
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : sectionBg.light,
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
         backgroundSize: "cover",
         transition: "all 0.5s ease",
@@ -56,9 +56,9 @@ export default function HealthcareAutomationPage() {
           fontWeight: 900,
           marginBottom: "40px",
           fontFamily: "'Roboto', sans-serif",
-          background: theme === "dark" ? "linear-gradient(90deg, #00c6ff, #0072ff)" : "none",
+          background: theme === "dark" ? "linear-gradient(90deg, var(--color-primary), var(--color-secondary))" : "none",
           WebkitBackgroundClip: theme === "dark" ? "text" : "unset",
-          color: theme === "dark" ? "transparent" : "#111",
+          color: theme === "dark" ? "transparent" : "var(--color-text-primary)",
           transition: "all 0.5s ease",
         }}
       >
@@ -70,7 +70,7 @@ export default function HealthcareAutomationPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, delay: 0.3 }}
-        style={{ position: "relative", fontSize: "1.2rem", lineHeight: 1.7, maxWidth: "800px", margin: "auto", color: textColor[theme] }}
+        style={{ position: "relative", fontSize: "1.2rem", lineHeight: 1.7, maxWidth: "50rem", margin: "auto", color: textColor[theme] }}
       >
         Automate your clinic’s appointment scheduling, EMR workflows, and patient follow-ups. AI-driven automation ensures your staff focuses on care, not paperwork.
       </motion.p>
@@ -83,14 +83,13 @@ export default function HealthcareAutomationPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{
-              scale: 1.05,
               boxShadow: theme === "dark" ? "0 25px 60px rgba(0,198,255,0.45)" : "0 20px 50px rgba(59,130,246,0.35)",
             }}
             transition={{ duration: 0.6, delay: i * 0.2 }}
             style={{
               position: "relative",
-              minWidth: "250px",
-              maxWidth: "300px",
+              minWidth: "15.625rem",
+              maxWidth: "18.75rem",
               padding: "32px",
               borderRadius: "20px",
               background: cardBg[theme],
