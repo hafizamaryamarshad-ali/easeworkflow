@@ -35,7 +35,7 @@ export default function Hero() {
   ];
 
   const bgColors = {
-    dark: "linear-gradient(45deg, #0f172a, #1e293b, #334155)",
+    dark: "var(--bg-gradient-dark)",
     light: "#f5f7fa",
   };
   const textColors = {

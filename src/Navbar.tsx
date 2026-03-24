@@ -16,12 +16,14 @@ export default function Navbar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
 
+  // Detect scroll
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Detect mobile
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -42,6 +44,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/", icon: <FiHome size={14} /> },
     { name: "About", href: "/about", icon: <FiInfo size={14} /> },
+    //{ name: "Healthcare", href: "/healthcare-automation", icon: <FiActivity size={14} /> },
     { name: "Projects", href: "/projects", icon: <FiHexagon size={14} /> },
     { name: "Case Studies", href: "/case-studies", icon: <FiTool size={14} /> },
     { name: "Blog", href: "/blog", icon: <FiPenTool size={14} /> },
@@ -50,8 +53,13 @@ export default function Navbar() {
 
   const mainColor = theme === "dark" ? "#00c6ff" : "#3b82f6";
   const navTextColor = theme === "dark" ? "#fff" : "#0f172a";
-  // Use a solid background so page gradients don't show through the app bar
-  const navBg = theme === "dark" ? "#020617" : "#ffffff";
+  const navBg = scrolled
+    ? theme === "dark"
+      ? "rgba(15,15,15,0.85)"
+      : "rgba(255,255,255,0.85)"
+    : theme === "dark"
+    ? "rgba(15,15,15,0.6)"
+    : "rgba(255,255,255,0.6)";
 
   return (
     <nav
@@ -65,8 +73,9 @@ export default function Navbar() {
         padding: "10px 24px",
         background: navBg,
         backdropFilter: "blur(16px)",
-        width: "100%",
-        boxSizing: "border-box",
+        borderRadius: "12px",
+        maxWidth: "1400px",
+        margin: "0 auto",
         transition: "all 0.4s ease",
         flexWrap: "wrap",
       }}
@@ -97,6 +106,8 @@ export default function Navbar() {
             backgroundClip: "text",
             WebkitBackgroundClip: "text",
             color: mainColor,
+            opacity: 1,
+            visibility: "visible",
             textDecoration: "none",
             textShadow: theme === "dark" ? "0 0 10px rgba(0,198,255,0.2)" : "none",
           }}
@@ -122,6 +133,7 @@ export default function Navbar() {
                 fontSize: "0.9rem",
                 textDecoration: "none",
                 padding: "4px 6px",
+                borderRadius: "6px",
                 transition: "all 0.25s ease",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = mainColor; }}
@@ -136,6 +148,7 @@ export default function Navbar() {
                   width: isLinkActive(link.href) ? "100%" : "0%",
                   height: "2px",
                   background: mainColor,
+                  borderRadius: "2px",
                   transition: "width 0.25s ease",
                 }}
               />
@@ -147,43 +160,46 @@ export default function Navbar() {
       {/* Desktop Buttons */}
       {!isMobile && (
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             style={{
               padding: "6px 12px",
-              borderRadius: "12px", // keep rounded
+              borderRadius: "12px",
               background: theme === "dark" ? "#fff" : mainColor,
               color: theme === "dark" ? "#0f172a" : "#fff",
               border: "none",
               cursor: "pointer",
               fontWeight: 600,
               fontSize: "0.8rem",
+              transition: "all 0.3s ease",
               display: "flex",
               alignItems: "center",
               gap: "6px",
-              transition: "all 0.3s ease",
             }}
           >
             {theme === "dark" ? <FiSun /> : <FiMoon />}
             {theme === "dark" ? "Light" : "Dark"}
           </button>
 
+          {/* Consultation */}
           <Link
             href="/contact"
             style={{
               padding: "8px 20px",
               fontSize: "0.88rem",
               fontWeight: 600,
+              borderRadius: "16px",
               background: mainColor,
               color: "#fff",
               textDecoration: "none",
-              textAlign: "center",
               transition: "all 0.25s ease",
             }}
           >
             Book Consultation
           </Link>
 
+          {/* Call */}
           <Link
             href="tel:+1234567890"
             style={{
@@ -194,7 +210,7 @@ export default function Navbar() {
               height: "36px",
               fontSize: "0.85rem",
               fontWeight: 600,
-              borderRadius: "50%", // keep icon rounded
+              borderRadius: "50%",
               background: mainColor,
               color: "#fff",
               textDecoration: "none",
@@ -205,7 +221,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {isMobile && (
         <>
           <button
@@ -233,6 +249,7 @@ export default function Navbar() {
                 right: 0,
                 background: theme === "dark" ? "rgba(10,15,43,0.97)" : "rgba(255,255,255,0.97)",
                 backdropFilter: "blur(16px)",
+                borderRadius: "0 0 12px 12px",
                 padding: "16px 24px",
                 display: "flex",
                 flexDirection: "column",
@@ -254,6 +271,7 @@ export default function Navbar() {
                     fontSize: "1rem",
                     textDecoration: "none",
                     padding: "10px 8px",
+                    borderRadius: "8px",
                     borderBottom: `1px solid ${theme === "dark" ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)"}`
                   }}
                 >
@@ -267,7 +285,7 @@ export default function Navbar() {
                   style={{
                     flex: 1,
                     padding: "8px 12px",
-                    borderRadius: "12px", // keep rounded
+                    borderRadius: "12px",
                     background: theme === "dark" ? "#fff" : mainColor,
                     color: theme === "dark" ? "#0f172a" : "#fff",
                     border: "none",
@@ -292,6 +310,7 @@ export default function Navbar() {
                     padding: "8px 16px",
                     fontSize: "0.88rem",
                     fontWeight: 600,
+                    borderRadius: "12px",
                     background: mainColor,
                     color: "#fff",
                     textDecoration: "none",
