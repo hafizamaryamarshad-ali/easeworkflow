@@ -50,13 +50,8 @@ export default function Navbar() {
 
   const mainColor = theme === "dark" ? "#00c6ff" : "#3b82f6";
   const navTextColor = theme === "dark" ? "#fff" : "#0f172a";
-  const navBg = scrolled
-    ? theme === "dark"
-      ? "rgba(15,15,15,0.85)"
-      : "rgba(255,255,255,0.85)"
-    : theme === "dark"
-    ? "rgba(15,15,15,0.6)"
-    : "rgba(255,255,255,0.6)";
+  // Use a solid background so page gradients don't show through the app bar
+  const navBg = theme === "dark" ? "#020617" : "#ffffff";
 
   return (
     <nav
@@ -70,8 +65,8 @@ export default function Navbar() {
         padding: "10px 24px",
         background: navBg,
         backdropFilter: "blur(16px)",
-        maxWidth: "1400px",
-        margin: "0 auto",
+        width: "100%",
+        boxSizing: "border-box",
         transition: "all 0.4s ease",
         flexWrap: "wrap",
       }}
