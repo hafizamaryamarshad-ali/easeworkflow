@@ -50,6 +50,8 @@ export default function Navbar() {
 
   const mainColor = theme === "dark" ? "#00c6ff" : "#3b82f6";
   const navTextColor = theme === "dark" ? "#fff" : "#0f172a";
+  // Use a solid background so page gradients don't show through the app bar
+  const navBg = theme === "dark" ? "#020617" : "#ffffff";
 
   return (
     <nav
@@ -57,130 +59,155 @@ export default function Navbar() {
         position: "sticky",
         top: 0,
         zIndex: 999,
-        width: "100%", // FIX
-        background: "transparent", // FIX (important)
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "10px 24px",
+        background: navBg,
         backdropFilter: "blur(16px)",
+        width: "100%",
+        boxSizing: "border-box",
+        transition: "all 0.4s ease",
+        flexWrap: "wrap",
       }}
     >
-      {/* INNER CONTAINER (keeps same size as before) */}
+      {/* Logo */}
       <div
         style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          padding: "10px 24px",
-          flexWrap: "wrap",
-          transition: "all 0.4s ease",
+          gap: "6px",
+          position: "relative",
+          zIndex: 1,
+          flexShrink: 0,
         }}
       >
-        {/* Logo */}
-        <div
+        <FiHexagon size={24} color={mainColor} />
+        <Link
+          href="/"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            flexShrink: 0,
+            display: "inline-block",
+            whiteSpace: "nowrap",
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            backgroundImage: theme === "dark"
+              ? "linear-gradient(270deg, #00c6ff, #0072ff)"
+              : "linear-gradient(270deg, #3b82f6, #2563eb)",
+            backgroundSize: "400% 400%",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            color: mainColor,
+            textDecoration: "none",
+            textShadow: theme === "dark" ? "0 0 10px rgba(0,198,255,0.2)" : "none",
           }}
         >
-          <FiHexagon size={24} color={mainColor} />
-          <Link
-            href="/"
+          EaseWorkflow
+        </Link>
+      </div>
+
+      {/* Desktop Nav Links */}
+      {!isMobile && (
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+                position: "relative",
+                color: isLinkActive(link.href) ? mainColor : navTextColor,
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                padding: "4px 6px",
+                transition: "all 0.25s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = mainColor; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = isLinkActive(link.href) ? mainColor : navTextColor; }}
+            >
+              {link.icon} {link.name}
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: -2,
+                  left: 0,
+                  width: isLinkActive(link.href) ? "100%" : "0%",
+                  height: "2px",
+                  background: mainColor,
+                  transition: "width 0.25s ease",
+                }}
+              />
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* Desktop Buttons */}
+      {!isMobile && (
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <button
+            onClick={toggleTheme}
             style={{
-              fontSize: "1.5rem",
-              fontWeight: 700,
-              color: mainColor,
+              padding: "6px 12px",
+              borderRadius: "12px", // keep rounded
+              background: theme === "dark" ? "#fff" : mainColor,
+              color: theme === "dark" ? "#0f172a" : "#fff",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: 600,
+              fontSize: "0.8rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              transition: "all 0.3s ease",
+            }}
+          >
+            {theme === "dark" ? <FiSun /> : <FiMoon />}
+            {theme === "dark" ? "Light" : "Dark"}
+          </button>
+
+          <Link
+            href="/contact"
+            style={{
+              padding: "8px 20px",
+              fontSize: "0.88rem",
+              fontWeight: 600,
+              background: mainColor,
+              color: "#fff",
+              textDecoration: "none",
+              textAlign: "center",
+              transition: "all 0.25s ease",
+            }}
+          >
+            Book Consultation
+          </Link>
+
+          <Link
+            href="tel:+1234567890"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "36px",
+              height: "36px",
+              fontSize: "0.85rem",
+              fontWeight: 600,
+              borderRadius: "50%", // keep icon rounded
+              background: mainColor,
+              color: "#fff",
               textDecoration: "none",
             }}
           >
-            EaseWorkflow
+            <FiPhone size={16} />
           </Link>
         </div>
+      )}
 
-        {/* Desktop Nav Links */}
-        {!isMobile && (
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  position: "relative",
-                  color: isLinkActive(link.href) ? mainColor : navTextColor,
-                  fontWeight: 600,
-                  fontSize: "0.9rem",
-                  textDecoration: "none",
-                  padding: "4px 6px",
-                }}
-              >
-                {link.icon} {link.name}
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Desktop Buttons */}
-        {!isMobile && (
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <button
-              onClick={toggleTheme}
-              style={{
-                padding: "6px 12px",
-                borderRadius: "12px",
-                background: theme === "dark" ? "#fff" : mainColor,
-                color: theme === "dark" ? "#0f172a" : "#fff",
-                border: "none",
-                cursor: "pointer",
-                fontWeight: 600,
-                fontSize: "0.8rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-              }}
-            >
-              {theme === "dark" ? <FiSun /> : <FiMoon />}
-              {theme === "dark" ? "Light" : "Dark"}
-            </button>
-
-            <Link
-              href="/contact"
-              style={{
-                padding: "8px 20px",
-                fontSize: "0.88rem",
-                fontWeight: 600,
-                background: mainColor,
-                color: "#fff",
-                textDecoration: "none",
-              }}
-            >
-              Book Consultation
-            </Link>
-
-            <Link
-              href="tel:+1234567890"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                background: mainColor,
-                color: "#fff",
-                textDecoration: "none",
-              }}
-            >
-              <FiPhone size={16} />
-            </Link>
-          </div>
-        )}
-
-        {/* Mobile Menu Button */}
-        {isMobile && (
+      {/* Mobile Menu */}
+      {isMobile && (
+        <>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
@@ -188,45 +215,95 @@ export default function Navbar() {
               border: "none",
               cursor: "pointer",
               color: mainColor,
+              display: "flex",
+              alignItems: "center",
+              padding: "4px",
             }}
+            aria-label="Toggle menu"
           >
             {menuOpen ? <FiX size={26} /> : <FiMenu size={26} />}
           </button>
-        )}
-      </div>
 
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div
-          style={{
-            background: theme === "dark"
-              ? "rgba(10,15,43,0.97)"
-              : "rgba(255,255,255,0.97)",
-            backdropFilter: "blur(16px)",
-            padding: "16px 24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "6px",
-          }}
-        >
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
+          {menuOpen && (
+            <div
               style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+                background: theme === "dark" ? "rgba(10,15,43,0.97)" : "rgba(255,255,255,0.97)",
+                backdropFilter: "blur(16px)",
+                padding: "16px 24px",
                 display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: navTextColor,
-                textDecoration: "none",
-                padding: "10px 8px",
+                flexDirection: "column",
+                gap: "4px",
+                zIndex: 998,
               }}
             >
-              {link.icon} {link.name}
-            </Link>
-          ))}
-        </div>
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    color: isLinkActive(link.href) ? mainColor : navTextColor,
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    textDecoration: "none",
+                    padding: "10px 8px",
+                    borderBottom: `1px solid ${theme === "dark" ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)"}`
+                  }}
+                >
+                  {link.icon} {link.name}
+                </Link>
+              ))}
+
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "12px" }}>
+                <button
+                  onClick={toggleTheme}
+                  style={{
+                    flex: 1,
+                    padding: "8px 12px",
+                    borderRadius: "12px", // keep rounded
+                    background: theme === "dark" ? "#fff" : mainColor,
+                    color: theme === "dark" ? "#0f172a" : "#fff",
+                    border: "none",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                  }}
+                >
+                  {theme === "dark" ? <FiSun /> : <FiMoon />}
+                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                </button>
+
+                <Link
+                  href="/contact"
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    flex: 2,
+                    padding: "8px 16px",
+                    fontSize: "0.88rem",
+                    fontWeight: 600,
+                    background: mainColor,
+                    color: "#fff",
+                    textDecoration: "none",
+                    textAlign: "center",
+                  }}
+                >
+                  Book Consultation
+                </Link>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </nav>
   );

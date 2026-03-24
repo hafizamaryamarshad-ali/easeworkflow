@@ -1,76 +1,76 @@
 /* ================================
-   GLOBAL STYLES (Hero-Matched Theme)
+   GLOBAL STYLES (Professional)
 ================================= */
-
 :root {
-  --bg-dark: #0f172a;
-  --bg-dark-2: #1e293b;
-  --bg-dark-3: #334155;
-  --bg-light: #f5f7fa;
-
-  --bg-gradient-dark: linear-gradient(45deg, #0f172a, #1e293b, #334155);
-
+  --bg: #0f172a;
+  --bg-gradient: linear-gradient(45deg, #0f172a, #1e293b, #334155);
   --primary: #0ea5e9;
   --secondary: #3b82f6;
   --accent: #60a5fa;
+  --text: #f8fafc;
+  --text-muted: #cbd5e1;
 
-  --text-light: #f8fafc;
-  --text-dark: #0f172a;
-  --text-muted-dark: #cbd5e1;
-  --text-muted-light: #475569;
-
-  --surface-dark: rgba(248, 250, 252, 0.08);
-  --surface-light: #ffffff;
-
-  --border-dark: rgba(14, 165, 233, 0.25);
-  --border-light: rgba(59, 130, 246, 0.18);
-
-  --btn-gradient: linear-gradient(90deg, #0ea5e9, #3b82f6);
-  --btn-gradient-light: linear-gradient(90deg, #3b82f6, #60a5fa);
-
-  --shadow-dark: 0 25px 50px rgba(0, 0, 0, 0.45);
-  --shadow-light: 0 12px 28px rgba(59, 130, 246, 0.15);
-
+  --color-primary: #0ea5e9;
+  --color-secondary: #3b82f6;
+  --color-tertiary: #60a5fa;
+  --color-bg: #0f172a;
+  --color-bg-light: #f5faff;
+  --color-page-gradient-dark: linear-gradient(45deg, #0f172a, #1e293b, #334155);
+  --color-text-primary: #f8fafc;
+  --color-text-dark: #0f172a;
+  --color-text-muted: #cbd5e1;
+  --color-text-muted-light: #475569;
+  --color-surface: #f8fafc;
+  --color-surface-muted: #1e293b;
+  --color-card-dark: rgba(248, 250, 252, 0.08);
+  --color-card-light: #ffffff;
+  --color-border-dark: rgba(14, 165, 233, 0.25);
+  --color-border-light: rgba(59, 130, 246, 0.18);
+  --color-text-inverse: #f8fafc;
+  --color-btn-gradient: linear-gradient(90deg, #0ea5e9, #3b82f6);
+  --color-btn-gradient-light: linear-gradient(90deg, #3b82f6, #60a5fa);
+  --color-btn-shadow: 0 12px 28px rgba(0, 198, 255, 0.35);
+  --color-btn-shadow-light: 0 12px 28px rgba(59, 130, 246, 0.35);
+  --color-btn-glow: 0 0 20px #0ea5e9, 0 0 40px #3b82f6;
+  --color-btn-glow-light: 0 0 20px #3b82f6, 0 0 40px #60a5fa;
+  --color-hover-dark: rgba(14, 165, 233, 0.18);
+  --color-hover-light: rgba(59, 130, 246, 0.15);
+  --shadow-card-dark: 0 25px 50px rgba(0, 0, 0, 0.45);
+  --shadow-card-light: 0 12px 28px rgba(59, 130, 246, 0.15);
   --shadow-hover-dark: 0 25px 60px rgba(14, 165, 233, 0.45);
   --shadow-hover-light: 0 20px 40px rgba(37, 99, 235, 0.2);
-
-  --glow-primary: 0 0 20px #0ea5e9, 0 0 40px #3b82f6;
-  --glow-primary-light: 0 0 20px #3b82f6, 0 0 40px #60a5fa;
+  --shadow-soft-dark: 0 18px 50px rgba(0, 0, 0, 0.3);
+  --shadow-soft-light: 0 12px 30px rgba(15, 23, 42, 0.12);
+  --shadow-media-dark: 0 25px 50px rgba(0, 0, 0, 0.5);
+  --shadow-contact-dark: 0 12px 30px rgba(0, 0, 0, 0.25);
+  --shadow-detail-dark: 0 20px 50px rgba(0, 0, 0, 0.3);
+  --shadow-detail-light: 0 16px 36px rgba(15, 23, 42, 0.12);
+  --icon-bg-dark: rgba(14, 165, 233, 0.2);
+  --icon-bg-light: rgba(59, 130, 246, 0.15);
+  --glow-primary-soft: radial-gradient(circle, rgba(14, 165, 233, 0.33), transparent);
+  --glow-secondary-soft: radial-gradient(circle, rgba(59, 130, 246, 0.33), transparent);
 }
-
-/* ================================
-   BASE STYLES
-================================= */
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  color: var(--text-light);
+  color: var(--color-text-primary);
   overflow-x: hidden;
   min-height: 100vh;
-
-  /* ✅ FIX: match Hero EXACTLY */
-  background: var(--bg-gradient-dark);
-  background-size: 600% 600%;
 }
 
-/* Sections */
 section {
   padding: 100px 20px;
-  width: 100%;
+  width: 100%; /* Full width */
   position: relative;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Ensure padding doesn't cause horizontal scroll */
 }
-
-/* ================================
-   TYPOGRAPHY
-================================= */
 
 h1 {
   font-size: clamp(2.3rem, 5vw, 3.5rem);
   font-weight: 900;
   line-height: 1.1;
-  background: var(--btn-gradient);
+  background: var(--color-btn-gradient);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -79,7 +79,7 @@ h2 {
   font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 800;
   margin-bottom: 30px;
-  background: var(--btn-gradient);
+  background: var(--color-btn-gradient);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -89,54 +89,41 @@ h3 {
   font-weight: 700;
 }
 
-/* ================================
-   BUTTONS
-================================= */
-
-button,
-a.button {
+button, a.button {
   padding: 14px 32px;
   border: none;
   border-radius: 20px;
-  background: var(--btn-gradient);
-  color: var(--text-light);
+  background: var(--color-btn-gradient);
+  color: var(--color-text-inverse);
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all .3s ease;
 }
 
-button:hover,
-a.button:hover {
+button:hover, a.button:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-dark);
+  box-shadow: var(--shadow-card-dark);
 }
-
-/* ================================
-   CARDS
-================================= */
 
 .card {
-  background: var(--surface-dark);
+  background: var(--color-card-dark);
   backdrop-filter: blur(18px);
   padding: 28px;
   border-radius: 20px;
-  box-shadow: var(--shadow-dark);
-  transition: 0.3s;
+  box-shadow: var(--shadow-soft-dark);
+  transition: .3s;
 }
 
 .card:hover {
   transform: translateY(-6px);
 }
 
-/* ================================
-   FLOATING SHAPES
-================================= */
-
+/* Floating shapes */
 .shape {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,0.05);
   z-index: 0;
   will-change: transform;
 }
@@ -148,11 +135,12 @@ a.button:hover {
 .shape5 { width: 180px; height: 180px; top: 75%; left: 20%; }
 
 @keyframes floatBasic {
-  0% { transform: translateY(0px) translateX(0px); }
-  50% { transform: translateY(-50px) translateX(30px); }
-  100% { transform: translateY(0px) translateX(0px); }
+  0% { transform: translateY(0px) translateX(0px);}
+  50% { transform: translateY(-50px) translateX(30px);}
+  100% { transform: translateY(0px) translateX(0px);}
 }
 
+/* Gradient Animation Keyframes (for sections with gradients) */
 @keyframes gradientBG {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
