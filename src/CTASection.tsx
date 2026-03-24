@@ -3,6 +3,7 @@
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaStethoscope, FaPills, FaHeart, FaSyringe } from "react-icons/fa";
+import Link from "next/link";
 
 export default function CTA() {
   const [gradientPos, setGradientPos] = useState(0);
@@ -154,8 +155,8 @@ export default function CTA() {
           Book Free Consultation
         </a>
 
-        <a
-          href="/services"
+        <Link
+          href="/healthcare-automation"
           style={{
             padding: "16px 36px",
             fontWeight: 700,
@@ -177,7 +178,7 @@ export default function CTA() {
           }}
         >
           Explore Services
-        </a>
+        </Link>
       </motion.div>
 
       {/* Floating doctor icons */}

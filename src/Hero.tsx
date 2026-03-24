@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaStethoscope, FaPills, FaHeart, FaSyringe } from "react-icons/fa";
+import Link from "next/link";
 import { useTheme } from "./theme/ThemeProvider";
 
 export default function Hero() {
@@ -176,8 +177,8 @@ export default function Hero() {
           Book Free Consultation
         </a>
 
-        <a
-          href="/services"
+        <Link
+          href="/healthcare-automation"
           style={{
             padding: "14px 32px",
             fontWeight: 700,
@@ -203,7 +204,7 @@ export default function Hero() {
           }}
         >
           Explore Services
-        </a>
+        </Link>
       </motion.div>
 
       {/* Floating tech icons */}

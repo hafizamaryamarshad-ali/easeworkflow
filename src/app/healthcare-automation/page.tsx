@@ -7,15 +7,26 @@ import { useTheme } from "../../theme/ThemeProvider";
 export default function HealthcareAutomationPage() {
   const { theme } = useTheme();
 
-  const sectionBg = { dark: "linear-gradient(135deg, var(--color-bg), var(--color-surface-muted), var(--color-text-muted), var(--color-primary))", light: "var(--color-bg)" };
-  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-primary)" };
-  const cardBg = { dark: "rgba(255,255,255,0.08)", light: "var(--color-surface)" };
-  const cardTextColor = { dark: "var(--color-text-inverse)", light: "var(--color-text-primary)" };
-  const iconBg = { dark: "rgba(0,198,255,0.2)", light: "rgba(59,130,246,0.2)" };
-  const iconColor = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
-  const boxShadow = { dark: "0 16px 40px rgba(0,0,0,0.25)", light: "0 12px 28px rgba(0,0,0,0.1)" };
-  const borderColor = { dark: "rgba(0,198,255,0.2)", light: "rgba(59,130,246,0.2)" };
-  const borderHoverColor = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const sectionBg = {
+    dark: "var(--color-page-gradient-dark)",
+    light: "var(--color-bg-light)",
+  };
+  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
+  const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
+  const cardBg = { dark: "var(--color-card-dark)", light: "var(--color-card-light)" };
+  const cardBorder = {
+    dark: "1px solid var(--color-border-dark)",
+    light: "1px solid var(--color-border-light)",
+  };
+  const cardShadow = { dark: "var(--shadow-soft-dark)", light: "var(--shadow-soft-light)" };
+  const iconBg = { dark: "rgba(0,198,255,0.2)", light: "rgba(59,130,246,0.1)" };
+  const iconColor = accent;
+  const borderColor = {
+    dark: "var(--color-border-dark)",
+    light: "var(--color-border-light)",
+  };
+  const borderHoverColor = accent;
 
   const features = [
     { title: "AI Appointment Scheduling", description: "Automate scheduling with AI to reduce no-shows and free up staff time for patient care.", icon: <FiSmartphone size={28} /> },
@@ -32,9 +43,10 @@ export default function HealthcareAutomationPage() {
         textAlign: "center",
         color: textColor[theme],
         overflow: "hidden",
-        backgroundColor: theme === "dark" ? "var(--color-bg)" : sectionBg.light,
+        backgroundColor: theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: "cover",
+        backgroundSize: "400% 400%",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         transition: "all 0.5s ease",
       }}
     >
@@ -56,9 +68,9 @@ export default function HealthcareAutomationPage() {
           fontWeight: 900,
           marginBottom: "40px",
           fontFamily: "'Roboto', sans-serif",
-          background: theme === "dark" ? "linear-gradient(90deg, var(--color-primary), var(--color-secondary))" : "none",
-          WebkitBackgroundClip: theme === "dark" ? "text" : "unset",
-          color: theme === "dark" ? "transparent" : "var(--color-text-primary)",
+          color: textColor[theme],
+          background: "none",
+          WebkitBackgroundClip: "unset",
           transition: "all 0.5s ease",
         }}
       >
@@ -70,7 +82,7 @@ export default function HealthcareAutomationPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, delay: 0.3 }}
-        style={{ position: "relative", fontSize: "1.2rem", lineHeight: 1.7, maxWidth: "50rem", margin: "auto", color: textColor[theme] }}
+        style={{ position: "relative", fontSize: "1.2rem", lineHeight: 1.7, maxWidth: "50rem", margin: "auto", color: subText[theme] }}
       >
         Automate your clinic’s appointment scheduling, EMR workflows, and patient follow-ups. AI-driven automation ensures your staff focuses on care, not paperwork.
       </motion.p>
@@ -94,8 +106,9 @@ export default function HealthcareAutomationPage() {
               borderRadius: "20px",
               background: cardBg[theme],
               backdropFilter: theme === "dark" ? "blur(25px)" : "none",
-              boxShadow: boxShadow[theme],
-              color: cardTextColor[theme],
+              border: cardBorder[theme],
+              boxShadow: cardShadow[theme],
+              color: textColor[theme],
               overflow: "hidden",
               transition: "all 0.5s ease",
             }}
@@ -116,8 +129,8 @@ export default function HealthcareAutomationPage() {
               {item.icon}
             </motion.div>
 
-            <h3 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "12px", color: cardTextColor[theme] }}>{item.title}</h3>
-            <p style={{ fontSize: "1rem", lineHeight: 1.5, color: cardTextColor[theme] }}>{item.description}</p>
+            <h3 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "12px", color: textColor[theme] }}>{item.title}</h3>
+            <p style={{ fontSize: "1rem", lineHeight: 1.5, color: subText[theme] }}>{item.description}</p>
 
             {/* Neon Border Glow on Hover */}
             <div
@@ -154,6 +167,17 @@ export default function HealthcareAutomationPage() {
         .cardBorder:hover {
           border-color: ${borderHoverColor[theme]};
           box-shadow: 0 0 15px ${borderHoverColor[theme]};
+        }
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
         }
       `}</style>
     </section>
