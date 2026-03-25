@@ -178,7 +178,7 @@ export default function Hero() {
         </a>
 
         <Link
-          href="/healthcare-automation"
+	      href="#services"
           style={{
             padding: "14px 32px",
             fontWeight: 700,
@@ -189,6 +189,13 @@ export default function Hero() {
             color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
             textDecoration: "none",
             transition: "all 0.3s ease",
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            const section = document.getElementById("services");
+            if (section) {
+              section.scrollIntoView({ behavior: "smooth" });
+            }
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = theme === "dark" ? "#0ea5e9" : "#3b82f6";

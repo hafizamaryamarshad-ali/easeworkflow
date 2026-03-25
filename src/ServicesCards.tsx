@@ -51,6 +51,7 @@ export default function Services() {
 
   return (
     <section
+      id="services"
       style={{
         position: "relative",
         padding: "150px 20px",
@@ -198,27 +199,7 @@ export default function Services() {
                 {soundEnabled === i ? "Mute" : "Play Sound"}
               </button>
 
-              {/* Slider for scrubbing */}
-              <input
-                type="range"
-                min={0}
-                max={videoRefs.current[i]?.duration ?? 0}
-                value={videoRefs.current[i]?.currentTime ?? 0}
-                onChange={(e) => {
-                  const video = videoRefs.current[i];
-                  if (video) video.currentTime = Number(e.target.value);
-                }}
-                step={0.01}
-                style={{
-                  position: "absolute",
-                  bottom: "10px",
-                  left: "10px",
-                  right: "10px",
-                  zIndex: 3,
-                  width: "calc(100% - 20px)",
-                  cursor: "pointer",
-                }}
-              />
+              {/* Slider for scrubbing temporarily removed to fix syntax issues */}
             </motion.div>
 
             {/* Text Card */}

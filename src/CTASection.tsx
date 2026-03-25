@@ -156,7 +156,7 @@ export default function CTA() {
         </a>
 
         <Link
-          href="/healthcare-automation"
+	      href="#services"
           style={{
             padding: "16px 36px",
             fontWeight: 700,
@@ -167,6 +167,13 @@ export default function CTA() {
             color: "#ffffff",
             textDecoration: "none",
             transition: "all 0.3s ease",
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            const section = document.getElementById("services");
+            if (section) {
+              section.scrollIntoView({ behavior: "smooth" });
+            }
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "#ffffff";
