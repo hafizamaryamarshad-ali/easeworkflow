@@ -1,5 +1,5 @@
 import { createClient } from "next-sanity";
-import { createImageUrlBuilder } from "@sanity/image-url";
+import imageUrlBuilder from "@sanity/image-url";
 
 const fallbackProjectId = "1nesg9s4";
 const fallbackDataset = "production";
@@ -54,7 +54,7 @@ export const client = createClient({
   perspective: "published",
 });
 
-const builder = createImageUrlBuilder(client);
+const builder = imageUrlBuilder(client);
 export const urlFor = (source) => builder.image(source);
 
 export async function sanityFetch(query, params = {}, debugLabel = "query") {
