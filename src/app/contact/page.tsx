@@ -13,6 +13,31 @@ export default function ContactPage() {
   const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
   const accent = { dark: "#fff", light: "#fff" }; // white icons for gradient cards
 
+  const cardBaseStyle: React.CSSProperties = {
+    padding: "20px 30px",
+    borderRadius: "15px",
+    background: "linear-gradient(90deg,var(--primary),var(--secondary))",
+    color: "#fff",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.25)",
+    border: "1px solid rgba(255,255,255,0.15)",
+    transition: "all 0.25s ease",
+  };
+
+  // Make form fields clearly visible on the blue gradient while
+  // still respecting the existing light/dark palette.
+  const inputBg = {
+    dark: "rgba(15,23,42,0.55)", // translucent dark surface over gradient
+    light: "rgba(255,255,255,0.9)", // light card-style background
+  };
+  const inputBorder = {
+    dark: "rgba(255,255,255,0.55)",
+    light: "rgba(59,130,246,0.55)",
+  };
+  const inputText = {
+    dark: "var(--text-light)",
+    light: "var(--text-dark)",
+  };
+
   const contacts = [
     { label: "Email", value: "contact@easeworkflow.com", icon: <FiMail size={22} /> },
     { label: "Phone", value: "+92 3000335194", icon: <FiPhone size={22} /> },
@@ -80,12 +105,7 @@ export default function ContactPage() {
           marginBottom: "20px",
           fontFamily: "'Roboto', sans-serif",
           textAlign: "center",
-          background:
-            theme === "dark"
-              ? "linear-gradient(90deg, var(--color-primary), var(--color-secondary))"
-              : "none",
-          WebkitBackgroundClip: theme === "dark" ? "text" : "unset",
-          color: theme === "dark" ? "transparent" : textColor.light,
+          color: textColor[theme],
         }}
       >
         Contact Information
@@ -106,16 +126,20 @@ export default function ContactPage() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
+          whileHover={{ scale: 1.03 }}
           style={{
             flex: "1 1 350px",
             maxWidth: "450px",
             display: "flex",
             flexDirection: "column",
             gap: "20px",
-            background: "linear-gradient(145deg, #ffffff, #e0f2fe)", // form stays same
-            padding: "30px",
-            borderRadius: "15px",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+            // Match the same gradient and behavior as the right-side cards
+            ...cardBaseStyle,
+            background:
+              theme === "dark"
+                ? "linear-gradient(90deg,var(--primary),var(--secondary))"
+                : "var(--surface-light)",
+            color: theme === "dark" ? "#fff" : textColor.light,
           }}
         >
           <input
@@ -124,8 +148,10 @@ export default function ContactPage() {
             style={{
               padding: "12px 15px",
               borderRadius: "10px",
-              border: "1px solid rgba(0,0,0,0.1)",
+              border: `1px solid ${inputBorder[theme]}`,
               outline: "none",
+              background: inputBg[theme],
+              color: inputText[theme],
             }}
           />
           <input
@@ -134,8 +160,10 @@ export default function ContactPage() {
             style={{
               padding: "12px 15px",
               borderRadius: "10px",
-              border: "1px solid rgba(0,0,0,0.1)",
+              border: `1px solid ${inputBorder[theme]}`,
               outline: "none",
+              background: inputBg[theme],
+              color: inputText[theme],
             }}
           />
           <textarea
@@ -144,8 +172,10 @@ export default function ContactPage() {
             style={{
               padding: "12px 15px",
               borderRadius: "10px",
-              border: "1px solid rgba(0,0,0,0.1)",
+              border: `1px solid ${inputBorder[theme]}`,
               outline: "none",
+              background: inputBg[theme],
+              color: inputText[theme],
               resize: "none",
             }}
           />
@@ -154,8 +184,8 @@ export default function ContactPage() {
               padding: "12px 20px",
               borderRadius: "10px",
               border: "none",
-              background: "linear-gradient(90deg,#6366f1,#3b82f6)",
-              color: "#fff",
+              background: "var(--btn-gradient)",
+              color: "var(--text-light)",
               fontWeight: 600,
               cursor: "pointer",
             }}
@@ -183,16 +213,11 @@ export default function ContactPage() {
               key={i}
               whileHover={{ scale: 1.03 }}
               style={{
+                ...cardBaseStyle,
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
-                padding: "20px 30px",
-                borderRadius: "15px",
-                background: "linear-gradient(90deg,#6366f1,#3b82f6)", // gradient same as button
-                color: "#fff", // white text
                 cursor: "pointer",
-                boxShadow: "0 8px 25px rgba(0,0,0,0.25)", // subtle shadow
-                transition: "all 0.25s ease",
               }}
             >
               <span>{item.icon}</span>
@@ -233,6 +258,17 @@ export default function ContactPage() {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
+        }
+
+        /* Theme-aware placeholder colors so they stay readable */
+        :global(html[data-theme='dark'] input::placeholder),
+        :global(html[data-theme='dark'] textarea::placeholder) {
+          color: rgba(255, 255, 255, 0.85);
+        }
+
+        :global(html[data-theme='light'] input::placeholder),
+        :global(html[data-theme='light'] textarea::placeholder) {
+          color: rgba(15, 23, 42, 0.65);
         }
       `}</style>
     </section>

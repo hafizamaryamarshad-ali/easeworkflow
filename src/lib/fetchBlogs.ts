@@ -1,5 +1,12 @@
 import { groq } from "next-sanity";
-import { sanityFetch, sanityRuntimeConfig } from "./sanity";
+import { sanityFetch, sanityRuntimeConfig, urlFor } from "./sanity";
+
+type SanityImage = {
+  asset?: {
+    _ref?: string;
+    _id?: string;
+  };
+};
 
 type SanitySlug =
   | string
@@ -13,6 +20,7 @@ type BlogQueryResult = {
   slug: SanitySlug;
   excerpt: string;
   content: string;
+  thumbnail: SanityImage | string | null;
   category: string;
   tags: string[] | string | null;
   authorName: string;
@@ -25,6 +33,7 @@ type BlogQueryResult = {
   featured: boolean;
   published: boolean;
   allowComments: boolean;
+  videoUrl?: string | null;
 };
 
 export type BlogPost = {
@@ -33,6 +42,8 @@ export type BlogPost = {
   slug: string;
   excerpt: string;
   content: string;
+   thumbnail: SanityImage | string | null;
+   thumbnailUrl: string | null;
   category: string;
   tags: string[];
   authorName: string;
@@ -45,6 +56,7 @@ export type BlogPost = {
   featured: boolean;
   published: boolean;
   allowComments: boolean;
+   videoUrl: string | null;
 };
 
 const blogFieldsProjection = `
@@ -53,6 +65,7 @@ const blogFieldsProjection = `
   slug,
   excerpt,
   content,
+  thumbnail,
   category,
   tags,
   authorName,
@@ -64,7 +77,8 @@ const blogFieldsProjection = `
   canonicalUrl,
   featured,
   published,
-  allowComments
+  allowComments,
+  "videoUrl": video.asset->url
 `;
 
 const blogsQuery = groq`
@@ -102,12 +116,28 @@ const normalizeTags = (tags: BlogQueryResult["tags"]): string[] => {
   return [];
 };
 
+const resolveThumbnailUrl = (
+  thumbnail: BlogQueryResult["thumbnail"]
+): string | null => {
+  if (typeof thumbnail === "string") {
+    return thumbnail || null;
+  }
+
+  if (thumbnail?.asset) {
+    return urlFor(thumbnail).width(1200).height(800).fit("crop").auto("format").url();
+  }
+
+  return null;
+};
+
 const mapBlog = (blog: BlogQueryResult): BlogPost => ({
   _id: blog._id,
   title: blog.title,
   slug: normalizeSlug(blog.slug),
   excerpt: blog.excerpt,
   content: blog.content,
+   thumbnail: blog.thumbnail,
+   thumbnailUrl: resolveThumbnailUrl(blog.thumbnail),
   category: blog.category,
   tags: normalizeTags(blog.tags),
   authorName: blog.authorName,
@@ -120,6 +150,7 @@ const mapBlog = (blog: BlogQueryResult): BlogPost => ({
   featured: Boolean(blog.featured),
   published: Boolean(blog.published),
   allowComments: Boolean(blog.allowComments),
+   videoUrl: blog.videoUrl || null,
 });
 
 const BLOGS_CACHE_TTL_MS = 60_000;

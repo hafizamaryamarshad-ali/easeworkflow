@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { fetchProjects, type Project } from "../../../lib/fetchProjects";
@@ -9,6 +9,7 @@ import { useTheme } from "../../../theme/ThemeProvider";
 
 export default function ProjectDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const routeProjectId = params?.projectId;
   const projectId = useMemo(() => {
     if (Array.isArray(routeProjectId)) {
@@ -105,6 +106,8 @@ export default function ProjectDetailPage() {
     project.videoUrl ??
     (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? null);
 
+  const hasBothMedia = Boolean(videoUrl && project.thumbnailUrl);
+
   return (
     <section
       style={{
@@ -166,40 +169,35 @@ export default function ProjectDetailPage() {
           gap: "30px",
         }}
       >
-        {videoUrl && (
-          <video
-            src={videoUrl}
-            controls
-            style={{
-              width: "100%",
-              borderRadius: "20px",
-              boxShadow: "var(--shadow-media-dark)",
-              border: theme === "dark" ? "1px solid var(--color-border-dark)" : "1px solid var(--color-border-light)",
-            }}
-          />
-        )}
-
-        {project.thumbnailUrl && (
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              minHeight: "420px",
-              borderRadius: "20px",
-              overflow: "hidden",
-              boxShadow: "var(--shadow-media-dark)",
-              border: theme === "dark" ? "1px solid var(--color-border-dark)" : "1px solid var(--color-border-light)",
-            }}
-          >
-            <Image
-              src={project.thumbnailUrl}
-              alt={project.title}
-              fill
-              sizes="100vw"
-              style={{ objectFit: "cover" }}
-            />
-          </div>
-        )}
+        <button
+          onClick={() => router.back()}
+          style={{
+            position: "absolute",
+            top: "20px",
+            left: "20px",
+            padding: "8px 14px",
+            borderRadius: "10px",
+            border:
+              theme === "dark"
+                ? "1px solid rgba(255,255,255,0.2)"
+                : "1px solid rgba(0,0,0,0.15)",
+            background:
+              theme === "dark"
+                ? "rgba(255,255,255,0.06)"
+                : "rgba(0,0,0,0.04)",
+            backdropFilter: theme === "dark" ? "blur(10px)" : "none",
+            color: theme === "dark" ? "#ffffff" : "#111827",
+            cursor: "pointer",
+            fontWeight: 600,
+            boxShadow:
+              theme === "dark"
+                ? "0 4px 20px rgba(0,0,0,0.4)"
+                : "0 4px 15px rgba(0,0,0,0.1)",
+          }}
+        >
+          
+          ← Back
+        </button>
 
         <h1
           style={{
@@ -258,6 +256,56 @@ export default function ProjectDetailPage() {
             <strong>Last Updated:</strong> {project.updated}
           </p>
         </div>
+
+        {(videoUrl || project.thumbnailUrl) && (
+          <section style={{ marginTop: "40px" }}>
+            <div
+              className={`project-media-grid${hasBothMedia ? " project-media-grid--two" : ""}`}
+            >
+              {videoUrl && (
+                <div
+                  className="project-media-card"
+                  style={{
+                    borderColor:
+                      theme === "dark"
+                        ? "var(--color-border-dark)"
+                        : "var(--color-border-light)",
+                  }}
+                >
+                  <div className="project-media-wrapper">
+                    <video
+                      src={videoUrl}
+                      controls
+                      className="project-media-content"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {project.thumbnailUrl && (
+                <div
+                  className="project-media-card"
+                  style={{
+                    borderColor:
+                      theme === "dark"
+                        ? "var(--color-border-dark)"
+                        : "var(--color-border-light)",
+                  }}
+                >
+                  <div className="project-media-wrapper">
+                    <Image
+                      src={project.thumbnailUrl}
+                      alt={project.title}
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="project-media-image"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
       </div>
 
       <style jsx>{`
@@ -271,6 +319,45 @@ export default function ProjectDetailPage() {
           100% {
             background-position: 0% 50%;
           }
+        }
+
+        .project-media-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+
+        @media (min-width: 900px) {
+          .project-media-grid.project-media-grid--two {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        .project-media-card {
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: var(--shadow-media-dark);
+          border: 1px solid;
+          background: rgba(15, 23, 42, 0.9);
+          backdrop-filter: blur(10px);
+        }
+
+        .project-media-wrapper {
+          position: relative;
+          width: 100%;
+          padding-bottom: 56.25%;
+          background-color: #020617;
+        }
+
+        .project-media-content,
+        .project-media-image {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
       `}</style>
     </section>

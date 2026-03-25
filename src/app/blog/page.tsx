@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiFileText, FiArrowLeft } from "react-icons/fi";
@@ -168,7 +169,7 @@ export default function BlogPage() {
                 transition={{ duration: 0.3 }}
                 style={{
                   width: "18.75rem",
-                  padding: "30px",
+                  padding: "24px 24px 28px",
                   borderRadius: "20px",
                   background: cardBg[theme],
                   backdropFilter: theme === "dark" ? "blur(20px)" : "none",
@@ -179,9 +180,41 @@ export default function BlogPage() {
                   textAlign: "left",
                 }}
               >
-                <FiFileText size={26} color={cardIconColor[theme]} />
+                <div
+                  style={{
+                    width: "100%",
+                    height: "180px",
+                    borderRadius: "16px",
+                    overflow: "hidden",
+                    marginBottom: "18px",
+                    background:
+                      theme === "dark"
+                        ? "linear-gradient(135deg, rgba(15,23,42,1), rgba(56,189,248,0.45))"
+                        : "linear-gradient(135deg, #e0f2fe, #bae6fd)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {blog.thumbnailUrl ? (
+                    <Image
+                      src={blog.thumbnailUrl}
+                      alt={blog.title || "Blog thumbnail"}
+                      width={320}
+                      height={180}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                  ) : (
+                    <FiFileText size={32} color={cardIconColor[theme]} />
+                  )}
+                </div>
 
-                <h3 style={{ marginTop: "15px", fontWeight: 800, color: cardTextColor[theme] }}>
+                <h3 style={{ fontWeight: 800, color: cardTextColor[theme] }}>
                   {blog.title}
                 </h3>
 
