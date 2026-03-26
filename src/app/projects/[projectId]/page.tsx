@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { FiCpu, FiGlobe, FiShield } from "react-icons/fi";
 import { fetchProjects, type Project } from "../../../lib/fetchProjects";
 import { useTheme } from "../../../theme/ThemeProvider";
 
@@ -64,6 +65,12 @@ export default function ProjectDetailPage() {
   const textColors = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
   const subTextColor = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
 
+  const floatingIcons = [
+    { Icon: FiCpu, top: "20%", left: "12%", duration: 18 },
+    { Icon: FiGlobe, top: "75%", left: "78%", duration: 24 },
+    { Icon: FiShield, top: "45%", left: "88%", duration: 26 },
+  ];
+
   if (loading) {
     return (
       <div
@@ -72,9 +79,9 @@ export default function ProjectDetailPage() {
           color: textColors[theme],
           textAlign: "center",
           padding: "50px",
-          backgroundColor: bgColors[theme],
-          backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none",
-          backgroundSize: "400% 400%",
+          backgroundColor: theme === "dark" ? "#0f172a" : bgColors.light,
+          backgroundImage: theme === "dark" ? "var(--bg-gradient-dark)" : "none",
+          backgroundSize: theme === "dark" ? "600% 600%" : "auto",
           animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         }}
       >
@@ -91,9 +98,9 @@ export default function ProjectDetailPage() {
           color: textColors[theme],
           textAlign: "center",
           padding: "50px",
-          backgroundColor: bgColors[theme],
-          backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none",
-          backgroundSize: "400% 400%",
+          backgroundColor: theme === "dark" ? "#0f172a" : bgColors.light,
+          backgroundImage: theme === "dark" ? "var(--bg-gradient-dark)" : "none",
+          backgroundSize: theme === "dark" ? "600% 600%" : "auto",
           animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         }}
       >
@@ -115,9 +122,9 @@ export default function ProjectDetailPage() {
         width: "100%",
         padding: "100px 20px",
         boxSizing: "border-box",
-        backgroundColor: bgColors[theme],
-        backgroundImage: theme === "dark" ? "var(--color-page-gradient-dark)" : "none",
-        backgroundSize: "400% 400%",
+        backgroundColor: theme === "dark" ? "#0f172a" : bgColors.light,
+        backgroundImage: theme === "dark" ? "var(--bg-gradient-dark)" : "none",
+        backgroundSize: theme === "dark" ? "600% 600%" : "auto",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColors[theme],
         display: "flex",
@@ -129,6 +136,52 @@ export default function ProjectDetailPage() {
         overflow: "hidden",
       }}
     >
+      {floatingIcons.map(({ Icon, top, left, duration }, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: -8, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          animate={{ y: 8 }}
+          transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            top,
+            left,
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            style={{
+              width: "120px",
+              height: "120px",
+              borderRadius: "999px",
+              border:
+                theme === "dark"
+                  ? "1px solid rgba(148, 163, 184, 0.3)"
+                  : "1px solid rgba(148, 163, 184, 0.25)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background:
+                theme === "dark"
+                  ? "radial-gradient(circle at top, rgba(56,189,248,0.18), rgba(15,23,42,0.1))"
+                  : "radial-gradient(circle at top, rgba(59,130,246,0.12), rgba(248,250,252,0.1))",
+              boxShadow:
+                theme === "dark"
+                  ? "0 20px 45px rgba(15,23,42,0.85)"
+                  : "0 16px 40px rgba(15,23,42,0.12)",
+            }}
+          >
+            <Icon
+              style={{
+                width: "54px",
+                height: "54px",
+                color: theme === "dark" ? "rgba(226, 232, 240, 0.85)" : "rgba(30, 64, 175, 0.9)",
+              }}
+            />
+          </div>
+        </motion.div>
+      ))}
       <motion.div
         animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
         transition={{ duration: 30, repeat: Infinity }}

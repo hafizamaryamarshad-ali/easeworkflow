@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
+import { FiArrowRight, FiArrowLeft, FiCpu, FiGlobe, FiShield } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { fetchCaseStudies, type CaseStudy } from "../../lib/fetchCaseStudies";
 import { useTheme } from "../../theme/ThemeProvider";
@@ -15,8 +15,8 @@ export default function CaseStudiesPage() {
   const [loading, setLoading] = useState(true);
 
   const sectionBg = {
-    dark: "var(--color-page-gradient-dark)",
-    light: "var(--color-bg-light)",
+    dark: "var(--bg-gradient-dark)",
+    light: "#f5f7fa",
   };
 
   const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
@@ -36,6 +36,15 @@ export default function CaseStudiesPage() {
     dark: "0 8px 25px rgba(0,0,0,0.25)", // subtle dark shadow
     light: "0 6px 20px rgba(0,0,0,0.12)", // subtle light shadow
   };
+
+  const floatingIcons = [
+    { Icon: FiCpu, size: 50, top: "10%", left: "8%", speed: 18, opacity: 0.14 },
+    { Icon: FiGlobe, size: 42, top: "25%", left: "88%", speed: 20, opacity: 0.12 },
+    { Icon: FiShield, size: 54, top: "78%", left: "6%", speed: 22, opacity: 0.13 },
+    { Icon: FiCpu, size: 38, top: "42%", left: "4%", speed: 19, opacity: 0.1 },
+    { Icon: FiGlobe, size: 36, top: "63%", left: "92%", speed: 21, opacity: 0.11 },
+    { Icon: FiShield, size: 46, top: "16%", left: "80%", speed: 23, opacity: 0.12 },
+  ];
 
   useEffect(() => {
     let isMounted = true;
@@ -60,14 +69,43 @@ export default function CaseStudiesPage() {
       style={{
         padding: "80px 20px",
         minHeight: "100vh",
-        backgroundColor: theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
+        backgroundColor: theme === "dark" ? "#0f172a" : sectionBg.light,
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: "400% 400%",
+        backgroundSize: "600% 600%",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         textAlign: "center",
         position: "relative",
       }}
     >
+      {floatingIcons.map((icon, i) => (
+        <motion.div
+          key={i}
+          initial={{ y: 0 }}
+          animate={{ y: ["0%", "-18%", "0%"] }}
+          transition={{
+            duration: icon.speed,
+            repeat: Infinity,
+            repeatType: "mirror",
+            ease: "easeInOut",
+          }}
+          style={{
+            position: "absolute",
+            top: icon.top,
+            left: icon.left,
+            fontSize: icon.size,
+            opacity: icon.opacity,
+            pointerEvents: "none",
+            zIndex: 0,
+            color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
+            textShadow:
+              theme === "dark"
+                ? "0 0 12px rgba(14,165,233,0.5), 0 0 24px rgba(37,99,235,0.45)"
+                : "none",
+          }}
+        >
+          <icon.Icon />
+        </motion.div>
+      ))}
       {/* Back Button */}
       <button
         onClick={() => router.back()}

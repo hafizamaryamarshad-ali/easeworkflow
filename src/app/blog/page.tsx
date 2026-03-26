@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FiFileText, FiArrowLeft } from "react-icons/fi";
+import { FiFileText, FiArrowLeft, FiCpu, FiGlobe, FiShield } from "react-icons/fi";
 import { fetchBlogs, type BlogPost } from "../../lib/fetchBlogs";
 import { useTheme } from "../../theme/ThemeProvider";
 
@@ -15,7 +15,7 @@ export default function BlogPage() {
   const [error, setError] = useState<string | null>(null);
 
   const pageBg = {
-    dark: "var(--color-page-gradient-dark)",
+    dark: "var(--bg-gradient-dark)",
     light: "var(--color-bg-light)",
   };
 
@@ -79,74 +79,138 @@ export default function BlogPage() {
     };
   }, []);
 
+  const floatingIcons = [
+    { Icon: FiCpu, top: "18%", left: "12%", duration: 18 },
+    { Icon: FiGlobe, top: "72%", left: "82%", duration: 24 },
+    { Icon: FiShield, top: "40%", left: "88%", duration: 26 },
+  ];
+
   return (
     <div
       style={{
-        padding: "80px 20px 80px",
+        padding: "60px 20px 80px",
         minHeight: "100vh",
-        backgroundColor: theme === "dark" ? "var(--color-bg)" : pageBg.light,
+        backgroundColor: theme === "dark" ? "#0f172a" : pageBg.light,
         backgroundImage: theme === "dark" ? pageBg.dark : "none",
-        backgroundSize: "400% 400%",
+        backgroundSize: theme === "dark" ? "600% 600%" : "auto",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColor[theme],
         position: "relative",
+        overflow: "hidden",
       }}
     >
-      {/* 🔙 Back Button */}
-      <div style={{ position: "absolute", top: "20px", left: "20px" }}>
-        <Link href="/">
-          <button
+      {/* Floating decorative icons */}
+      {floatingIcons.map(({ Icon, top, left, duration }, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: -8, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          animate={{ y: 8 }}
+          transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            top,
+            left,
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        >
+          <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "8px 14px",
-              borderRadius: "10px",
+              width: "120px",
+              height: "120px",
+              borderRadius: "999px",
               border:
                 theme === "dark"
-                  ? "1px solid rgba(255,255,255,0.15)"
-                  : "1px solid rgba(2,132,199,0.25)",
+                  ? "1px solid rgba(148, 163, 184, 0.3)"
+                  : "1px solid rgba(148, 163, 184, 0.25)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               background:
                 theme === "dark"
-                  ? "rgba(255,255,255,0.06)"
-                  : "rgba(255,255,255,0.9)",
-              backdropFilter: "blur(10px)",
-              color: theme === "dark" ? "#fff" : "#0f172a",
+                  ? "radial-gradient(circle at top, rgba(56,189,248,0.18), rgba(15,23,42,0.1))"
+                  : "radial-gradient(circle at top, rgba(59,130,246,0.12), rgba(248,250,252,0.1))",
               boxShadow:
                 theme === "dark"
-                  ? "0 10px 25px rgba(0,0,0,0.3)"
-                  : "0 6px 15px rgba(2,132,199,0.15)",
-              cursor: "pointer",
-              fontWeight: 600,
-              transition: "all 0.25s ease",
+                  ? "0 20px 45px rgba(15,23,42,0.85)"
+                  : "0 16px 40px rgba(15,23,42,0.12)",
             }}
           >
-            <FiArrowLeft size={16} />
-            Back
-          </button>
-        </Link>
-      </div>
-
-      <h1
-        style={{
-          textAlign: "center",
-          fontSize: "3rem",
-          fontWeight: 900,
-          color: textColor[theme],
-        }}
-      >
-        Our Blog
-      </h1>
+            <Icon
+              style={{
+                width: "54px",
+                height: "54px",
+                color: theme === "dark" ? "rgba(226, 232, 240, 0.85)" : "rgba(30, 64, 175, 0.9)",
+              }}
+            />
+          </div>
+        </motion.div>
+      ))}
 
       <div
         style={{
-          marginTop: "50px",
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: "30px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 1,
         }}
       >
+        {/* 🔙 Back Button */}
+        <div style={{ position: "absolute", top: "15px", left: "20px" }}>
+          <Link href="/">
+            <button
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "8px 14px",
+                borderRadius: "10px",
+                border:
+                  theme === "dark"
+                    ? "1px solid rgba(255,255,255,0.15)"
+                    : "1px solid rgba(2,132,199,0.25)",
+                background:
+                  theme === "dark"
+                    ? "rgba(255,255,255,0.06)"
+                    : "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(10px)",
+                color: theme === "dark" ? "#fff" : "#0f172a",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 10px 25px rgba(0,0,0,0.3)"
+                    : "0 6px 15px rgba(2,132,199,0.15)",
+                cursor: "pointer",
+                fontWeight: 600,
+                transition: "all 0.25s ease",
+              }}
+            >
+              <FiArrowLeft size={16} />
+              Back
+            </button>
+          </Link>
+        </div>
+
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "3rem",
+            fontWeight: 900,
+            color: textColor[theme],
+            marginTop: "28px",
+          }}
+        >
+          Our Blog
+        </h1>
+
+        <div
+          style={{
+            marginTop: "40px",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "30px",
+          }}
+        >
         {loading ? (
           <p style={{ color: subText[theme] }}>Loading blogs...</p>
         ) : error ? (
@@ -225,6 +289,7 @@ export default function BlogPage() {
             </Link>
           ))
         )}
+        </div>
       </div>
 
       <style jsx>{`

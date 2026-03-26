@@ -9,9 +9,18 @@ export default function AboutPage() {
   const router = useRouter();
   const { theme } = useTheme();
 
+  const floatingIcons = [
+    { Icon: FiCpu, size: 52, top: "10%", left: "8%", speed: 16, opacity: 0.14 },
+    { Icon: FiGlobe, size: 44, top: "24%", left: "88%", speed: 18, opacity: 0.12 },
+    { Icon: FiShield, size: 56, top: "78%", left: "6%", speed: 20, opacity: 0.13 },
+    { Icon: FiCpu, size: 40, top: "40%", left: "4%", speed: 19, opacity: 0.1 },
+    { Icon: FiGlobe, size: 38, top: "62%", left: "92%", speed: 17, opacity: 0.11 },
+    { Icon: FiShield, size: 48, top: "16%", left: "80%", speed: 21, opacity: 0.12 },
+  ];
+
   const sectionBg = {
-    dark: "var(--color-page-gradient-dark)",
-    light: "var(--color-bg-light)",
+    dark: "var(--bg-gradient-dark)",
+    light: "#f5f7fa",
   };
 
   const textColor = {
@@ -47,13 +56,42 @@ export default function AboutPage() {
         padding: "100px 20px",
         minHeight: "100vh",
         color: textColor[theme],
-        backgroundColor:
-          theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
+        backgroundColor: theme === "dark" ? "#0f172a" : sectionBg.light,
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: "400% 400%",
+        backgroundSize: "600% 600%",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
       }}
     >
+      {floatingIcons.map((icon, i) => (
+        <motion.div
+          key={i}
+          initial={{ y: 0 }}
+          animate={{ y: ["0%", "-18%", "0%"] }}
+          transition={{
+            duration: icon.speed,
+            repeat: Infinity,
+            repeatType: "mirror",
+            ease: "easeInOut",
+          }}
+          style={{
+            position: "absolute",
+            top: icon.top,
+            left: icon.left,
+            fontSize: icon.size,
+            opacity: icon.opacity,
+            pointerEvents: "none",
+            zIndex: 0,
+            color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
+            textShadow:
+              theme === "dark"
+                ? "0 0 12px rgba(14,165,233,0.5), 0 0 24px rgba(37,99,235,0.45)"
+                : "none",
+          }}
+        >
+          <icon.Icon />
+        </motion.div>
+      ))}
+
       {/* Back Button */}
       <button
         onClick={() => router.back()}

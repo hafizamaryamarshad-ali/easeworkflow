@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiMail, FiPhone, FiMapPin, FiArrowLeft } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin, FiArrowLeft, FiCpu, FiGlobe, FiShield } from "react-icons/fi";
 import { FaGithub, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
 import { useTheme } from "../../theme/ThemeProvider";
 import Link from "next/link";
@@ -44,6 +44,12 @@ export default function ContactPage() {
     { label: "Address", value: "Faisalabad, PK", icon: <FiMapPin size={22} /> },
   ];
 
+  const floatingIcons = [
+    { Icon: FiCpu, top: "18%", left: "10%", duration: 18 },
+    { Icon: FiGlobe, top: "72%", left: "82%", duration: 24 },
+    { Icon: FiShield, top: "42%", left: "88%", duration: 26 },
+  ];
+
   return (
     <section
       style={{
@@ -52,13 +58,59 @@ export default function ContactPage() {
         minHeight: "100vh",
         color: textColor[theme],
         overflow: "hidden",
-        backgroundColor: theme === "dark" ? "var(--color-bg)" : sectionBg.light,
-        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: "400% 400%",
+        backgroundColor: theme === "dark" ? "#0f172a" : sectionBg.light,
+        backgroundImage: theme === "dark" ? "var(--bg-gradient-dark)" : "none",
+        backgroundSize: theme === "dark" ? "600% 600%" : "auto",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         transition: "all 0.5s ease",
       }}
     >
+      {floatingIcons.map(({ Icon, top, left, duration }, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: -8, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          animate={{ y: 8 }}
+          transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            top,
+            left,
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            style={{
+              width: "120px",
+              height: "120px",
+              borderRadius: "999px",
+              border:
+                theme === "dark"
+                  ? "1px solid rgba(148, 163, 184, 0.3)"
+                  : "1px solid rgba(148, 163, 184, 0.25)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background:
+                theme === "dark"
+                  ? "radial-gradient(circle at top, rgba(56,189,248,0.18), rgba(15,23,42,0.1))"
+                  : "radial-gradient(circle at top, rgba(59,130,246,0.12), rgba(248,250,252,0.1))",
+              boxShadow:
+                theme === "dark"
+                  ? "0 20px 45px rgba(15,23,42,0.85)"
+                  : "0 16px 40px rgba(15,23,42,0.12)",
+            }}
+          >
+            <Icon
+              style={{
+                width: "54px",
+                height: "54px",
+                color: theme === "dark" ? "rgba(226, 232, 240, 0.85)" : "rgba(30, 64, 175, 0.9)",
+              }}
+            />
+          </div>
+        </motion.div>
+      ))}
       {/* Back Button */}
       <div style={{ position: "absolute", top: "20px", left: "20px" }}>
         <Link href="/">
@@ -94,7 +146,15 @@ export default function ContactPage() {
         </Link>
       </div>
 
-      <motion.h1
+      <div
+        style={{
+          maxWidth: "1100px",
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <motion.h1
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -107,19 +167,19 @@ export default function ContactPage() {
           textAlign: "center",
           color: textColor[theme],
         }}
-      >
-        Contact Information
-      </motion.h1>
+        >
+          Contact Information
+        </motion.h1>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "60px",
-          flexWrap: "wrap",
-          marginTop: "20px",
-        }}
-      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "60px",
+            flexWrap: "wrap",
+            marginTop: "20px",
+          }}
+        >
         {/* Left: Form */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -251,6 +311,7 @@ export default function ContactPage() {
             ))}
           </div>
         </motion.div>
+        </div>
       </div>
 
       <style jsx>{`

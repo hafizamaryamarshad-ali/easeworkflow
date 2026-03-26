@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiCpu, FiGlobe, FiShield } from "react-icons/fi";
 import { fetchProjects } from "../../../lib/fetchProjects";
 import { useTheme } from "../../../theme/ThemeProvider";
 
@@ -76,7 +76,7 @@ export default function ProjectsList() {
   }, []);
 
   const sectionBg = {
-    dark: "var(--color-page-gradient-dark)",
+    dark: "var(--bg-gradient-dark)",
     light: "var(--color-bg-light)",
   };
 
@@ -106,20 +106,75 @@ export default function ProjectsList() {
     light: "0 8px 20px rgba(0,0,0,0.1)", // subtle light shadow
   };
 
+  const floatingIcons = [
+    { Icon: FiCpu, top: "16%", left: "12%", duration: 18 },
+    { Icon: FiGlobe, top: "68%", left: "80%", duration: 24 },
+    { Icon: FiShield, top: "42%", left: "88%", duration: 26 },
+  ];
+
   return (
     <section
       style={{
         padding: "50px 15px 120px",
         backgroundColor:
-          theme === "dark" ? "var(--color-bg)" : "var(--color-bg-light)",
+          theme === "dark" ? "#0f172a" : "var(--color-bg-light)",
         backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: "400% 400%",
+        backgroundSize: theme === "dark" ? "600% 600%" : "auto",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColor[theme],
         textAlign: "center",
         position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Floating decorative icons */}
+      {floatingIcons.map(({ Icon, top, left, duration }, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: -8, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          animate={{ y: 8 }}
+          transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            top,
+            left,
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            style={{
+              width: "120px",
+              height: "120px",
+              borderRadius: "999px",
+              border:
+                theme === "dark"
+                  ? "1px solid rgba(148, 163, 184, 0.3)"
+                  : "1px solid rgba(148, 163, 184, 0.25)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background:
+                theme === "dark"
+                  ? "radial-gradient(circle at top, rgba(56,189,248,0.18), rgba(15,23,42,0.1))"
+                  : "radial-gradient(circle at top, rgba(59,130,246,0.12), rgba(248,250,252,0.1))",
+              boxShadow:
+                theme === "dark"
+                  ? "0 20px 45px rgba(15,23,42,0.85)"
+                  : "0 16px 40px rgba(15,23,42,0.12)",
+            }}
+          >
+            <Icon
+              style={{
+                width: "54px",
+                height: "54px",
+                color: theme === "dark" ? "rgba(226, 232, 240, 0.85)" : "rgba(30, 64, 175, 0.9)",
+              }}
+            />
+          </div>
+        </motion.div>
+      ))}
+
       {/* Back Button */}
       <button
         onClick={() => router.back()}
@@ -148,24 +203,33 @@ export default function ProjectsList() {
         <FiArrowLeft size={18} /> Back
       </button>
 
-      <h1
-        style={{
-          fontSize: "2.2rem",
-          fontWeight: 900,
-          marginBottom: "40px",
-        }}
-      >
-        All Projects
-      </h1>
-
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          alignItems: "center",
+          maxWidth: "1100px",
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 1,
         }}
       >
+        <h1
+          style={{
+            fontSize: "2.2rem",
+            fontWeight: 900,
+            marginBottom: "40px",
+            marginTop: "20px",
+          }}
+        >
+          All Projects
+        </h1>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            alignItems: "center",
+          }}
+        >
         {projects.map((project, i) => (
           <motion.div
             key={project.id}
@@ -221,6 +285,7 @@ export default function ProjectsList() {
             </div>
           </motion.div>
         ))}
+        </div>
       </div>
 
       <style jsx>{`

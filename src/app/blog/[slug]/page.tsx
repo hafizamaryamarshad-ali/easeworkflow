@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { fetchBlogBySlug, type BlogPost } from "../../../lib/fetchBlogs";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { FiCpu, FiGlobe, FiShield } from "react-icons/fi";
 
 type ThemeMode = "dark" | "light";
 
@@ -28,7 +29,7 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
 
   const pageBg: Palette = {
-    dark: "var(--color-page-gradient-dark)",
+    dark: "var(--bg-gradient-dark)",
     light: "var(--color-bg-light)",
   };
 
@@ -52,9 +53,15 @@ export default function BlogDetail() {
     load();
   }, [slug]);
 
+  const floatingIcons = [
+    { Icon: FiCpu, top: "16%", left: "10%", duration: 18 },
+    { Icon: FiGlobe, top: "72%", left: "82%", duration: 24 },
+    { Icon: FiShield, top: "44%", left: "88%", duration: 26 },
+  ];
+
   if (loading) {
     return (
-      <Wrapper theme={theme} pageBg={pageBg} textColor={textColor}>
+      <Wrapper theme={theme} pageBg={pageBg} textColor={textColor} floatingIcons={floatingIcons}>
         Loading...
       </Wrapper>
     );
@@ -62,21 +69,21 @@ export default function BlogDetail() {
 
   if (!blog) {
     return (
-      <Wrapper theme={theme} pageBg={pageBg} textColor={textColor}>
+      <Wrapper theme={theme} pageBg={pageBg} textColor={textColor} floatingIcons={floatingIcons}>
         Blog not found
       </Wrapper>
     );
   }
 
   return (
-    <Wrapper theme={theme} pageBg={pageBg} textColor={textColor}>
+    <Wrapper theme={theme} pageBg={pageBg} textColor={textColor} floatingIcons={floatingIcons}>
 
      {/* Back Button */}
       <button
         onClick={() => router.back()}
         style={{
           position: "absolute",
-          top: "80px",
+          top: "20px",
           left: "20px",
           padding: "8px 14px",
           borderRadius: "10px",
@@ -96,6 +103,7 @@ export default function BlogDetail() {
             theme === "dark"
               ? "0 4px 20px rgba(0,0,0,0.4)"
               : "0 4px 15px rgba(0,0,0,0.1)",
+          zIndex: 2,
         }}
       >
         ← Back
@@ -150,22 +158,79 @@ export default function BlogDetail() {
 }
 
 /* ---------- Wrapper ---------- */
-function Wrapper({ children, theme, pageBg, textColor }: any) {
+function Wrapper({ children, theme, pageBg, textColor, floatingIcons }: any) {
   return (
     <div
       style={{
         minHeight: "100vh",
-        padding: "80px 20px",
-        background:
-          theme === "dark"
-            ? "var(--color-bg)"
-            : pageBg.light,
-        backgroundImage:
-          theme === "dark" ? pageBg.dark : "none",
+        padding: "60px 20px",
+        backgroundColor:
+          theme === "dark" ? "#0f172a" : pageBg.light,
+        backgroundImage: theme === "dark" ? pageBg.dark : "none",
+        backgroundSize: theme === "dark" ? "600% 600%" : "auto",
+        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
         color: textColor[theme],
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      {children}
+      {Array.isArray(floatingIcons) &&
+        floatingIcons.map(({ Icon, top, left, duration }: any, index: number) => (
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              top,
+              left,
+              zIndex: 0,
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              style={{
+                width: "120px",
+                height: "120px",
+                borderRadius: "999px",
+                border:
+                  theme === "dark"
+                    ? "1px solid rgba(148, 163, 184, 0.3)"
+                    : "1px solid rgba(148, 163, 184, 0.25)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background:
+                  theme === "dark"
+                    ? "radial-gradient(circle at top, rgba(56,189,248,0.18), rgba(15,23,42,0.1))"
+                    : "radial-gradient(circle at top, rgba(59,130,246,0.12), rgba(248,250,252,0.1))",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 20px 45px rgba(15,23,42,0.85)"
+                    : "0 16px 40px rgba(15,23,42,0.12)",
+              }}
+            >
+              <Icon
+                style={{
+                  width: "54px",
+                  height: "54px",
+                  color:
+                    theme === "dark"
+                      ? "rgba(226, 232, 240, 0.85)"
+                      : "rgba(30, 64, 175, 0.9)",
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      <div
+        style={{
+          maxWidth: "1100px",
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -206,7 +271,7 @@ const outerContainer: CSSProperties = {
 };
 
 const card = (theme: ThemeMode): CSSProperties => ({
-  marginTop: "40px",
+  marginTop: "20px",
   padding: "40px 35px",
   borderRadius: "22px",
   background:
@@ -251,7 +316,7 @@ const content = (subTextColor: Palette, theme: ThemeMode): CSSProperties => ({
 });
 
 const mediaGrid = (blog: BlogPost): CSSProperties => ({
-  marginTop: "50px",
+  marginTop: "36px",
   display: "grid",
   gridTemplateColumns:
     blog.videoUrl && blog.thumbnailUrl ? "1fr 1fr" : "1fr",
