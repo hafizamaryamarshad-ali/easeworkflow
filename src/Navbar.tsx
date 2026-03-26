@@ -43,23 +43,32 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/", icon: <FiHome size={14} /> },
-    { name: "About", href: "/about", icon: <FiInfo size={14} /> },
-    //{ name: "Healthcare", href: "/healthcare-automation", icon: <FiActivity size={14} /> },
     { name: "Projects", href: "/projects", icon: <FiHexagon size={14} /> },
     { name: "Case Studies", href: "/case-studies", icon: <FiTool size={14} /> },
     { name: "Blog", href: "/blog", icon: <FiPenTool size={14} /> },
     { name: "Contact", href: "/contact", icon: <FiMail size={14} /> },
+    { name: "About", href: "/about", icon: <FiInfo size={14} /> },
   ];
 
-  const mainColor = theme === "dark" ? "#00c6ff" : "#3b82f6";
-  const navTextColor = theme === "dark" ? "#fff" : "#0f172a";
-  const navBg = scrolled
-    ? theme === "dark"
-      ? "rgba(15,15,15,0.85)"
-      : "rgba(255,255,255,0.85)"
-    : theme === "dark"
-    ? "rgba(15,15,15,0.6)"
-    : "rgba(255,255,255,0.6)";
+  // Match the hero section's blue accent and glassy gradient feel
+  const mainColor = theme === "dark" ? "#0ea5e9" : "#3b82f6";
+  const navTextColor = theme === "dark" ? "#e5f4ff" : "#0f172a";
+
+  const navBg = theme === "dark"
+    ? scrolled
+      ? "linear-gradient(120deg, rgba(15,23,42,0.96), rgba(15,23,42,0.9))"
+      : "linear-gradient(120deg, rgba(15,23,42,0.9), rgba(15,23,42,0.82))"
+    : scrolled
+    ? "rgba(255,255,255,0.96)"
+    : "rgba(255,255,255,0.9)";
+
+  const navBorder = theme === "dark"
+    ? "1px solid rgba(148,163,184,0.45)"
+    : "1px solid rgba(148,163,184,0.25)";
+
+  const navShadow = theme === "dark"
+    ? "0 18px 45px rgba(15,23,42,0.9)"
+    : "0 10px 30px rgba(15,23,42,0.12)";
 
   return (
     <nav
@@ -73,7 +82,9 @@ export default function Navbar() {
         padding: "10px 24px",
         background: navBg,
         backdropFilter: "blur(16px)",
-        borderRadius: "12px",
+        border: navBorder,
+        boxShadow: navShadow,
+        borderRadius: "0 0 12px 12px",
         maxWidth: "1400px",
         margin: "0 auto",
         transition: "all 0.4s ease",
@@ -100,8 +111,8 @@ export default function Navbar() {
             fontSize: "1.5rem",
             fontWeight: 700,
             backgroundImage: theme === "dark"
-              ? "linear-gradient(270deg, #00c6ff, #0072ff)"
-              : "linear-gradient(270deg, #3b82f6, #2563eb)",
+              ? "linear-gradient(270deg, #0ea5e9, #3b82f6)"
+              : "linear-gradient(270deg, #2563eb, #3b82f6)",
             backgroundSize: "400% 400%",
             backgroundClip: "text",
             WebkitBackgroundClip: "text",

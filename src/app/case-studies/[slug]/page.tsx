@@ -4,9 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { FiArrowLeft, FiCpu, FiGlobe, FiShield } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
+import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
 import { fetchCaseStudies, type CaseStudy } from "../../../lib/fetchCaseStudies";
 import { useTheme } from "../../../theme/ThemeProvider";
+import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
 
 export default function CaseStudyDetail() {
   const params = useParams();
@@ -99,10 +101,25 @@ export default function CaseStudyDetail() {
   }
 
   const floatingIcons = [
-    { Icon: FiCpu, top: "15%", left: "10%", duration: 18 },
-    { Icon: FiGlobe, top: "70%", left: "80%", duration: 24 },
-    { Icon: FiShield, top: "40%", left: "85%", duration: 26 },
+    { Icon: FaStethoscope, top: "15%", left: "10%", duration: 18 },
+    { Icon: FaPills, top: "70%", left: "80%", duration: 24 },
+    { Icon: FaHeart, top: "40%", left: "85%", duration: 26 },
   ];
+
+  const mediaItems: MediaItem[] = [];
+  if (study.featuredImageUrl) {
+    mediaItems.push({ type: "image", src: study.featuredImageUrl, alt: study.title });
+  }
+  if (Array.isArray(study.galleryImageUrls)) {
+    study.galleryImageUrls.forEach((url) => {
+      if (url) mediaItems.push({ type: "image", src: url, alt: study.title });
+    });
+  }
+  if (Array.isArray(study.videoUrls)) {
+    study.videoUrls.forEach((url) => {
+      if (url) mediaItems.push({ type: "video", src: url });
+    });
+  }
 
   return (
     <section
@@ -127,9 +144,9 @@ export default function CaseStudyDetail() {
       {floatingIcons.map(({ Icon, top, left, duration }, index) => (
         <motion.div
           key={index}
-          initial={{ y: -8, opacity: theme === "dark" ? 0.22 : 0.1 }}
-          animate={{ y: 8 }}
-          transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          initial={{ y: 0, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          animate={{ y: ["0%", "-18%", "0%"] }}
+          transition={{ duration, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
           style={{
             position: "absolute",
             top,
@@ -161,7 +178,7 @@ export default function CaseStudyDetail() {
               style={{
                 width: "54px",
                 height: "54px",
-                color: theme === "dark" ? "rgba(226, 232, 240, 0.85)" : "rgba(30, 64, 175, 0.9)",
+                color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
               }}
             />
           </div>
@@ -199,6 +216,10 @@ export default function CaseStudyDetail() {
       </button>
 
       <div style={{ maxWidth: "1050px", margin: "0 auto", paddingTop: "20px", position: "relative", zIndex: 1 }}>
+
+        {mediaItems.length > 0 && (
+          <MediaCarousel items={mediaItems} aspectRatio="16 / 9" />
+        )}
 
         {/* Header */}
         <motion.div
@@ -308,35 +329,6 @@ export default function CaseStudyDetail() {
             ))}
           </div>
         </motion.div>
-
-        {/* Image */}
-        {study.featuredImageUrl && (
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{
-              maxWidth: "820px",
-              margin: "0 auto",
-              borderRadius: "26px",
-              overflow: "hidden",
-              ...baseCard,
-              padding: "12px",
-            }}
-          >
-            <Image
-              src={study.featuredImageUrl}
-              alt={study.title}
-              width={1200}
-              height={800}
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-                borderRadius: "18px",
-              }}
-            />
-          </motion.div>
-        )}
 
       </div>
     </section>

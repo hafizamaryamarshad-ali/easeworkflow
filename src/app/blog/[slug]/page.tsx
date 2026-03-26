@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { fetchBlogBySlug, type BlogPost } from "../../../lib/fetchBlogs";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { FiCpu, FiGlobe, FiShield } from "react-icons/fi";
+import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
+import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
 
 type ThemeMode = "dark" | "light";
 
@@ -13,6 +15,40 @@ type Palette = {
   dark: string;
   light: string;
 };
+
+function BlogMediaSection({ blog }: { blog: BlogPost }) {
+  const items: MediaItem[] = [];
+
+  if (blog.thumbnailUrl) {
+    items.push({ type: "image", src: blog.thumbnailUrl, alt: blog.title });
+  }
+
+  const gallery = (blog as any).galleryImageUrls as string[] | undefined;
+  if (Array.isArray(gallery)) {
+    gallery.forEach((url) => {
+      if (url) items.push({ type: "image", src: url, alt: blog.title });
+    });
+  }
+
+  if (blog.videoUrl) {
+    items.push({ type: "video", src: blog.videoUrl });
+  }
+
+  const extraVideos = (blog as any).videoUrls as string[] | undefined;
+  if (Array.isArray(extraVideos)) {
+    extraVideos.forEach((url) => {
+      if (url) items.push({ type: "video", src: url });
+    });
+  }
+
+  if (!items.length) return null;
+
+  return (
+    <div style={{ marginBottom: "24px" }}>
+      <MediaCarousel items={items} aspectRatio="16 / 9" />
+    </div>
+  );
+}
 
 export default function BlogDetail() {
   const params = useParams();
@@ -22,7 +58,7 @@ export default function BlogDetail() {
   const slugParam = params?.slug;
   const slug = useMemo(() => {
     if (Array.isArray(slugParam)) return slugParam[0];
-    return slugParam;
+    return slugParam as string | undefined;
   }, [slugParam]);
 
   const [blog, setBlog] = useState<BlogPost | null>(null);
@@ -54,9 +90,9 @@ export default function BlogDetail() {
   }, [slug]);
 
   const floatingIcons = [
-    { Icon: FiCpu, top: "16%", left: "10%", duration: 18 },
-    { Icon: FiGlobe, top: "72%", left: "82%", duration: 24 },
-    { Icon: FiShield, top: "44%", left: "88%", duration: 26 },
+    { Icon: FaStethoscope, top: "16%", left: "10%", duration: 18 },
+    { Icon: FaPills, top: "72%", left: "82%", duration: 24 },
+    { Icon: FaHeart, top: "44%", left: "88%", duration: 26 },
   ];
 
   if (loading) {
@@ -77,8 +113,7 @@ export default function BlogDetail() {
 
   return (
     <Wrapper theme={theme} pageBg={pageBg} textColor={textColor} floatingIcons={floatingIcons}>
-
-     {/* Back Button */}
+      {/* Back Button */}
       <button
         onClick={() => router.back()}
         style={{
@@ -106,52 +141,29 @@ export default function BlogDetail() {
           zIndex: 2,
         }}
       >
+        
+        
+        
+        
+        
+        
+        
+        
+        
         ← Back
       </button>
 
       <div style={outerContainer}>
-
-        {/* Main Card */}
         <div style={card(theme)}>
-
           <h1 style={title}>{blog.title}</h1>
 
           <div style={divider(theme)} />
 
-          <p style={content(subTextColor, theme)}>
-            {blog.content}
-          </p>
+          {/* Media slider inside the main card, below the header */}
+          <BlogMediaSection blog={blog} />
 
-          {/* Media Section */}
-          {(blog.videoUrl || blog.thumbnailUrl) && (
-            <div style={mediaGrid(blog)}>
-
-              {blog.videoUrl && (
-                <div style={mediaCard(theme)}>
-                  <div style={mediaWrapper}>
-                    <video src={blog.videoUrl} controls style={mediaContent} />
-                  </div>
-                </div>
-              )}
-
-              {blog.thumbnailUrl && (
-                <div style={mediaCard(theme)}>
-                  <div style={mediaWrapper}>
-                    <Image
-                      src={blog.thumbnailUrl}
-                      alt={blog.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
-                </div>
-              )}
-
-            </div>
-          )}
-
+          <p style={content(subTextColor, theme)}>{blog.content}</p>
         </div>
-
       </div>
     </Wrapper>
   );
@@ -164,8 +176,7 @@ function Wrapper({ children, theme, pageBg, textColor, floatingIcons }: any) {
       style={{
         minHeight: "100vh",
         padding: "60px 20px",
-        backgroundColor:
-          theme === "dark" ? "#0f172a" : pageBg.light,
+        backgroundColor: theme === "dark" ? "#0f172a" : pageBg.light,
         backgroundImage: theme === "dark" ? pageBg.dark : "none",
         backgroundSize: theme === "dark" ? "600% 600%" : "auto",
         animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
@@ -176,8 +187,11 @@ function Wrapper({ children, theme, pageBg, textColor, floatingIcons }: any) {
     >
       {Array.isArray(floatingIcons) &&
         floatingIcons.map(({ Icon, top, left, duration }: any, index: number) => (
-          <div
+          <motion.div
             key={index}
+            initial={{ y: 0, opacity: theme === "dark" ? 0.22 : 0.1 }}
+            animate={{ y: ["0%", "-18%", "0%"] }}
+            transition={{ duration, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
             style={{
               position: "absolute",
               top,
@@ -214,12 +228,12 @@ function Wrapper({ children, theme, pageBg, textColor, floatingIcons }: any) {
                   height: "54px",
                   color:
                     theme === "dark"
-                      ? "rgba(226, 232, 240, 0.85)"
-                      : "rgba(30, 64, 175, 0.9)",
+                      ? "#0ea5e9"
+                      : "#3b82f6",
                 }}
               />
             </div>
-          </div>
+          </motion.div>
         ))}
       <div
         style={{
@@ -235,7 +249,7 @@ function Wrapper({ children, theme, pageBg, textColor, floatingIcons }: any) {
   );
 }
 
-/* ---------- Back Button ---------- */
+/* ---------- Back Button (unused helper) ---------- */
 const backButtonStyle = (theme: ThemeMode): CSSProperties => ({
   position: "fixed",
   top: "20px",
@@ -315,6 +329,7 @@ const content = (subTextColor: Palette, theme: ThemeMode): CSSProperties => ({
   whiteSpace: "pre-line",
 });
 
+// legacy helpers kept for compatibility (unused in new layout)
 const mediaGrid = (blog: BlogPost): CSSProperties => ({
   marginTop: "36px",
   display: "grid",

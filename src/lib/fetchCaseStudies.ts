@@ -26,6 +26,8 @@ type CaseStudyQueryResult = {
   solution: string;
   tools: string[] | null;
   results: string[] | null;
+  galleryImageUrls?: string[] | null;
+  videoUrls?: string[] | null;
 };
 
 export type CaseStudy = {
@@ -41,6 +43,8 @@ export type CaseStudy = {
   tools: string[];
   results: string[];
   featuredImageUrl: string | null;
+  galleryImageUrls: string[];
+  videoUrls: string[];
 };
 
 const caseStudiesQuery = groq`
@@ -50,6 +54,8 @@ const caseStudiesQuery = groq`
     title,
     summary,
     featuredImage,
+    "galleryImageUrls": galleryImages[].asset->url,
+    "videoUrls": videos[].asset->url,
     client,
     industry,
     problem,
@@ -121,6 +127,12 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
         tools: Array.isArray(study.tools) ? study.tools : [],
         results: Array.isArray(study.results) ? study.results : [],
         featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),
+        galleryImageUrls: Array.isArray(study.galleryImageUrls)
+          ? study.galleryImageUrls.filter(Boolean)
+          : [],
+        videoUrls: Array.isArray(study.videoUrls)
+          ? study.videoUrls.filter(Boolean)
+          : [],
       }));
 
       if (process.env.NODE_ENV === "production") {

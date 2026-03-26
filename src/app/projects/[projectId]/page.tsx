@@ -4,9 +4,10 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { FiCpu, FiGlobe, FiShield } from "react-icons/fi";
+import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
 import { fetchProjects, type Project } from "../../../lib/fetchProjects";
 import { useTheme } from "../../../theme/ThemeProvider";
+import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -66,9 +67,9 @@ export default function ProjectDetailPage() {
   const subTextColor = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
 
   const floatingIcons = [
-    { Icon: FiCpu, top: "20%", left: "12%", duration: 18 },
-    { Icon: FiGlobe, top: "75%", left: "78%", duration: 24 },
-    { Icon: FiShield, top: "45%", left: "88%", duration: 26 },
+    { Icon: FaStethoscope, top: "20%", left: "12%", duration: 18 },
+    { Icon: FaPills, top: "75%", left: "78%", duration: 24 },
+    { Icon: FaHeart, top: "45%", left: "88%", duration: 26 },
   ];
 
   if (loading) {
@@ -115,6 +116,24 @@ export default function ProjectDetailPage() {
 
   const hasBothMedia = Boolean(videoUrl && project.thumbnailUrl);
 
+  const mediaItems: MediaItem[] = [];
+  if (project.thumbnailUrl) {
+    mediaItems.push({ type: "image", src: project.thumbnailUrl, alt: project.title });
+  }
+  if (Array.isArray((project as any).galleryImageUrls)) {
+    (project as any).galleryImageUrls.forEach((url: string) => {
+      if (url) mediaItems.push({ type: "image", src: url, alt: project.title });
+    });
+  }
+  if (videoUrl) {
+    mediaItems.push({ type: "video", src: videoUrl });
+  }
+  if (Array.isArray((project as any).extraVideoUrls)) {
+    (project as any).extraVideoUrls.forEach((url: string) => {
+      if (url) mediaItems.push({ type: "video", src: url });
+    });
+  }
+
   return (
     <section
       style={{
@@ -139,9 +158,9 @@ export default function ProjectDetailPage() {
       {floatingIcons.map(({ Icon, top, left, duration }, index) => (
         <motion.div
           key={index}
-          initial={{ y: -8, opacity: theme === "dark" ? 0.22 : 0.1 }}
-          animate={{ y: 8 }}
-          transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          initial={{ y: 0, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          animate={{ y: ["0%", "-18%", "0%"] }}
+          transition={{ duration, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
           style={{
             position: "absolute",
             top,
@@ -176,7 +195,7 @@ export default function ProjectDetailPage() {
               style={{
                 width: "54px",
                 height: "54px",
-                color: theme === "dark" ? "rgba(226, 232, 240, 0.85)" : "rgba(30, 64, 175, 0.9)",
+                color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
               }}
             />
           </div>
@@ -252,6 +271,12 @@ export default function ProjectDetailPage() {
           ← Back
         </button>
 
+        {mediaItems.length > 0 && (
+          <div style={{ marginTop: "40px" }}>
+            <MediaCarousel items={mediaItems} aspectRatio="16 / 9" />
+          </div>
+        )}
+
         <h1
           style={{
             fontSize: "3rem",
@@ -310,109 +335,7 @@ export default function ProjectDetailPage() {
           </p>
         </div>
 
-        {(videoUrl || project.thumbnailUrl) && (
-          <section style={{ marginTop: "40px" }}>
-            <div
-              className={`project-media-grid${hasBothMedia ? " project-media-grid--two" : ""}`}
-            >
-              {videoUrl && (
-                <div
-                  className="project-media-card"
-                  style={{
-                    borderColor:
-                      theme === "dark"
-                        ? "var(--color-border-dark)"
-                        : "var(--color-border-light)",
-                  }}
-                >
-                  <div className="project-media-wrapper">
-                    <video
-                      src={videoUrl}
-                      controls
-                      className="project-media-content"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {project.thumbnailUrl && (
-                <div
-                  className="project-media-card"
-                  style={{
-                    borderColor:
-                      theme === "dark"
-                        ? "var(--color-border-dark)"
-                        : "var(--color-border-light)",
-                  }}
-                >
-                  <div className="project-media-wrapper">
-                    <Image
-                      src={project.thumbnailUrl}
-                      alt={project.title}
-                      fill
-                      sizes="(min-width: 1024px) 50vw, 100vw"
-                      className="project-media-image"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
       </div>
-
-      <style jsx>{`
-        @keyframes gradientBG {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-
-        .project-media-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 28px;
-        }
-
-        @media (min-width: 900px) {
-          .project-media-grid.project-media-grid--two {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-
-        .project-media-card {
-          border-radius: 20px;
-          overflow: hidden;
-          box-shadow: var(--shadow-media-dark);
-          border: 1px solid;
-          background: rgba(15, 23, 42, 0.9);
-          backdrop-filter: blur(10px);
-        }
-
-        .project-media-wrapper {
-          position: relative;
-          width: 100%;
-          padding-bottom: 56.25%;
-          background-color: #020617;
-        }
-
-        .project-media-content,
-        .project-media-image {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-      `}</style>
     </section>
   );
 }

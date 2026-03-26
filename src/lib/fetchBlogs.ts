@@ -34,6 +34,8 @@ type BlogQueryResult = {
   published: boolean;
   allowComments: boolean;
   videoUrl?: string | null;
+  videoUrls?: string[] | null;
+  galleryImageUrls?: string[] | null;
 };
 
 export type BlogPost = {
@@ -57,6 +59,8 @@ export type BlogPost = {
   published: boolean;
   allowComments: boolean;
    videoUrl: string | null;
+  videoUrls: string[];
+  galleryImageUrls: string[];
 };
 
 const blogFieldsProjection = `
@@ -78,7 +82,9 @@ const blogFieldsProjection = `
   featured,
   published,
   allowComments,
-  "videoUrl": video.asset->url
+  "videoUrl": video.asset->url,
+  "videoUrls": videos[].asset->url,
+  "galleryImageUrls": galleryImages[].asset->url
 `;
 
 const blogsQuery = groq`
@@ -151,6 +157,10 @@ const mapBlog = (blog: BlogQueryResult): BlogPost => ({
   published: Boolean(blog.published),
   allowComments: Boolean(blog.allowComments),
    videoUrl: blog.videoUrl || null,
+  videoUrls: Array.isArray(blog.videoUrls) ? blog.videoUrls.filter(Boolean) : [],
+  galleryImageUrls: Array.isArray(blog.galleryImageUrls)
+    ? blog.galleryImageUrls.filter(Boolean)
+    : [],
 });
 
 const BLOGS_CACHE_TTL_MS = 60_000;

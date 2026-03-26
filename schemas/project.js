@@ -7,8 +7,28 @@ export default {
     { name: "title", title: "Title", type: "string", readOnly: false, hidden: false },
     { name: "shortDesc", title: "Short Description", type: "string", readOnly: false, hidden: false },
     { name: "longDesc", title: "Long Description", type: "text", readOnly: false, hidden: false },
-    { name: "video", title: "Video ", type: "file", options: { accept: "video/*" }, readOnly: false, hidden: false },
+    // Existing single video field (kept)
+    { name: "video", title: "Video", type: "file", options: { accept: "video/*" }, readOnly: false, hidden: false },
+    // New multiple videos field
+    {
+      name: "videos",
+      title: "Additional Videos",
+      type: "array",
+      of: [{ type: "file", options: { accept: "video/*" } }],
+      readOnly: false,
+      hidden: false,
+    },
+    // Existing single thumbnail (kept)
     { name: "thumbnail", title: "Thumbnail Image", type: "image", options: { hotspot: true }, readOnly: false, hidden: false },
+    // New multiple images field
+    {
+      name: "galleryImages",
+      title: "Gallery Images",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      readOnly: false,
+      hidden: false,
+    },
     { name: "clientName", title: "Client Name", type: "string", readOnly: false, hidden: false },
     { name: "industry", title: "Industry", type: "string", readOnly: false, hidden: false },
     { name: "technologies", title: "Technologies", type: "array", of: [{ type: "string" }], readOnly: false, hidden: false },

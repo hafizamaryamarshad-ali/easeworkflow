@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiCpu, FiGlobe, FiShield } from "react-icons/fi";
+import { FaStethoscope, FaPills, FaHeart, FaSyringe } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useTheme } from "../../theme/ThemeProvider";
 
@@ -10,12 +10,12 @@ export default function AboutPage() {
   const { theme } = useTheme();
 
   const floatingIcons = [
-    { Icon: FiCpu, size: 52, top: "10%", left: "8%", speed: 16, opacity: 0.14 },
-    { Icon: FiGlobe, size: 44, top: "24%", left: "88%", speed: 18, opacity: 0.12 },
-    { Icon: FiShield, size: 56, top: "78%", left: "6%", speed: 20, opacity: 0.13 },
-    { Icon: FiCpu, size: 40, top: "40%", left: "4%", speed: 19, opacity: 0.1 },
-    { Icon: FiGlobe, size: 38, top: "62%", left: "92%", speed: 17, opacity: 0.11 },
-    { Icon: FiShield, size: 48, top: "16%", left: "80%", speed: 21, opacity: 0.12 },
+    { Icon: FaStethoscope, size: 52, top: "10%", left: "8%", speed: 16, opacity: 0.14 },
+    { Icon: FaPills, size: 44, top: "24%", left: "88%", speed: 18, opacity: 0.12 },
+    { Icon: FaHeart, size: 56, top: "78%", left: "6%", speed: 20, opacity: 0.13 },
+    { Icon: FaStethoscope, size: 40, top: "40%", left: "4%", speed: 19, opacity: 0.1 },
+    { Icon: FaPills, size: 38, top: "62%", left: "92%", speed: 17, opacity: 0.11 },
+    { Icon: FaSyringe, size: 48, top: "16%", left: "80%", speed: 21, opacity: 0.12 },
   ];
 
   const sectionBg = {
@@ -171,17 +171,17 @@ export default function AboutPage() {
           {[
             {
               title: "Our Mission",
-              icon: <FiCpu size={26} />,
+              icon: <FaStethoscope size={26} />,
               desc: "Our mission is to transform healthcare operations through smart automation, AI-driven workflows, and digital innovation to reduce manual workload and improve efficiency.",
             },
             {
               title: "Our Vision",
-              icon: <FiGlobe size={26} />,
+              icon: <FaPills size={26} />,
               desc: "Our vision is to become a global leader in healthcare technology by delivering scalable, secure, and intelligent systems that empower medical institutions worldwide.",
             },
             {
               title: "Our Values",
-              icon: <FiShield size={26} />,
+              icon: <FaHeart size={26} />,
               desc: "We value innovation, integrity, transparency, and excellence. Every solution is built with long-term reliability, security, and trust at its core.",
             },
           ].map((item, i) => (

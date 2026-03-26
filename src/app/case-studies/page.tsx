@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FiArrowRight, FiArrowLeft, FiCpu, FiGlobe, FiShield } from "react-icons/fi";
+import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
+import { FaStethoscope, FaPills, FaHeart, FaSyringe } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { fetchCaseStudies, type CaseStudy } from "../../lib/fetchCaseStudies";
 import { useTheme } from "../../theme/ThemeProvider";
@@ -13,6 +14,7 @@ export default function CaseStudiesPage() {
   const { theme } = useTheme();
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(0);
 
   const sectionBg = {
     dark: "var(--bg-gradient-dark)",
@@ -23,28 +25,36 @@ export default function CaseStudiesPage() {
   const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
   const accent = { dark: "var(--color-primary)", light: "var(--color-secondary)" };
 
-  // ✅ Card styling fixed for light + dark themes (visible shadow)
+  // Card styling swapped to match the original Projects page look
   const cardBg = {
-    dark: "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(14,165,233,0.08))", // stronger gradient
-    light: "linear-gradient(145deg, #ffffff, #e0f2fe)",
+    dark: "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(14,165,233,0.05))",
+    light: "linear-gradient(145deg, #e0f2fe, #ffffff)",
   };
   const cardBorder = {
     dark: "1px solid rgba(255,255,255,0.15)",
-    light: "1px solid rgba(14,165,233,0.25)",
+    light: "1px solid rgba(14,165,233,0.18)",
   };
   const cardShadow = {
-    dark: "0 8px 25px rgba(0,0,0,0.25)", // subtle dark shadow
-    light: "0 6px 20px rgba(0,0,0,0.12)", // subtle light shadow
+    dark: "0 8px 20px rgba(0,0,0,0.2)", // subtle dark shadow
+    light: "0 8px 20px rgba(0,0,0,0.1)", // subtle light shadow
   };
 
   const floatingIcons = [
-    { Icon: FiCpu, size: 50, top: "10%", left: "8%", speed: 18, opacity: 0.14 },
-    { Icon: FiGlobe, size: 42, top: "25%", left: "88%", speed: 20, opacity: 0.12 },
-    { Icon: FiShield, size: 54, top: "78%", left: "6%", speed: 22, opacity: 0.13 },
-    { Icon: FiCpu, size: 38, top: "42%", left: "4%", speed: 19, opacity: 0.1 },
-    { Icon: FiGlobe, size: 36, top: "63%", left: "92%", speed: 21, opacity: 0.11 },
-    { Icon: FiShield, size: 46, top: "16%", left: "80%", speed: 23, opacity: 0.12 },
+    { Icon: FaStethoscope, size: 50, top: "10%", left: "8%", speed: 18, opacity: 0.14 },
+    { Icon: FaPills, size: 42, top: "25%", left: "88%", speed: 20, opacity: 0.12 },
+    { Icon: FaHeart, size: 54, top: "78%", left: "6%", speed: 22, opacity: 0.13 },
+    { Icon: FaStethoscope, size: 38, top: "42%", left: "4%", speed: 19, opacity: 0.1 },
+    { Icon: FaPills, size: 36, top: "63%", left: "92%", speed: 21, opacity: 0.11 },
+    { Icon: FaSyringe, size: 46, top: "16%", left: "80%", speed: 23, opacity: 0.12 },
   ];
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -160,9 +170,9 @@ export default function CaseStudiesPage() {
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: "30px",
+          flexDirection: "column",
+          gap: "20px",
+          alignItems: "center",
         }}
       >
         {loading && (
@@ -181,24 +191,24 @@ export default function CaseStudiesPage() {
           caseStudies.map((study, i) => (
             <motion.div
               key={study.slug}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: cardShadow[theme], // subtle hover shadow
-              }}
-              transition={{ duration: 0.5, delay: i * 0.2 }}
+              whileHover={{ y: -6, scale: 1.02 }}
+              transition={{ delay: i * 0.1 }}
               style={{
-                width: "320px",
-                borderRadius: "20px",
+                display: "flex",
+                flexDirection: windowWidth < 640 ? "column" : "row",
+                width: "100%",
+                maxWidth: "900px",
+
                 background: cardBg[theme],
-                backdropFilter: theme === "dark" ? "blur(20px)" : "none",
+                borderRadius: "20px",
+                boxShadow: cardShadow[theme],
                 border: cardBorder[theme],
-                color: textColor[theme],
+                backdropFilter: theme === "dark" ? "blur(16px)" : "none",
                 overflow: "hidden",
-                textAlign: "left",
-                boxShadow: cardShadow[theme], // subtle shadow to pop
+                cursor: "pointer",
               }}
             >
               {study.featuredImageUrl && (
@@ -206,33 +216,21 @@ export default function CaseStudiesPage() {
                   src={study.featuredImageUrl}
                   alt={study.title}
                   style={{
-                    width: "100%",
-                    height: "180px",
+                    width: windowWidth < 640 ? "100%" : "200px",
+                    height: "200px",
                     objectFit: "cover",
+                    borderRadius:
+                      windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
                   }}
                 />
               )}
 
-              <div style={{ padding: "25px" }}>
-                <h2
-                  style={{
-                    fontSize: "1.3rem",
-                    fontWeight: 800,
-                    marginBottom: "10px",
-                  }}
-                >
+              <div style={{ padding: "15px 20px", textAlign: "left" }}>
+                <h2 style={{ fontSize: "1.45rem", fontWeight: 700 }}>
                   {study.title}
                 </h2>
 
-                <p
-                  style={{
-                    fontSize: "0.95rem",
-                    lineHeight: 1.6,
-                    marginBottom: "15px",
-                    color: subText[theme],
-                    opacity: theme === "light" ? 1 : 0.9,
-                  }}
-                >
+                <p style={{ color: subText[theme], lineHeight: 1.6 }}>
                   {study.summary}
                 </p>
 

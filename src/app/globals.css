@@ -8,8 +8,17 @@
   --bg-dark-3: #334155;
   --bg-light: #f5f7fa;
 
-  /* Bright hero-style dark gradient used for body + hero */
-  --bg-gradient-dark: linear-gradient(145deg, #0a0f2b, #0f172a, #1e40af, #22d3ee);
+  /* Smoothed dark blue gradient used for body + hero
+     (avoids abrupt jumps into bright cyan while still
+      animating nicely with background-position) */
+  --bg-gradient-dark: linear-gradient(
+    145deg,
+    #020617,
+    #050b1e,
+    #0b1120,
+    #1e293b,
+    #1d4ed8
+  );
 
   --primary: #0ea5e9;
   --secondary: #3b82f6;

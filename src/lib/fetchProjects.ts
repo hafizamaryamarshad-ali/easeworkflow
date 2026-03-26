@@ -27,6 +27,8 @@ export type Project = {
   updated: string;
   videoUrl: string | null;
   thumbnailUrl: string | null;
+  extraVideoUrls: string[];
+  galleryImageUrls: string[];
 };
 
 type ProjectQueryResult = Omit<Project, "videoUrl" | "thumbnailUrl">;
@@ -46,6 +48,8 @@ const projectsQuery = groq`
       video
     ),
     thumbnail,
+    "extraVideoUrls": videos[].asset->url,
+    "galleryImageUrls": galleryImages[].asset->url,
     clientName,
     industry,
     technologies,
@@ -89,6 +93,12 @@ export const fetchProjects = async (): Promise<Project[]> => {
         thumbnailUrl: project.thumbnail?.asset
           ? urlFor(project.thumbnail).width(1200).height(800).fit("crop").auto("format").url()
           : null,
+        extraVideoUrls: Array.isArray(project.extraVideoUrls)
+          ? project.extraVideoUrls.filter(Boolean)
+          : [],
+        galleryImageUrls: Array.isArray(project.galleryImageUrls)
+          ? project.galleryImageUrls.filter(Boolean)
+          : [],
       }));
 
       if (process.env.NODE_ENV === "production") {

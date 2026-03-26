@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { FiArrowLeft, FiCpu, FiGlobe, FiShield } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
+import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
 import { fetchProjects } from "../../../lib/fetchProjects";
 import { useTheme } from "../../../theme/ThemeProvider";
 
@@ -90,26 +91,26 @@ export default function ProjectsList() {
     light: "var(--color-text-muted-light)",
   };
 
-  // ✅ Card styles: subtle neutral shadow, more visible
+  // Card styles borrowed from Case Studies page
   const cardBg = {
-    dark: "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(14,165,233,0.05))",
-    light: "linear-gradient(145deg, #e0f2fe, #ffffff)",
+    dark: "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(14,165,233,0.08))",
+    light: "linear-gradient(145deg, #ffffff, #e0f2fe)",
   };
 
   const cardBorder = {
     dark: "1px solid rgba(255,255,255,0.15)",
-    light: "1px solid rgba(14,165,233,0.18)",
+    light: "1px solid rgba(14,165,233,0.25)",
   };
 
   const cardShadow = {
-    dark: "0 8px 20px rgba(0,0,0,0.2)", // subtle dark shadow
-    light: "0 8px 20px rgba(0,0,0,0.1)", // subtle light shadow
+    dark: "0 8px 25px rgba(0,0,0,0.25)", // subtle dark shadow
+    light: "0 6px 20px rgba(0,0,0,0.12)", // subtle light shadow
   };
 
   const floatingIcons = [
-    { Icon: FiCpu, top: "16%", left: "12%", duration: 18 },
-    { Icon: FiGlobe, top: "68%", left: "80%", duration: 24 },
-    { Icon: FiShield, top: "42%", left: "88%", duration: 26 },
+    { Icon: FaStethoscope, top: "16%", left: "12%", duration: 18 },
+    { Icon: FaPills, top: "68%", left: "80%", duration: 24 },
+    { Icon: FaHeart, top: "42%", left: "88%", duration: 26 },
   ];
 
   return (
@@ -131,9 +132,9 @@ export default function ProjectsList() {
       {floatingIcons.map(({ Icon, top, left, duration }, index) => (
         <motion.div
           key={index}
-          initial={{ y: -8, opacity: theme === "dark" ? 0.22 : 0.1 }}
-          animate={{ y: 8 }}
-          transition={{ duration, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          initial={{ y: 0, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          animate={{ y: ["0%", "-18%", "0%"] }}
+          transition={{ duration, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
           style={{
             position: "absolute",
             top,
@@ -168,7 +169,7 @@ export default function ProjectsList() {
               style={{
                 width: "54px",
                 height: "54px",
-                color: theme === "dark" ? "rgba(226, 232, 240, 0.85)" : "rgba(30, 64, 175, 0.9)",
+                color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
               }}
             />
           </div>
@@ -225,9 +226,9 @@ export default function ProjectsList() {
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            alignItems: "center",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "30px",
           }}
         >
         {projects.map((project, i) => (
@@ -236,19 +237,20 @@ export default function ProjectsList() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            whileHover={{ y: -6, scale: 1.02 }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: cardShadow[theme],
+            }}
             style={{
-              display: "flex",
-              flexDirection: windowWidth < 640 ? "column" : "row",
-              width: "100%",
-              maxWidth: "900px",
-
-              background: cardBg[theme],
+              width: windowWidth < 640 ? "100%" : "320px",
               borderRadius: "20px",
-              boxShadow: cardShadow[theme], // visible shadow
+              background: cardBg[theme],
+              backdropFilter: theme === "dark" ? "blur(20px)" : "none",
               border: cardBorder[theme],
-              backdropFilter: theme === "dark" ? "blur(16px)" : "none",
+              color: textColor[theme],
               overflow: "hidden",
+              textAlign: "left",
+              boxShadow: cardShadow[theme],
               cursor: "pointer",
             }}
             onClick={() => router.push(`/projects/${project.id}`)}
@@ -258,25 +260,23 @@ export default function ProjectsList() {
                 src={project.thumbnail}
                 alt={project.title}
                 style={{
-                  width: windowWidth < 640 ? "100%" : "200px",
-                  height: "200px",
+                  width: "100%",
+                  height: "180px",
                   objectFit: "cover",
-                  borderRadius:
-                    windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
                 }}
               />
             )}
 
-            <div style={{ padding: "15px 20px", textAlign: "left" }}>
-              <h3 style={{ fontSize: "1.45rem", fontWeight: 700 }}>
+            <div style={{ padding: "25px" }}>
+              <h3 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "10px" }}>
                 {project.title}
               </h3>
 
-              <p style={{ color: subText[theme], lineHeight: 1.6 }}>
+              <p style={{ color: subText[theme], lineHeight: 1.6, marginBottom: "12px" }}>
                 {project.shortDesc}
               </p>
 
-              <p style={{ color: subText[theme] }}>
+              <p style={{ color: subText[theme], fontSize: "0.9rem" }}>
                 Client: {project.clientName} <br />
                 Industry: {project.industry} <br />
                 Tech: {project.technologies.join(", ")} <br />
