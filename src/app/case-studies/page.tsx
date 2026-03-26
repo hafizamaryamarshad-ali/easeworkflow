@@ -116,41 +116,6 @@ export default function CaseStudiesPage() {
           <icon.Icon />
         </motion.div>
       ))}
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "8px 14px",
-          fontSize: "0.9rem",
-          borderRadius: "10px",
-          border:
-            theme === "dark"
-              ? "1px solid rgba(255,255,255,0.15)"
-              : "1px solid rgba(2,132,199,0.25)",
-          background:
-            theme === "dark"
-              ? "rgba(255,255,255,0.06)"
-              : "rgba(255,255,255,0.9)",
-          backdropFilter: "blur(10px)",
-          color: theme === "dark" ? "#fff" : "#0f172a",
-          boxShadow:
-            theme === "dark"
-              ? "0 10px 25px rgba(0,0,0,0.3)"
-              : "0 6px 15px rgba(2,132,199,0.15)",
-          cursor: "pointer",
-          fontWeight: 600,
-          transition: "all 0.25s ease",
-        }}
-      >
-        <FiArrowLeft size={16} /> Back
-      </button>
-
       {/* Title */}
       <motion.h1
         initial={{ opacity: 0, y: -30 }}
@@ -189,66 +154,95 @@ export default function CaseStudiesPage() {
 
         {!loading &&
           caseStudies.map((study, i) => (
-            <motion.div
+            <Link
               key={study.slug}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              transition={{ delay: i * 0.1 }}
+              href={`/case-studies/${study.slug}`}
               style={{
-                display: "flex",
-                flexDirection: windowWidth < 640 ? "column" : "row",
                 width: "100%",
                 maxWidth: "900px",
-
-                background: cardBg[theme],
-                borderRadius: "20px",
-                boxShadow: cardShadow[theme],
-                border: cardBorder[theme],
-                backdropFilter: theme === "dark" ? "blur(16px)" : "none",
-                overflow: "hidden",
-                cursor: "pointer",
+                textDecoration: "none",
+                display: "block",
               }}
             >
-              {study.featuredImageUrl && (
-                <img
-                  src={study.featuredImageUrl}
-                  alt={study.title}
-                  style={{
-                    width: windowWidth < 640 ? "100%" : "200px",
-                    height: "200px",
-                    objectFit: "cover",
-                    borderRadius:
-                      windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
-                  }}
-                />
-              )}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ delay: i * 0.1 }}
+                style={{
+                  display: "flex",
+                  flexDirection: windowWidth < 640 ? "column" : "row",
+                  width: "100%",
+                  maxWidth: "900px",
 
-              <div style={{ padding: "15px 20px", textAlign: "left" }}>
-                <h2 style={{ fontSize: "1.45rem", fontWeight: 700 }}>
-                  {study.title}
-                </h2>
+                  background: cardBg[theme],
+                  borderRadius: "20px",
+                  boxShadow: cardShadow[theme],
+                  border: cardBorder[theme],
+                  backdropFilter: theme === "dark" ? "blur(16px)" : "none",
+                  overflow: "hidden",
+                  cursor: "pointer",
+                  color: theme === "dark" ? "#ffffff" : "#0f172a",
+                }}
+              >
+                {study.featuredImageUrl && (
+                  <img
+                    src={study.featuredImageUrl}
+                    alt={study.title}
+                    style={{
+                      width: windowWidth < 640 ? "100%" : "200px",
+                      height: "200px",
+                      objectFit: "cover",
+                      borderRadius:
+                        windowWidth < 640 ? "20px 20px 0 0" : "0 0 0 20px",
+                    }}
+                  />
+                )}
 
-                <p style={{ color: subText[theme], lineHeight: 1.6 }}>
-                  {study.summary}
-                </p>
+                <div style={{ padding: "15px 20px", textAlign: "left" }}>
+                  <h2
+                    style={{
+                      fontSize: "1.45rem",
+                      fontWeight: 700,
+                      color:
+                        theme === "dark"
+                          ? "rgba(255,255,255,0.96)"
+                          : "rgba(15,23,42,0.96)",
+                    }}
+                  >
+                    {study.title}
+                  </h2>
 
-                <Link
-                  href={`/case-studies/${study.slug}`}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    color: accent[theme],
-                    fontWeight: 600,
-                    textDecoration: "none",
-                  }}
-                >
-                  View Case Study <FiArrowRight />
-                </Link>
-              </div>
-            </motion.div>
+                  <p
+                    style={{
+                      lineHeight: 1.6,
+                      color:
+                        theme === "dark"
+                          ? "rgba(255,255,255,0.9)"
+                          : "rgba(15,23,42,0.8)",
+                    }}
+                  >
+                    {study.summary}
+                  </p>
+
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      color:
+                        theme === "dark"
+                          ? "rgba(255,255,255,0.92)"
+                          : "rgba(15,23,42,0.92)",
+                      fontWeight: 600,
+                    }}
+                  >
+                    View Case Study <FiArrowRight />
+                  </span>
+                </div>
+              </motion.div>
+            </Link>
           ))}
       </div>
 

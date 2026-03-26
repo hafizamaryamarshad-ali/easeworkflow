@@ -155,41 +155,6 @@ export default function BlogPage() {
           zIndex: 1,
         }}
       >
-        {/* 🔙 Back Button */}
-        <div style={{ position: "absolute", top: "15px", left: "20px" }}>
-          <Link href="/">
-            <button
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "8px 14px",
-                borderRadius: "10px",
-                border:
-                  theme === "dark"
-                    ? "1px solid rgba(255,255,255,0.15)"
-                    : "1px solid rgba(2,132,199,0.25)",
-                background:
-                  theme === "dark"
-                    ? "rgba(255,255,255,0.06)"
-                    : "rgba(255,255,255,0.9)",
-                backdropFilter: "blur(10px)",
-                color: theme === "dark" ? "#fff" : "#0f172a",
-                boxShadow:
-                  theme === "dark"
-                    ? "0 10px 25px rgba(0,0,0,0.3)"
-                    : "0 6px 15px rgba(2,132,199,0.15)",
-                cursor: "pointer",
-                fontWeight: 600,
-                transition: "all 0.25s ease",
-              }}
-            >
-              <FiArrowLeft size={16} />
-              Back
-            </button>
-          </Link>
-        </div>
-
         <h1
           style={{
             textAlign: "center",

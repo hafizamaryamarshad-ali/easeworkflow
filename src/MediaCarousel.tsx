@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type PointerEvent } from "react";
+import { useEffect, useState, type PointerEvent } from "react";
 import Image from "next/image";
 
 export type MediaItem = {
@@ -18,6 +18,7 @@ export default function MediaCarousel({ items, aspectRatio = "16 / 9" }: MediaCa
   const [index, setIndex] = useState(0);
   const [dragStartX, setDragStartX] = useState<number | null>(null);
   const [dragDelta, setDragDelta] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   if (!items.length) return null;
 
@@ -48,6 +49,17 @@ export default function MediaCarousel({ items, aspectRatio = "16 / 9" }: MediaCa
     setDragDelta(0);
   };
 
+  // Auto-play slider
+  useEffect(() => {
+    if (items.length <= 1 || isHovered || dragStartX !== null) return;
+
+    const intervalId = window.setInterval(() => {
+      setIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
+    }, 4500); // ~4.5 seconds
+
+    return () => window.clearInterval(intervalId);
+  }, [items.length, isHovered, dragStartX]);
+
   return (
     <div
       style={{
@@ -60,6 +72,8 @@ export default function MediaCarousel({ items, aspectRatio = "16 / 9" }: MediaCa
         boxShadow: "0 18px 40px rgba(15,23,42,0.5)",
         background: "rgba(15,23,42,0.95)",
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         style={{

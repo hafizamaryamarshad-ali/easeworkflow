@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   FiHome, FiInfo, FiTool, FiHexagon, FiPenTool,
-  FiMail, FiPhone, FiSun, FiMoon, FiMenu, FiX
+  FiMail, FiPhone, FiSun, FiMoon, FiMenu, FiX, FiLock
 } from "react-icons/fi";
 import { useTheme } from "./theme/ThemeProvider";
 
@@ -36,13 +36,29 @@ export default function Navbar() {
   }, [pathname]);
 
   const isLinkActive = (href: string) => {
+    // hash links are handled via scroll, not route matching
+    if (href.startsWith("#")) return false;
+
     if (!pathname) return href === "/";
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
+  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      event.preventDefault();
+      const targetId = href.slice(1);
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      return;
+    }
+  };
+
   const navLinks = [
     { name: "Home", href: "/", icon: <FiHome size={14} /> },
+    { name: "Privacy", href: "#privacy", icon: <FiLock size={14} /> },
     { name: "Projects", href: "/projects", icon: <FiHexagon size={14} /> },
     { name: "Case Studies", href: "/case-studies", icon: <FiTool size={14} /> },
     { name: "Blog", href: "/blog", icon: <FiPenTool size={14} /> },
@@ -134,6 +150,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -272,7 +289,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={(e) => {
+                    handleNavClick(e, link.href);
+                    setMenuOpen(false);
+                  }}
                   style={{
                     display: "flex",
                     alignItems: "center",

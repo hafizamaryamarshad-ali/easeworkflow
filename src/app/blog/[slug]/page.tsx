@@ -141,15 +141,6 @@ export default function BlogDetail() {
           zIndex: 2,
         }}
       >
-        
-        
-        
-        
-        
-        
-        
-        
-        
         ← Back
       </button>
 

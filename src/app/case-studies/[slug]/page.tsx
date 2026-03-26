@@ -285,6 +285,40 @@ export default function CaseStudyDetail() {
               <span style={{ opacity: 0.75 }}>{item}</span>
             </div>
           ))}
+
+          {study.tags && study.tags.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "8px",
+              }}
+            >
+              {study.tags.map((tag) => (
+                <span
+                  key={tag}
+                  style={{
+                    fontSize: "0.8rem",
+                    padding: "6px 12px",
+                    borderRadius: "999px",
+                    backgroundColor:
+                      theme === "dark"
+                        ? "rgba(15,23,42,0.95)"
+                        : "rgba(219,234,254,0.95)",
+                    color: theme === "dark" ? "#e5e7eb" : "#1e293b",
+                    border:
+                      theme === "dark"
+                        ? "1px solid rgba(148,163,184,0.7)"
+                        : "1px solid rgba(59,130,246,0.7)",
+                    lineHeight: 1.3,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -329,6 +363,60 @@ export default function CaseStudyDetail() {
             ))}
           </div>
         </motion.div>
+
+        {/* Results / Outcomes */}
+        {study.results && study.results.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ marginBottom: "40px" }}
+          >
+            <div
+              style={{
+                ...baseCard,
+                padding: "28px",
+                borderRadius: "24px",
+                border:
+                  theme === "dark"
+                    ? "1px solid rgba(34,197,94,0.6)"
+                    : "1px solid rgba(34,197,94,0.5)",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 20px 45px rgba(15,23,42,0.9)"
+                    : "0 16px 35px rgba(15,23,42,0.16)",
+                background:
+                  theme === "dark"
+                    ? "linear-gradient(145deg, rgba(22,163,74,0.2), rgba(15,23,42,0.9))"
+                    : "linear-gradient(145deg, #ecfdf3, #dcfce7)",
+              }}
+            >
+              <h3
+                style={{
+                  margin: 0,
+                  marginBottom: "10px",
+                  fontSize: "1.3rem",
+                  fontWeight: 800,
+                }}
+              >
+                Results & Outcomes
+              </h3>
+
+              <ul
+                style={{
+                  margin: 0,
+                  marginTop: "8px",
+                  paddingLeft: "1.2rem",
+                  lineHeight: 1.8,
+                  color: subTextColor[theme],
+                }}
+              >
+                {study.results.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        )}
 
       </div>
     </section>

@@ -19,6 +19,9 @@ type CaseStudyQueryResult = {
   slug: SanitySlug;
   title: string;
   summary: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  tags?: string[] | null;
   featuredImage: SanityImage | string | null;
   client: string;
   industry: string;
@@ -35,6 +38,9 @@ export type CaseStudy = {
   slug: string;
   title: string;
   summary: string;
+  metaTitle: string;
+  metaDescription: string;
+  tags: string[];
   featuredImage: SanityImage | string | null;
   client: string;
   industry: string;
@@ -53,6 +59,9 @@ const caseStudiesQuery = groq`
     slug,
     title,
     summary,
+    metaTitle,
+    metaDescription,
+    tags,
     featuredImage,
     "galleryImageUrls": galleryImages[].asset->url,
     "videoUrls": videos[].asset->url,
@@ -119,6 +128,9 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
         slug: resolveSlug(study.slug),
         title: study.title,
         summary: study.summary,
+        metaTitle: study.metaTitle || study.title,
+        metaDescription: study.metaDescription || study.summary,
+        tags: Array.isArray(study.tags) ? study.tags.filter(Boolean) : [],
         featuredImage: study.featuredImage,
         client: study.client,
         industry: study.industry,

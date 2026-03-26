@@ -38,13 +38,6 @@ export default function Services() {
     Array(services.length).fill(null)
   );
 
-  // Force slider update
-  const [, forceUpdate] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => forceUpdate((v) => v + 1), 100);
-    return () => clearInterval(interval);
-  }, []);
-
   const bg = { dark: "var(--color-bg)", light: "var(--color-text-primary)" };
   const text = { dark: "var(--color-text-primary)", light: "var(--color-text-primary)" };
   const sub = { dark: "var(--color-text-muted)", light: "var(--color-text-muted)" };
@@ -136,7 +129,7 @@ export default function Services() {
               transition={{ duration: 0.6 }}
               style={{
                 flex: "1 1 300px",
-                minHeight: "18.75rem", // ensures video is always visible
+                aspectRatio: "16 / 9",
                 borderRadius: "26px",
                 overflow: "hidden",
                 position: "relative",
@@ -152,6 +145,7 @@ export default function Services() {
                   background:
                     "linear-gradient(120deg,var(--color-primary),transparent,transparent)",
                   opacity: 0.4,
+                  pointerEvents: "none",
                   zIndex: 2,
                 }}
               />
@@ -166,6 +160,7 @@ export default function Services() {
                 loop
                 muted={soundEnabled !== i}
                 playsInline
+                controls
                 style={{
                   width: "100%",
                   height: "100%",
@@ -183,7 +178,7 @@ export default function Services() {
                 }
                 style={{
                   position: "absolute",
-                  bottom: "40px",
+                  bottom: "18px",
                   right: "10px",
                   zIndex: 3,
                   padding: "6px 12px",

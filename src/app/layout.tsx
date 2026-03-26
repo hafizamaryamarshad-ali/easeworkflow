@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import ThemeProvider from "../theme/ThemeProvider";
+import BackButton from "../BackButton";
 
 export const metadata = {
   title: "EaseWorkflow - Healthcare Automation",
@@ -24,7 +25,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <Navbar />
-
+          <BackButton />
           <main>{children}</main>
 
           <Footer />

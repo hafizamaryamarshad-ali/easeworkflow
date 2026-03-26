@@ -92,36 +92,6 @@ export default function AboutPage() {
         </motion.div>
       ))}
 
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          padding: "8px 14px",
-          borderRadius: "10px",
-          border:
-            theme === "dark"
-              ? "1px solid rgba(255,255,255,0.2)"
-              : "1px solid rgba(0,0,0,0.15)",
-          background:
-            theme === "dark"
-              ? "rgba(255,255,255,0.06)"
-              : "rgba(0,0,0,0.04)",
-          backdropFilter: theme === "dark" ? "blur(10px)" : "none",
-          color: theme === "dark" ? "#ffffff" : "#111827",
-          cursor: "pointer",
-          fontWeight: 600,
-          boxShadow:
-            theme === "dark"
-              ? "0 4px 20px rgba(0,0,0,0.4)"
-              : "0 4px 15px rgba(0,0,0,0.1)",
-        }}
-      >
-        ← Back
-      </button>
-
       <div style={{ maxWidth: "68.75rem", margin: "auto" }}>
         {/* Title */}
         <motion.h1

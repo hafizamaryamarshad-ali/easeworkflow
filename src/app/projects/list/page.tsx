@@ -10,6 +10,7 @@ import { useTheme } from "../../../theme/ThemeProvider";
 
 type ProjectCard = {
   id: string;
+  slug: string;
   title: string;
   shortDesc: string;
   longDesc: string;
@@ -46,6 +47,7 @@ export default function ProjectsList() {
 
         const mappedProjects: ProjectCard[] = fetchedProjects.map((project) => ({
           id: project._id,
+          slug: project.slug,
           title: project.title,
           shortDesc: project.shortDesc,
           longDesc: project.longDesc,
@@ -176,34 +178,6 @@ export default function ProjectsList() {
         </motion.div>
       ))}
 
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        style={{
-          position: "absolute",
-          top: "15px",
-          left: "15px",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "6px",
-          padding: "6px 12px",
-          borderRadius: "10px",
-          border:
-            theme === "dark"
-              ? "1px solid rgba(255,255,255,0.2)"
-              : "1px solid rgba(0,0,0,0.15)",
-          cursor: "pointer",
-          fontWeight: 600,
-          background:
-            theme === "dark"
-              ? "rgba(255,255,255,0.06)"
-              : "rgba(0,0,0,0.04)",
-          color: theme === "dark" ? "#ffffff" : "#111827",
-        }}
-      >
-        <FiArrowLeft size={18} /> Back
-      </button>
-
       <div
         style={{
           maxWidth: "1100px",
@@ -238,7 +212,8 @@ export default function ProjectsList() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             whileHover={{
-              scale: 1.05,
+              scale: 1.03,
+              y: -6,
               boxShadow: cardShadow[theme],
             }}
             style={{
@@ -253,7 +228,7 @@ export default function ProjectsList() {
               boxShadow: cardShadow[theme],
               cursor: "pointer",
             }}
-            onClick={() => router.push(`/projects/${project.id}`)}
+            onClick={() => router.push(`/projects/${project.slug || project.id}`)}
           >
             {project.thumbnail && (
               <img
@@ -267,21 +242,153 @@ export default function ProjectsList() {
               />
             )}
 
-            <div style={{ padding: "25px" }}>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "10px" }}>
+            <div
+              style={{
+                padding: "22px 22px 20px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: "1.4rem",
+                  fontWeight: 800,
+                  lineHeight: 1.3,
+                  margin: 0,
+                }}
+              >
                 {project.title}
               </h3>
 
-              <p style={{ color: subText[theme], lineHeight: 1.6, marginBottom: "12px" }}>
+              <p
+                style={{
+                  color: subText[theme],
+                  lineHeight: 1.6,
+                  fontSize: "0.96rem",
+                  margin: 0,
+                }}
+              >
                 {project.shortDesc}
               </p>
 
-              <p style={{ color: subText[theme], fontSize: "0.9rem" }}>
-                Client: {project.clientName} <br />
-                Industry: {project.industry} <br />
-                Tech: {project.technologies.join(", ")} <br />
-                Updated: {project.updated}
-              </p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  marginTop: "4px",
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span
+                    style={{
+                      fontSize: "0.78rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      color: subText[theme],
+                    }}
+                  >
+                    Client
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.92rem",
+                      fontWeight: 400,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {project.clientName || "—"}
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span
+                    style={{
+                      fontSize: "0.78rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      color: subText[theme],
+                    }}
+                  >
+                    Industry
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.92rem",
+                      fontWeight: 400,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {project.industry || "—"}
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span
+                    style={{
+                      fontSize: "0.78rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      color: subText[theme],
+                    }}
+                  >
+                    Last Updated
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.92rem",
+                      fontWeight: 400,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {project.updated || "—"}
+                  </span>
+                </div>
+              </div>
+
+              {project.technologies && project.technologies.length > 0 && (
+                <div
+                  style={{
+                    marginTop: "14px",
+                    paddingTop: "12px",
+                    borderTop:
+                      theme === "dark"
+                        ? "1px solid rgba(148,163,184,0.35)"
+                        : "1px solid rgba(148,163,184,0.25)",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "8px",
+                  }}
+                >
+                  {project.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      style={{
+                        fontSize: "0.8rem",
+                        padding: "4px 10px",
+                        borderRadius: "999px",
+                        backgroundColor:
+                          theme === "dark"
+                            ? "rgba(15,23,42,0.9)"
+                            : "rgba(191,219,254,0.8)",
+                        color: theme === "dark" ? "#e5e7eb" : "#1e293b",
+                        border:
+                          theme === "dark"
+                            ? "1px solid rgba(148,163,184,0.6)"
+                            : "1px solid rgba(59,130,246,0.6)",
+                        lineHeight: 1.3,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         ))}

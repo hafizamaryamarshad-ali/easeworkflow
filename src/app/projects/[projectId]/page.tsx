@@ -1,24 +1,26 @@
 "use client";
 
-import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
-import { fetchProjects, type Project } from "../../../lib/fetchProjects";
+import { FiAlertTriangle, FiTool, FiAward } from "react-icons/fi";
+import { fetchProjectBySlug, type Project } from "../../../lib/fetchProjects";
 import { useTheme } from "../../../theme/ThemeProvider";
 import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
 
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const routeProjectId = params?.projectId;
-  const projectId = useMemo(() => {
-    if (Array.isArray(routeProjectId)) {
-      return routeProjectId[0];
+  const routeParam = params?.projectId as string | string[] | undefined;
+
+  // We treat the dynamic segment as a slug for routing
+  const projectSlug = useMemo(() => {
+    if (Array.isArray(routeParam)) {
+      return routeParam[0];
     }
-    return routeProjectId;
-  }, [routeProjectId]);
+    return routeParam;
+  }, [routeParam]);
 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,7 @@ export default function ProjectDetailPage() {
     let isMounted = true;
 
     const loadProject = async () => {
-      if (!projectId) {
+      if (!projectSlug) {
         if (isMounted) {
           setProject(null);
           setLoading(false);
@@ -38,8 +40,7 @@ export default function ProjectDetailPage() {
 
       try {
         setLoading(true);
-        const allProjects = await fetchProjects();
-        const found = allProjects.find((item) => item._id === projectId);
+        const found = await fetchProjectBySlug(projectSlug);
 
         if (isMounted) {
           setProject(found ?? null);
@@ -60,17 +61,76 @@ export default function ProjectDetailPage() {
     return () => {
       isMounted = false;
     };
-  }, [projectId]);
+  }, [projectSlug]);
 
-  const bgColors = { dark: "var(--color-bg)", light: "var(--color-bg-light)" };
-  const textColors = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
-  const subTextColor = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
+  const bgColors = {
+    light: "var(--color-bg-light)",
+    dark: "#0f172a",
+  } as const;
+
+  const textColors = {
+    light: "var(--color-text-dark)",
+    dark: "var(--color-text-primary)",
+  } as const;
+
+  const subTextColor = {
+    light: "var(--color-text-muted-light)",
+    dark: "var(--color-text-muted)",
+  } as const;
 
   const floatingIcons = [
-    { Icon: FaStethoscope, top: "20%", left: "12%", duration: 18 },
-    { Icon: FaPills, top: "75%", left: "78%", duration: 24 },
-    { Icon: FaHeart, top: "45%", left: "88%", duration: 26 },
+    { Icon: FaStethoscope, top: "16%", left: "12%", duration: 18 },
+    { Icon: FaPills, top: "68%", left: "80%", duration: 24 },
+    { Icon: FaHeart, top: "42%", left: "88%", duration: 26 },
   ];
+
+  const sectionTexts = useMemo(
+    () => {
+      if (!project) {
+        return {
+          overview: "",
+          problem: "",
+          solution: "",
+          results: "",
+        };
+      }
+
+      const baseOverview = project.shortDesc || project.longDesc || "";
+
+      if (!project.longDesc) {
+        return {
+          overview: baseOverview,
+          problem: "",
+          solution: "",
+          results: "",
+        };
+      }
+
+      const sentences = project.longDesc
+        .split(/(?<=[.!?])\s+/)
+        .filter(Boolean);
+
+      if (sentences.length < 4) {
+        return {
+          overview: baseOverview,
+          problem: sentences.join(" "),
+          solution: "",
+          results: "",
+        };
+      }
+
+      const third = Math.floor(sentences.length / 3);
+      const twoThirds = Math.floor((2 * sentences.length) / 3);
+
+      return {
+        overview: baseOverview,
+        problem: sentences.slice(0, third).join(" "),
+        solution: sentences.slice(third, twoThirds).join(" "),
+        results: sentences.slice(twoThirds).join(" "),
+      };
+    },
+    [project],
+  );
 
   if (loading) {
     return (
@@ -112,9 +172,9 @@ export default function ProjectDetailPage() {
 
   const videoUrl =
     project.videoUrl ??
-    (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? null);
-
-  const hasBothMedia = Boolean(videoUrl && project.thumbnailUrl);
+    (typeof project.video === "string"
+      ? project.video
+      : project.video?.asset?.url ?? null);
 
   const mediaItems: MediaItem[] = [];
   if (project.thumbnailUrl) {
@@ -133,6 +193,10 @@ export default function ProjectDetailPage() {
       if (url) mediaItems.push({ type: "video", src: url });
     });
   }
+
+  const hasTags = Array.isArray(project.tags) && project.tags.length > 0;
+
+  const displayedResults = project.results || sectionTexts.results;
 
   return (
     <section
@@ -201,6 +265,7 @@ export default function ProjectDetailPage() {
           </div>
         </motion.div>
       ))}
+
       <motion.div
         animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
         transition={{ duration: 30, repeat: Infinity }}
@@ -238,104 +303,376 @@ export default function ProjectDetailPage() {
           zIndex: 1,
           display: "flex",
           flexDirection: "column",
-          gap: "30px",
+          gap: "32px",
         }}
       >
-        <button
-          onClick={() => router.back()}
-          style={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            padding: "8px 14px",
-            borderRadius: "10px",
-            border:
-              theme === "dark"
-                ? "1px solid rgba(255,255,255,0.2)"
-                : "1px solid rgba(0,0,0,0.15)",
-            background:
-              theme === "dark"
-                ? "rgba(255,255,255,0.06)"
-                : "rgba(0,0,0,0.04)",
-            backdropFilter: theme === "dark" ? "blur(10px)" : "none",
-            color: theme === "dark" ? "#ffffff" : "#111827",
-            cursor: "pointer",
-            fontWeight: 600,
-            boxShadow:
-              theme === "dark"
-                ? "0 4px 20px rgba(0,0,0,0.4)"
-                : "0 4px 15px rgba(0,0,0,0.1)",
-          }}
-        >
-          
-          ← Back
-        </button>
-
         {mediaItems.length > 0 && (
-          <div style={{ marginTop: "40px" }}>
+          <div style={{ marginTop: "32px" }}>
             <MediaCarousel items={mediaItems} aspectRatio="16 / 9" />
           </div>
         )}
 
-        <h1
-          style={{
-            fontSize: "3rem",
-            fontWeight: 900,
-            textAlign: "center",
-            marginTop: "20px",
-          }}
-        >
-          {project.title}
-        </h1>
-
-        <p
-          style={{
-            fontSize: "1.2rem",
-            fontWeight: 600,
-            color: subTextColor[theme],
-            textAlign: "center",
-            lineHeight: 1.8,
-          }}
-        >
-          {project.shortDesc}
-        </p>
-
-        <p
-          style={{
-            fontSize: "1rem",
-            color: subTextColor[theme],
-            textAlign: "center",
-            lineHeight: 1.7,
-          }}
-        >
-          {project.longDesc}
-        </p>
-
         <div
           style={{
-            fontSize: "1rem",
-            color: textColors[theme],
+            marginTop: "32px",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
+            gap: "16px",
+            alignItems: "flex-start",
           }}
         >
-          <p>
-            <strong>Client Name:</strong> {project.clientName}
-          </p>
-          <p>
-            <strong>Industry:</strong> {project.industry}
-          </p>
-          <p>
-            <strong>Technologies Used:</strong> {project.technologies?.join(", ") || "-"}
-          </p>
-          <p>
-            <strong>Last Updated:</strong> {project.updated}
+          <h1
+            style={{
+              fontSize: "2.6rem",
+              fontWeight: 900,
+              lineHeight: 1.1,
+              margin: 0,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            {project.title}
+          </h1>
+
+          <p
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 500,
+              color: subTextColor[theme],
+              maxWidth: "720px",
+              lineHeight: 1.7,
+              margin: 0,
+            }}
+          >
+            {sectionTexts.overview}
           </p>
         </div>
 
+        <div
+          style={{
+            marginTop: "32px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "32px",
+            alignItems: "flex-start",
+          }}
+        >
+          <div
+            style={{
+              flex: "1 1 60%",
+              minWidth: "260px",
+              maxWidth: "760px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "28px",
+            }}
+          >
+            {sectionTexts.problem && (
+              <div
+                style={{
+                  padding: "20px 22px",
+                  borderRadius: "18px",
+                  backgroundColor:
+                    theme === "dark"
+                      ? "rgba(15,23,42,0.9)"
+                      : "rgba(241,245,249,0.95)",
+                  border:
+                    theme === "dark"
+                      ? "1px solid rgba(148,163,184,0.45)"
+                      : "1px solid rgba(148,163,184,0.55)",
+                }}
+              >
+                <h2
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    fontSize: "1.25rem",
+                    fontWeight: 700,
+                    margin: 0,
+                    marginBottom: "8px",
+                  }}
+                >
+                  <FiAlertTriangle size={18} /> Problem / Challenge
+                </h2>
+                <p
+                  style={{
+                    margin: 0,
+                    marginTop: "6px",
+                    fontSize: "1rem",
+                    lineHeight: 1.7,
+                    color: subTextColor[theme],
+                  }}
+                >
+                  {sectionTexts.problem}
+                </p>
+              </div>
+            )}
+
+            {sectionTexts.solution && (
+              <div
+                style={{
+                  padding: "20px 22px",
+                  borderRadius: "18px",
+                  backgroundColor:
+                    theme === "dark"
+                      ? "rgba(15,23,42,0.9)"
+                      : "rgba(241,245,249,0.95)",
+                  border:
+                    theme === "dark"
+                      ? "1px solid rgba(56,189,248,0.6)"
+                      : "1px solid rgba(59,130,246,0.5)",
+                }}
+              >
+                <h2
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    fontSize: "1.25rem",
+                    fontWeight: 700,
+                    margin: 0,
+                    marginBottom: "8px",
+                  }}
+                >
+                  <FiTool size={18} /> Solution / Implementation
+                </h2>
+                <p
+                  style={{
+                    margin: 0,
+                    marginTop: "6px",
+                    fontSize: "1rem",
+                    lineHeight: 1.7,
+                    color: subTextColor[theme],
+                  }}
+                >
+                  {sectionTexts.solution}
+                </p>
+              </div>
+            )}
+
+            {displayedResults && (
+              <div
+                style={{
+                  padding: "20px 22px",
+                  borderRadius: "18px",
+                  backgroundColor:
+                    theme === "dark"
+                      ? "rgba(15,23,42,0.9)"
+                      : "rgba(241,245,249,0.95)",
+                  border:
+                    theme === "dark"
+                      ? "1px solid rgba(34,197,94,0.6)"
+                      : "1px solid rgba(34,197,94,0.5)",
+                }}
+              >
+                <h2
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    fontSize: "1.25rem",
+                    fontWeight: 700,
+                    margin: 0,
+                    marginBottom: "8px",
+                  }}
+                >
+                  <FiAward size={18} /> Results / Outcome
+                </h2>
+                <p
+                  style={{
+                    margin: 0,
+                    marginTop: "6px",
+                    fontSize: "1rem",
+                    lineHeight: 1.7,
+                    color: subTextColor[theme],
+                  }}
+                >
+                  {displayedResults}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <aside
+            style={{
+              flex: "1 1 280px",
+              maxWidth: "360px",
+              minWidth: "260px",
+              position: "sticky",
+              top: "100px",
+              alignSelf: "flex-start",
+              padding: "20px 22px",
+              borderRadius: "20px",
+              backgroundColor:
+                theme === "dark" ? "rgba(15,23,42,0.95)" : "rgba(248,250,252,0.98)",
+              border:
+                theme === "dark"
+                  ? "1px solid rgba(148,163,184,0.45)"
+                  : "1px solid rgba(203,213,225,0.9)",
+              boxShadow:
+                theme === "dark"
+                  ? "0 20px 45px rgba(15,23,42,0.9)"
+                  : "0 16px 35px rgba(15,23,42,0.16)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "14px",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "1.1rem",
+                fontWeight: 700,
+                margin: 0,
+                marginBottom: "4px",
+              }}
+            >
+              Project Snapshot
+            </h3>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                <span
+                  style={{
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: subTextColor[theme],
+                  }}
+                >
+                  Client
+                </span>
+                <span style={{ fontSize: "0.95rem", fontWeight: 500 }}>
+                  {project.clientName || "—"}
+                </span>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                <span
+                  style={{
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: subTextColor[theme],
+                  }}
+                >
+                  Industry
+                </span>
+                <span style={{ fontSize: "0.95rem", fontWeight: 500 }}>
+                  {project.industry || "—"}
+                </span>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                <span
+                  style={{
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: subTextColor[theme],
+                  }}
+                >
+                  Last Updated
+                </span>
+                <span style={{ fontSize: "0.95rem" }}>
+                  {project.updated || "—"}
+                </span>
+              </div>
+            </div>
+
+            {project.technologies && project.technologies.length > 0 && (
+              <div
+                style={{
+                  marginTop: "6px",
+                  paddingTop: "10px",
+                  borderTop:
+                    theme === "dark"
+                      ? "1px solid rgba(148,163,184,0.4)"
+                      : "1px solid rgba(203,213,225,0.9)",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                }}
+              >
+                {project.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    style={{
+                      fontSize: "0.78rem",
+                      padding: "4px 10px",
+                      borderRadius: "999px",
+                      backgroundColor:
+                        theme === "dark"
+                          ? "rgba(15,23,42,0.95)"
+                          : "rgba(219,234,254,0.95)",
+                      color: theme === "dark" ? "#e5e7eb" : "#1e293b",
+                      border:
+                        theme === "dark"
+                          ? "1px solid rgba(148,163,184,0.7)"
+                          : "1px solid rgba(59,130,246,0.7)",
+                      lineHeight: 1.3,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {hasTags && (
+              <div
+                style={{
+                  marginTop: "8px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                }}
+              >
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      fontSize: "0.78rem",
+                      padding: "4px 10px",
+                      borderRadius: "999px",
+                      backgroundColor:
+                        theme === "dark"
+                          ? "rgba(15,23,42,0.95)"
+                          : "rgba(240,253,250,0.95)",
+                      color: theme === "dark" ? "#e5e7eb" : "#0f172a",
+                      border:
+                        theme === "dark"
+                          ? "1px solid rgba(34,197,94,0.7)"
+                          : "1px solid rgba(34,197,94,0.7)",
+                      lineHeight: 1.3,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </aside>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </section>
   );
 }
