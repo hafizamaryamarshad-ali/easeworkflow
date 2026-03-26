@@ -44,7 +44,7 @@ export type Project = {
 
 type ProjectQueryResult = Omit<
   Project,
-  "slug" | "metaTitle" | "metaDescription" | "tags" | "results" | "videoUrl" | "thumbnailUrl" | "extraVideoUrls" | "galleryImageUrls"
+  "slug" | "metaTitle" | "metaDescription" | "tags" | "videoUrl" | "thumbnailUrl" | "extraVideoUrls" | "galleryImageUrls"
 > & {
   slug?: SanitySlug;
   metaTitle?: string | null;
