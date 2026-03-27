@@ -2,109 +2,75 @@
 
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
-import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
-import {
-  FaGithub,
-  FaTwitter,
-  FaLinkedin,
-  FaInstagram,
-  FaStethoscope,
-  FaPills,
-  FaHeart,
-} from "react-icons/fa";
+import { FiMail, FiPhone, FiMapPin, FiTwitter, FiLinkedin } from "react-icons/fi";
 import { useTheme } from "../../theme/ThemeProvider";
 
 export default function ContactPage() {
   const { theme } = useTheme();
+  const primaryColor = "#0ea5e9";
 
-  const sectionBg = { dark: "var(--bg-gradient-dark)", light: "var(--color-bg-light)" };
-  const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
-
-  const subText = {
-    dark: "var(--color-text-muted)",
-    light: "var(--color-text-muted-light)",
+  const inputStyle: CSSProperties = {
+    width: "100%",
+    padding: "12px 14px",
+    borderRadius: "14px",
+    border: "1px solid rgba(148,163,184,0.25)",
+    outline: "none",
+    background: theme === "dark" ? "rgba(15,23,42,0.9)" : "rgba(255,255,255,0.9)",
+    color: theme === "dark" ? "#e2e8f0" : "#0f172a",
+    fontSize: "0.9rem",
+    boxSizing: "border-box",
+    transition: "border 0.25s ease, box-shadow 0.25s ease, background 0.25s ease",
   };
 
-  const cardBaseStyle: CSSProperties = {
-    padding: "26px 28px",
-    borderRadius: "20px",
-    background: "linear-gradient(120deg,var(--primary),var(--secondary))",
-    color: "#fff",
-    boxShadow: "0 18px 40px rgba(15,23,42,0.6)",
-    border: "3px solid rgba(255,255,255,0.3)",
-    backdropFilter: "blur(18px)",
-    transition: "all 0.25s ease",
+  const cardStyle: CSSProperties = {
+    padding: "14px 16px",
+    borderRadius: "16px",
+    background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
+    border: "none",
+    boxShadow:
+      theme === "dark"
+        ? "0 16px 40px rgba(15,23,42,0.95)"
+        : "0 16px 40px rgba(15,23,42,0.18)",
+    backdropFilter: "blur(16px)",
+    color: "#f9fafb",
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+    cursor: "pointer",
   };
-
-  const inputBg = {
-    dark: "rgba(15,23,42,0.85)",
-    light: "rgba(255,255,255,0.9)",
-  };
-  const inputBorder = {
-    dark: "rgba(148,163,184,0.7)",
-    light: "rgba(15,23,42,0.18)",
-  };
-  const inputText = {
-    dark: "var(--text-light)",
-    light: "var(--text-dark)",
-  };
-
-  const formCardBg = {
-    dark: "linear-gradient(145deg, #020617, #020617, #0b1120)",
-    light: "linear-gradient(145deg, #1d4ed8, #1e40af)",
-  };
-
-  const formCardBorder = {
-    dark: "3px solid rgba(255,255,255,0.3)",
-    light: "3px solid rgba(255,255,255,0.3)",
-  };
-
-  const contacts = [
-    {
-      label: "Email",
-      value: "hello@easeworkflow.com",
-      icon: <FiMail size={22} />,
-    },
-    {
-      label: "Phone",
-      value: "+1 (555) 123-4567",
-      icon: <FiPhone size={22} />,
-    },
-    {
-      label: "Location",
-      value: "Remote • Serving US clinics",
-      icon: <FiMapPin size={22} />,
-    },
-  ];
 
   const floatingIcons = [
-    { Icon: FaStethoscope, top: "16%", left: "12%", duration: 18 },
-    { Icon: FaPills, top: "68%", left: "80%", duration: 24 },
-    { Icon: FaHeart, top: "42%", left: "88%", duration: 26 },
-  ] as const;
+    { Icon: FiMail, top: "10%", left: "6%", size: 44, duration: 22, opacity: 0.12 },
+    { Icon: FiPhone, top: "22%", left: "88%", size: 38, duration: 26, opacity: 0.1 },
+    { Icon: FiMapPin, top: "78%", left: "8%", size: 40, duration: 24, opacity: 0.1 },
+    { Icon: FiTwitter, top: "70%", left: "92%", size: 34, duration: 28, opacity: 0.08 },
+    { Icon: FiLinkedin, top: "40%", left: "4%", size: 36, duration: 30, opacity: 0.09 },
+  ];
 
   return (
     <section
       style={{
         position: "relative",
-        padding: "100px 20px",
-        minHeight: "100vh",
-        color: textColor[theme],
         overflow: "hidden",
-        backgroundColor: theme === "dark" ? "#0f172a" : sectionBg.light,
-        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: theme === "dark" ? "600% 600%" : "auto",
-        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
-        transition: "all 0.5s ease",
+        padding: "80px 16px 72px",
+        background:
+          theme === "dark"
+            ? "radial-gradient(circle at top, #020617, #020617 30%, #0f172a 70%)"
+            : "radial-gradient(circle at top, #eef2ff, #f8fafc 55%, #e2e8f0 95%)",
       }}
     >
-      {/* Floating decorative icons */}
-      {floatingIcons.map(({ Icon, top, left, duration }, index) => (
+      {/* Floating background icons */}
+      {floatingIcons.map(({ Icon, top, left, size, duration, opacity }, index) => (
         <motion.div
           key={index}
-          initial={{ y: 0, opacity: theme === "dark" ? 0.22 : 0.1 }}
+          initial={{ y: 0 }}
           animate={{ y: ["0%", "-18%", "0%"] }}
-          transition={{ duration, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+          transition={{
+            duration,
+            repeat: Infinity,
+            repeatType: "mirror",
+            ease: "easeInOut",
+          }}
           style={{
             position: "absolute",
             top,
@@ -115,13 +81,13 @@ export default function ContactPage() {
         >
           <div
             style={{
-              width: "120px",
-              height: "120px",
-              borderRadius: "999px",
+              width: size + 42,
+              height: size + 42,
+              borderRadius: 999,
               border:
                 theme === "dark"
-                  ? "1px solid rgba(148, 163, 184, 0.3)"
-                  : "1px solid rgba(148, 163, 184, 0.25)",
+                  ? "1px solid rgba(148,163,184,0.25)"
+                  : "1px solid rgba(148,163,184,0.2)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -131,14 +97,15 @@ export default function ContactPage() {
                   : "radial-gradient(circle at top, rgba(59,130,246,0.12), rgba(248,250,252,0.1))",
               boxShadow:
                 theme === "dark"
-                  ? "0 20px 45px rgba(15,23,42,0.85)"
-                  : "0 16px 40px rgba(15,23,42,0.12)",
+                  ? "0 20px 45px rgba(15,23,42,0.8)"
+                  : "0 16px 40px rgba(15,23,42,0.14)",
+              filter: "blur(1px)",
+              opacity,
             }}
           >
             <Icon
+              size={size}
               style={{
-                width: "54px",
-                height: "54px",
                 color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
               }}
             />
@@ -146,248 +113,434 @@ export default function ContactPage() {
         </motion.div>
       ))}
 
-      <div
-        style={{
-          maxWidth: "1100px",
-          margin: "0 auto",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <motion.h1
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          style={{
-            fontSize: "3rem",
-            fontWeight: 900,
-            marginBottom: "40px",
-            textAlign: "center",
-            color: textColor[theme],
-          }}
-        >
-          Contact Information
-        </motion.h1>
+      <div style={{ maxWidth: "1080px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+        {/* HEADER */}
+        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+            style={{
+              fontSize: "2.4rem",
+              fontWeight: 800,
+              letterSpacing: "-0.04em",
+              color: theme === "dark" ? "#e5f4ff" : "#0f172a",
+            }}
+          >
+            Let’s talk about your workflow
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.1 }}
+            style={{
+              maxWidth: "560px",
+              margin: "10px auto 0",
+              fontSize: "0.98rem",
+              lineHeight: 1.7,
+              color: theme === "dark" ? "#94a3b8" : "#475569",
+            }}
+          >
+            Share a bit about your clinic and we’ll follow up with a tailored
+            automation plan within one business day.
+          </motion.p>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          style={{
-            maxWidth: "640px",
-            margin: "0 auto 40px auto",
-            textAlign: "center",
-            fontSize: "1.05rem",
-            lineHeight: 1.7,
-            opacity: 0.9,
-            color: subText[theme],
-          }}
-        >
-          Share a bit about your clinic and we’ll get back
-          to you with tailored automation recommendations.
-        </motion.p>
-
+        {/* MAIN LAYOUT */}
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "56px",
+            gap: "26px",
+            alignItems: "stretch",
             flexWrap: "wrap",
           }}
         >
-          {/* Left: Form */}
+          {/* FORM */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{
-              flex: "1 1 380px",
-              maxWidth: "480px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
-              padding: "30px 28px",
-              borderRadius: "24px",
-              background: formCardBg[theme],
-              border: formCardBorder[theme],
-              boxShadow:
-                theme === "dark"
-                  ? "0 22px 55px rgba(15,23,42,0.95), 0 0 0 1px rgba(148,163,184,0.35)"
-                  : "0 18px 40px rgba(30,64,175,0.35), 0 0 0 1px rgba(191,219,254,0.8)",
-              color: theme === "dark" ? "#fff" : textColor.light,
-              backdropFilter: "blur(22px)",
-            }}
+            transition={{ duration: 0.45 }}
+            style={{ flex: "1 1 420px" }}
           >
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="contact-input"
+            <div
               style={{
-                padding: "12px 15px",
-                borderRadius: "10px",
-                border: `1px solid ${inputBorder[theme]}`,
-                outline: "none",
-                background: inputBg[theme],
-                color: inputText[theme],
-              }}
-            />
-            <input
-              type="email"
-              placeholder="Email Address"
-              className="contact-input"
-              style={{
-                padding: "12px 15px",
-                borderRadius: "10px",
-                border: `1px solid ${inputBorder[theme]}`,
-                outline: "none",
-                background: inputBg[theme],
-                color: inputText[theme],
-              }}
-            />
-            <textarea
-              placeholder="Your Message"
-              rows={5}
-              className="contact-input"
-              style={{
-                padding: "12px 15px",
-                borderRadius: "10px",
-                border: `1px solid ${inputBorder[theme]}`,
-                outline: "none",
-                background: inputBg[theme],
-                color: inputText[theme],
-                resize: "none",
-              }}
-            />
-            <motion.button
-              whileHover={{
-                scale: 1.04,
-                y: -1,
-                boxShadow:
-                  theme === "dark"
-                    ? "0 18px 40px rgba(56,189,248,0.55)"
-                    : "0 16px 34px rgba(37,99,235,0.45)",
-                filter: "brightness(1.08)",
-              }}
-              whileTap={{ scale: 0.98, y: 0 }}
-              style={{
-                padding: "12px 32px",
-                borderRadius: "999px",
-                border: "none",
+                padding: "24px 24px 22px",
+                borderRadius: "22px",
                 background:
-                  theme === "light"
-                    ? "linear-gradient(120deg,#2563eb,#1d4ed8)"
-                    : "linear-gradient(120deg,var(--primary),var(--secondary))",
-                color: "#ffffff",
-                fontWeight: 700,
-                fontSize: "0.98rem",
-                cursor: "pointer",
-                alignSelf: "flex-start",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "6px",
+                  theme === "dark"
+                    ? "linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.88))"
+                    : "linear-gradient(145deg, rgba(255,255,255,0.98), rgba(241,245,249,0.96))",
+                border:
+                  theme === "dark"
+                    ? "1px solid rgba(148,163,184,0.35)"
+                    : "1px solid rgba(148,163,184,0.25)",
                 boxShadow:
                   theme === "dark"
-                    ? "0 10px 26px rgba(15,23,42,0.85)"
-                    : "0 10px 24px rgba(37,99,235,0.28)",
-                transition: "box-shadow 0.2s ease, transform 0.2s ease",
+                    ? "0 24px 60px rgba(15,23,42,0.9)"
+                    : "0 20px 50px rgba(15,23,42,0.12)",
+                backdropFilter: "blur(20px)",
               }}
             >
-              Send Message
-            </motion.button>
-          </motion.div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {["Your Name", "Work Email"].map((placeholder, i) => (
+                  <input
+                    key={placeholder}
+                    type={i === 1 ? "email" : "text"}
+                    placeholder={placeholder}
+                    style={inputStyle}
+                    onFocus={(e) => {
+                      e.currentTarget.style.border = `1px solid ${primaryColor}`;
+                      e.currentTarget.style.boxShadow =
+                        theme === "dark"
+                          ? "0 0 0 1px rgba(14,165,233,0.4)"
+                          : "0 0 0 1px rgba(59,130,246,0.25)";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.border = "1px solid rgba(148,163,184,0.25)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  />
+                ))}
 
-          {/* Right: Gradient Contact Cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{
-              flex: "1 1 300px",
-              maxWidth: "400px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "22px",
-            }}
-          >
-            {contacts.map((item, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.04, y: -4 }}
+                <textarea
+                  placeholder="Tell us briefly what you’d like to improve."
+                  rows={4}
+                  style={{ ...inputStyle, resize: "none" }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.border = `1px solid ${primaryColor}`;
+                    e.currentTarget.style.boxShadow =
+                      theme === "dark"
+                        ? "0 0 0 1px rgba(14,165,233,0.4)"
+                        : "0 0 0 1px rgba(59,130,246,0.25)";
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.border = "1px solid rgba(148,163,184,0.25)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              <button
                 style={{
-                  ...cardBaseStyle,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "14px",
+                  marginTop: "16px",
+                  width: "100%",
+                  padding: "13px 18px",
+                  borderRadius: "999px",
+                  border: "none",
+                  background:
+                    theme === "dark"
+                      ? "linear-gradient(90deg,#0ea5e9,#3b82f6)"
+                      : "linear-gradient(90deg,#3b82f6,#60a5fa)",
+                  color: "#f9fafb",
+                  fontWeight: 600,
+                  fontSize: "0.95rem",
                   cursor: "pointer",
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  boxShadow:
+                    theme === "dark"
+                      ? "0 16px 34px rgba(8,47,73,0.9)"
+                      : "0 16px 34px rgba(59,130,246,0.35)",
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow =
+                    theme === "dark"
+                      ? "0 0 25px rgba(14,165,233,0.6)"
+                      : "0 0 25px rgba(59,130,246,0.55)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow =
+                    theme === "dark"
+                      ? "0 16px 34px rgba(8,47,73,0.9)"
+                      : "0 16px 34px rgba(59,130,246,0.35)";
                 }}
               >
-                <span>{item.icon}</span>
-                <p style={{ margin: 0, fontSize: "1rem" }}>
-                  <strong>{item.label}:</strong> {item.value}
-                </p>
-              </motion.div>
-            ))}
+                Send message
+              </button>
+            </div>
 
-            {/* Social Icons */}
-            <div style={{ display: "flex", gap: "15px", marginTop: "16px" }}>
-              {[FaGithub, FaTwitter, FaLinkedin, FaInstagram].map((Icon, idx) => (
-                <div
-                  key={idx}
+            {/* CONTACT INFO CARDS under the form */}
+            <div
+              style={{
+                display: "flex",
+                gap: "14px",
+                marginTop: "18px",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+              }}
+            >
+              {[
+                {
+                  icon: <FiMail size={18} />,
+                  title: "Email",
+                  lines: ["contact@easeworkflow.com"],
+                },
+                {
+                  icon: <FiPhone size={18} />,
+                  title: "Phone",
+                  lines: ["+92 3000335194"],
+                },
+                {
+                  icon: <FiMapPin size={18} />,
+                  title: "Location",
+                  lines: ["Faisalabad, Pakistan"],
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -3, scale: 1.01 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
                   style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "10px",
-                    background: "linear-gradient(120deg,var(--primary),var(--secondary))",
-                    border: "3px solid rgba(255,255,255,0.3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    color: "#fff",
-                    boxShadow: "0 10px 28px rgba(15,23,42,0.6)",
-                    transition: "all 0.3s ease",
+                    ...cardStyle,
+                    flex: "1 1 calc(33.333% - 10px)",
+                    minWidth: "210px",
                   }}
                 >
-                  <Icon size={18} />
-                </div>
+                  <div
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 999,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background:
+                        theme === "dark"
+                          ? "rgba(15,23,42,0.2)"
+                          : "rgba(15,23,42,0.1)",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+                  <h4 style={{ margin: 0, fontWeight: 600, fontSize: "0.9rem" }}>
+                    {item.title}
+                  </h4>
+                  {item.lines.map((line, idx) => (
+                    <p
+                      key={idx}
+                      style={{
+                        fontSize: "0.8rem",
+                        opacity: 0.96,
+                        margin: idx === 0 ? "4px 0 0" : "2px 0 0",
+                      }}
+                    >
+                      {line}
+                    </p>
+                  ))}
+                </motion.div>
               ))}
+            </div>
+          </motion.div>
+
+          {/* ILLUSTRATION / VISUAL PANEL */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.45 }}
+            style={{ flex: "1 1 380px", display: "flex", alignItems: "stretch" }}
+          >
+            <div
+              style={{
+                position: "relative",
+                borderRadius: "24px",
+                padding: "22px 22px 20px",
+                width: "100%",
+                background:
+                  theme === "dark"
+                    ? "radial-gradient(circle at top left, rgba(59,130,246,0.25), rgba(15,23,42,0.96))"
+                    : "radial-gradient(circle at top left, rgba(191,219,254,0.9), rgba(248,250,252,0.98))",
+                border:
+                  theme === "dark"
+                    ? "1px solid rgba(148,163,184,0.4)"
+                    : "1px solid rgba(148,163,184,0.3)",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 24px 70px rgba(15,23,42,0.95)"
+                    : "0 20px 60px rgba(15,23,42,0.12)",
+                backdropFilter: "blur(22px)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                gap: 18,
+              }}
+            >
+              {/* Top: image + label */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 16,
+                  marginBottom: 4,
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "0.8rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.12em",
+                      color: theme === "dark" ? "#bae6fd" : "#1d4ed8",
+                      margin: 0,
+                    }}
+                  >
+                    Concierge onboarding
+                  </p>
+                  <h3
+                    style={{
+                      fontSize: "1.3rem",
+                      fontWeight: 700,
+                      lineHeight: 1.3,
+                      color: theme === "dark" ? "#e5f4ff" : "#0f172a",
+                      margin: 0,
+                    }}
+                  >
+                    A dedicated team for your clinic rollout.
+                  </h3>
+                </div>
+
+                <div
+                  style={{
+                    flexShrink: 0,
+                    position: "relative",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: -8,
+                      borderRadius: 24,
+                      background:
+                        theme === "dark"
+                          ? "radial-gradient(circle at top, rgba(59,130,246,0.5), transparent)"
+                          : "radial-gradient(circle at top, rgba(96,165,250,0.6), transparent)",
+                      opacity: 0.7,
+                      filter: "blur(6px)",
+                    }}
+                  />
+                  <img
+                    src="/contact-illustration.png"
+                    alt="EaseWorkflow contact illustration"
+                    style={{
+                      position: "relative",
+                      width: 160,
+                      height: "auto",
+                      borderRadius: 24,
+                      boxShadow:
+                        theme === "dark"
+                          ? "0 18px 40px rgba(15,23,42,0.95)"
+                          : "0 16px 32px rgba(15,23,42,0.2)",
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Feature chips */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2,minmax(0,1fr))",
+                  gap: 10,
+                  marginTop: 4,
+                }}
+              >
+                {["HIPAA-aware setup", "Training included", "US-based clinics", "Secure by design"].map(
+                  (label) => (
+                    <div
+                      key={label}
+                      style={{
+                        padding: "9px 11px",
+                        borderRadius: 14,
+                        background:
+                          theme === "dark"
+                            ? "rgba(15,23,42,0.9)"
+                            : "rgba(255,255,255,0.96)",
+                        border:
+                          theme === "dark"
+                            ? "1px solid rgba(148,163,184,0.45)"
+                            : "1px solid rgba(148,163,184,0.35)",
+                        fontSize: "0.78rem",
+                        color: theme === "dark" ? "#e5e7eb" : "#1f2933",
+                      }}
+                    >
+                      {label}
+                    </div>
+                  )
+                )}
+              </div>
+
+              {/* Stats row */}
+              <div
+                style={{
+                  marginTop: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  flexWrap: "wrap",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    fontSize: "0.8rem",
+                    color: theme === "dark" ? "#cbd5e1" : "#475569",
+                  }}
+                >
+                  <span style={{ opacity: 0.9 }}>Average first reply time</span>
+                  <span style={{ fontWeight: 700, fontSize: "0.95rem" }}>under 4 hours</span>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    fontSize: "0.82rem",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: "999px",
+                      background:
+                        theme === "dark"
+                          ? "linear-gradient(135deg,#0ea5e9,#3b82f6)"
+                          : "linear-gradient(135deg,#3b82f6,#60a5fa)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#f9fafb",
+                      fontWeight: 700,
+                      fontSize: "0.78rem",
+                      boxShadow:
+                        theme === "dark"
+                          ? "0 10px 22px rgba(8,47,73,0.9)"
+                          : "0 10px 22px rgba(59,130,246,0.35)",
+                    }}
+                  >
+                    24/7
+                  </div>
+                  <div style={{ color: theme === "dark" ? "#cbd5e1" : "#475569" }}>
+                    <div>Priority support for US clinics</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes gradientBG {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-
-        :global(html[data-theme='dark'] input::placeholder),
-        :global(html[data-theme='dark'] textarea::placeholder) {
-          color: rgba(255, 255, 255, 0.85);
-        }
-
-        :global(html[data-theme='light'] input::placeholder),
-        :global(html[data-theme='light'] textarea::placeholder) {
-          color: rgba(15, 23, 42, 0.65);
-        }
-
-        :global(.contact-input:focus) {
-          box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.75), 0 0 0 4px rgba(59, 130, 246, 0.28);
-          border-color: rgba(59, 130, 246, 0.95) !important;
-        }
-
-        :global(.contact-input:hover) {
-          border-color: rgba(129, 140, 248, 0.9);
-        }
-      `}</style>
     </section>
   );
 }

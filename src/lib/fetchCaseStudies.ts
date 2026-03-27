@@ -27,6 +27,7 @@ type CaseStudyQueryResult = {
   industry: string;
   problem: string;
   solution: string;
+   explanation?: any[] | null;
   tools: string[] | null;
   results: string[] | null;
   galleryImageUrls?: string[] | null;
@@ -46,6 +47,7 @@ export type CaseStudy = {
   industry: string;
   problem: string;
   solution: string;
+    explanation: any[];
   tools: string[];
   results: string[];
   featuredImageUrl: string | null;
@@ -69,6 +71,7 @@ const caseStudiesQuery = groq`
     industry,
     problem,
     solution,
+    explanation,
     tools,
     results
   }
@@ -136,6 +139,7 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
         industry: study.industry,
         problem: study.problem,
         solution: study.solution,
+        explanation: Array.isArray(study.explanation) ? study.explanation : [],
         tools: Array.isArray(study.tools) ? study.tools : [],
         results: Array.isArray(study.results) ? study.results : [],
         featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),

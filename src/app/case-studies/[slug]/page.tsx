@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
 import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
+import { PortableText } from "@portabletext/react";
 import { fetchCaseStudies, type CaseStudy } from "../../../lib/fetchCaseStudies";
 import { useTheme } from "../../../theme/ThemeProvider";
 import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
@@ -185,239 +185,321 @@ export default function CaseStudyDetail() {
         </motion.div>
       ))}
 
-     {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          padding: "8px 14px",
-          borderRadius: "10px",
-          border:
-            theme === "dark"
-              ? "1px solid rgba(255,255,255,0.2)"
-              : "1px solid rgba(0,0,0,0.15)",
-          background:
-            theme === "dark"
-              ? "rgba(255,255,255,0.06)"
-              : "rgba(0,0,0,0.04)",
-          backdropFilter: theme === "dark" ? "blur(10px)" : "none",
-          color: theme === "dark" ? "#ffffff" : "#111827",
-          cursor: "pointer",
-          fontWeight: 600,
-          boxShadow:
-            theme === "dark"
-              ? "0 4px 20px rgba(0,0,0,0.4)"
-              : "0 4px 15px rgba(0,0,0,0.1)",
-        }}
-      >
-        ← Back
-      </button>
 
       <div style={{ maxWidth: "1050px", margin: "0 auto", paddingTop: "20px", position: "relative", zIndex: 1 }}>
-
-        {mediaItems.length > 0 && (
-          <MediaCarousel items={mediaItems} aspectRatio="16 / 9" />
-        )}
-
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -18 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{
-            ...baseCard,
-            padding: "48px 42px",
-            marginBottom: "24px",
-            borderRadius: "22px",
-            background:
-              theme === "dark"
-                ? "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))"
-                : "#ffffff",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "3.4rem",
-              fontWeight: 900,
-              lineHeight: 1.1,
-              letterSpacing: "-0.04em",
-              marginBottom: "14px",
-            }}
-          >
-            {study.title}
-          </h1>
-
-          <p
-            style={{
-              color: subTextColor[theme],
-              lineHeight: 1.75,
-              fontSize: "1.05rem",
-              maxWidth: "850px",
-            }}
-          >
-            {study.summary}
-          </p>
-        </motion.div>
-
-        {/* Meta */}
         <div
           style={{
-            display: "flex",
-            gap: "12px",
-            flexWrap: "wrap",
-            marginBottom: "28px",
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 3fr) minmax(0, 2fr)",
+            gap: "32px",
+            alignItems: "flex-start",
           }}
         >
-          {[study.client, study.industry].map((item, i) => (
-            <div
-              key={i}
-              style={{
-                padding: "10px 16px",
-                borderRadius: "999px",
-                ...baseCard,
-                display: "flex",
-                alignItems: "center",
-                fontSize: "0.85rem",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <span style={{ opacity: 0.75 }}>{item}</span>
-            </div>
-          ))}
-
-          {study.tags && study.tags.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "8px",
-              }}
-            >
-              {study.tags.map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    fontSize: "0.8rem",
-                    padding: "6px 12px",
-                    borderRadius: "999px",
-                    backgroundColor:
-                      theme === "dark"
-                        ? "rgba(15,23,42,0.95)"
-                        : "rgba(219,234,254,0.95)",
-                    color: theme === "dark" ? "#e5e7eb" : "#1e293b",
-                    border:
-                      theme === "dark"
-                        ? "1px solid rgba(148,163,184,0.7)"
-                        : "1px solid rgba(59,130,246,0.7)",
-                    lineHeight: 1.3,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: "32px" }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "28px",
-            }}
-          >
-            {[
-              { title: "Problem", content: study.problem },
-              { title: "Solution", content: study.solution },
-            ].map((block, i) => (
-              <div
-                key={i}
-                style={{
-                  ...baseCard,
-                  padding: "28px",
-                  borderRadius: "22px",
-                  transition: "all 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-6px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                <h3 style={{ marginBottom: "12px", fontSize: "1.25rem" }}>
-                  {block.title}
-                </h3>
-                <p style={{ lineHeight: 1.75, color: subTextColor[theme] }}>
-                  {block.content}
-                </p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Results / Outcomes */}
-        {study.results && study.results.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ marginBottom: "40px" }}
-          >
-            <div
+          {/* Left: Text content */}
+          <div>
+            {/* Header (Title at the top) */}
+            <motion.div
+              initial={{ opacity: 0, y: -18 }}
+              animate={{ opacity: 1, y: 0 }}
               style={{
                 ...baseCard,
-                padding: "28px",
-                borderRadius: "24px",
-                border:
-                  theme === "dark"
-                    ? "1px solid rgba(34,197,94,0.6)"
-                    : "1px solid rgba(34,197,94,0.5)",
-                boxShadow:
-                  theme === "dark"
-                    ? "0 20px 45px rgba(15,23,42,0.9)"
-                    : "0 16px 35px rgba(15,23,42,0.16)",
+                padding: "48px 42px",
+                marginBottom: "24px",
+                borderRadius: "22px",
                 background:
                   theme === "dark"
-                    ? "linear-gradient(145deg, rgba(22,163,74,0.2), rgba(15,23,42,0.9))"
-                    : "linear-gradient(145deg, #ecfdf3, #dcfce7)",
+                    ? "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))"
+                    : "#ffffff",
               }}
             >
-              <h3
+              <h1
                 style={{
-                  margin: 0,
-                  marginBottom: "10px",
-                  fontSize: "1.3rem",
-                  fontWeight: 800,
+                  fontSize: "3.4rem",
+                  fontWeight: 900,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.04em",
+                  marginBottom: "14px",
                 }}
               >
-                Results & Outcomes
-              </h3>
+                {study.title}
+              </h1>
 
-              <ul
+              <p
                 style={{
-                  margin: 0,
-                  marginTop: "8px",
-                  paddingLeft: "1.2rem",
-                  lineHeight: 1.8,
                   color: subTextColor[theme],
+                  lineHeight: 1.75,
+                  fontSize: "1.05rem",
+                  maxWidth: "850px",
                 }}
               >
-                {study.results.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        )}
+                {study.summary}
+              </p>
+            </motion.div>
 
+            {/* Problem & Solution cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{ marginBottom: "32px" }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                  gap: "28px",
+                }}
+              >
+                {[
+                  { title: "Problem", content: study.problem },
+                  { title: "Solution", content: study.solution },
+                ].map((block, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      ...baseCard,
+                      padding: "28px",
+                      borderRadius: "22px",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-6px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                    }}
+                  >
+                    <h3 style={{ marginBottom: "12px", fontSize: "1.25rem" }}>
+                      {block.title}
+                    </h3>
+                    <p style={{ lineHeight: 1.75, color: subTextColor[theme] }}>
+                      {block.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Explanation section */}
+            {Array.isArray(study.explanation) && study.explanation.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ marginBottom: "32px" }}
+              >
+                <div
+                  style={{
+                    ...baseCard,
+                    padding: "28px",
+                    borderRadius: "22px",
+                  }}
+                >
+                  <h2
+                    style={{
+                      marginBottom: "16px",
+                      fontSize: "1.5rem",
+                      fontWeight: 800,
+                    }}
+                  >
+                    Explanation
+                  </h2>
+                  <div
+                    style={{
+                      lineHeight: 1.8,
+                      color: subTextColor[theme],
+                    }}
+                  >
+                    <PortableText
+                      value={study.explanation}
+                      components={{
+                        block: {
+                          h1: ({children}) => (
+                            <h1
+                              style={{
+                                fontSize: "2rem",
+                                fontWeight: 800,
+                                margin: "1.4rem 0 0.8rem",
+                              }}
+                            >
+                              {children}
+                            </h1>
+                          ),
+                          h2: ({children}) => (
+                            <h2
+                              style={{
+                                fontSize: "1.6rem",
+                                fontWeight: 800,
+                                margin: "1.2rem 0 0.75rem",
+                              }}
+                            >
+                              {children}
+                            </h2>
+                          ),
+                          h3: ({children}) => (
+                            <h3
+                              style={{
+                                fontSize: "1.3rem",
+                                fontWeight: 700,
+                                margin: "1rem 0 0.6rem",
+                              }}
+                            >
+                              {children}
+                            </h3>
+                          ),
+                          h4: ({children}) => (
+                            <h4
+                              style={{
+                                fontSize: "1.1rem",
+                                fontWeight: 600,
+                                margin: "0.9rem 0 0.5rem",
+                              }}
+                            >
+                              {children}
+                            </h4>
+                          ),
+                          normal: ({children}) => <p style={{ margin: "0 0 0.9rem" }}>{children}</p>,
+                        },
+                        marks: {
+                          strong: ({children}) => <strong>{children}</strong>,
+                          em: ({children}) => <em>{children}</em>,
+                        },
+                        list: {
+                          bullet: ({children}) => (
+                            <ul style={{ paddingLeft: "1.4rem", margin: "0 0 0.9rem" }}>{children}</ul>
+                          ),
+                        },
+                        listItem: {
+                          bullet: ({children}) => <li style={{ marginBottom: "0.3rem" }}>{children}</li>,
+                        },
+                      }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Meta */}
+            <div
+              style={{
+                display: "flex",
+                gap: "12px",
+                flexWrap: "wrap",
+                marginBottom: "28px",
+              }}
+            >
+              {[study.client, study.industry].map((item, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: "10px 16px",
+                    borderRadius: "999px",
+                    ...baseCard,
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: "0.85rem",
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  <span style={{ opacity: 0.75 }}>{item}</span>
+                </div>
+              ))}
+
+              {study.tags && study.tags.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "8px",
+                  }}
+                >
+                  {study.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        borderRadius: "999px",
+                        backgroundColor:
+                          theme === "dark"
+                            ? "rgba(15,23,42,0.95)"
+                            : "rgba(219,234,254,0.95)",
+                        color: theme === "dark" ? "#e5e7eb" : "#1e293b",
+                        border:
+                          theme === "dark"
+                            ? "1px solid rgba(148,163,184,0.7)"
+                            : "1px solid rgba(59,130,246,0.7)",
+                        lineHeight: 1.3,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Results / Outcomes */}
+            {study.results && study.results.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ marginBottom: "40px" }}
+              >
+                <div
+                  style={{
+                    ...baseCard,
+                    padding: "28px",
+                    borderRadius: "24px",
+                    border:
+                      theme === "dark"
+                        ? "1px solid rgba(34,197,94,0.6)"
+                        : "1px solid rgba(34,197,94,0.5)",
+                    boxShadow:
+                      theme === "dark"
+                        ? "0 20px 45px rgba(15,23,42,0.9)"
+                        : "0 16px 35px rgba(15,23,42,0.16)",
+                    background:
+                      theme === "dark"
+                        ? "linear-gradient(145deg, rgba(22,163,74,0.2), rgba(15,23,42,0.9))"
+                        : "linear-gradient(145deg, #ecfdf3, #dcfce7)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      marginBottom: "10px",
+                      fontSize: "1.3rem",
+                      fontWeight: 800,
+                    }}
+                  >
+                    Results & Outcomes
+                  </h3>
+
+                  <ul
+                    style={{
+                      margin: 0,
+                      marginTop: "8px",
+                      paddingLeft: "1.2rem",
+                      lineHeight: 1.8,
+                      color: subTextColor[theme],
+                    }}
+                  >
+                    {study.results.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Right: Media slider only */}
+          <div>
+            {mediaItems.length > 0 && (
+              <MediaCarousel items={mediaItems} aspectRatio="16 / 9" />
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -84,11 +84,11 @@ export default function BlogForm() {
         maxWidth: "900px",
         margin: "auto",
         padding: "60px 40px",
-        position: "relative", // ✅ IMPORTANT
+        position: "relative",
       }}
     >
-      {/* 🔙 TOP LEFT BACK BUTTON */}
-      <div style={{ position: "absolute", top: "20px", left: "20px" }}>
+      {/* 🔙 TOP LEFT BACK BUTTON (fixed, aligned with global back button) */}
+      <div style={{ position: "fixed", top: 80, left: 24, zIndex: 2000 }}>
         <Link href="/blog">
           <button style={backButtonStyle}>
             ← Back

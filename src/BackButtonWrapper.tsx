@@ -7,10 +7,10 @@ type BackButtonWrapperProps = {
 };
 
 const basePositionStyle: CSSProperties = {
-  position: "fixed",
+  position: "absolute", // 🔥 fixed hatao
   top: 80,
   left: 24,
-  zIndex: 900,
+  zIndex: 10,
 };
 
 export default function BackButtonWrapper({ children }: BackButtonWrapperProps) {
