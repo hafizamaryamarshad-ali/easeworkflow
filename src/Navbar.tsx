@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FiHome, FiInfo, FiTool, FiHexagon, FiPenTool,
   FiMail, FiPhone, FiSun, FiMoon, FiMenu, FiX, FiLock
@@ -14,6 +14,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
 
   // Detect scroll
@@ -36,15 +37,33 @@ export default function Navbar() {
   }, [pathname]);
 
   const isLinkActive = (href: string) => {
-    // hash links are handled via scroll, not route matching
+    // Ignore pure hash links for active state
     if (href.startsWith("#")) return false;
 
-    if (!pathname) return href === "/";
-    if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(`${href}/`);
+    const baseHref = href.split("#")[0] || "/";
+
+    if (!pathname) return baseHref === "/";
+    if (baseHref === "/") return pathname === "/";
+    return pathname === baseHref || pathname.startsWith(`${baseHref}/`);
   };
 
   const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Special handling for Privacy section: navigate home then scroll
+    if (href === "/#privacy") {
+      event.preventDefault();
+
+      if (pathname === "/") {
+        const el = document.getElementById("privacy");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      } else {
+        router.push("/#privacy");
+      }
+      return;
+    }
+
+    // Other same-page hash links
     if (href.startsWith("#")) {
       event.preventDefault();
       const targetId = href.slice(1);
@@ -58,7 +77,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/", icon: <FiHome size={14} /> },
-    { name: "Privacy", href: "#privacy", icon: <FiLock size={14} /> },
+    { name: "Privacy", href: "/#privacy", icon: <FiLock size={14} /> },
     { name: "Projects", href: "/projects", icon: <FiHexagon size={14} /> },
     { name: "Case Studies", href: "/case-studies", icon: <FiTool size={14} /> },
     { name: "Blog", href: "/blog", icon: <FiPenTool size={14} /> },

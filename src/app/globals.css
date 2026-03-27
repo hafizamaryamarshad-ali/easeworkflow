@@ -2,6 +2,10 @@
    GLOBAL STYLES (Hero-Matched Theme)
 ================================= */
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --bg-dark: #0f172a;
   --bg-dark-2: #1e293b;
