@@ -27,7 +27,7 @@ export default function FeaturedProjects() {
   return (
     <section
       style={{
-        padding: "50px 15px 60px", // 🔼 slightly lifted layout
+        padding: "30px 15px 50px", // ✅ FIXED spacing
         background: bg[theme],
         color: text[theme],
         textAlign: "center",
@@ -40,7 +40,8 @@ export default function FeaturedProjects() {
         style={{
           fontSize: "3rem",
           fontWeight: 900,
-          marginBottom: "6px",
+          marginBottom: "4px",
+          marginTop: "0px",
           background: "linear-gradient(90deg,#38bdf8,#a78bfa)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -49,7 +50,7 @@ export default function FeaturedProjects() {
         Featured Projects
       </motion.h2>
 
-      <p style={{ opacity: 0.7, marginBottom: "30px" }}>
+      <p style={{ opacity: 0.7, marginBottom: "20px" }}>
         Real-world applications built with modern technologies
       </p>
 
@@ -62,7 +63,6 @@ export default function FeaturedProjects() {
           flexWrap: "wrap",
           justifyContent: "center",
           gap: "22px",
-          transform: "translateY(-15px)", // 🔼 uplift cards
         }}
       >
         {projects.map((project) => (
@@ -74,13 +74,13 @@ export default function FeaturedProjects() {
         ))}
       </div>
 
-      {/* 🔥 ONLY ONE BUTTON (BOTTOM) */}
+      {/* BUTTON */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => router.push("/projects")}
         style={{
-          marginTop: "35px",
+          marginTop: "30px",
           padding: "12px 36px",
           borderRadius: "999px",
           border: "none",

@@ -119,75 +119,204 @@ h3 {
 }
 
 /* ================================
-   SIDE TAB (MODERN + EDGE FIT)
+   CONTAINER (BOTTOM RIGHT FIXED)
+================================= */
+.side-tabs-container {
+  position: fixed;
+  right: 0;
+  bottom: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  z-index: 999;
+}
+
+/* ================================
+   CONTAINER (BOTTOM RIGHT FIXED)
+================================= */
+.side-tabs-container {
+  position: fixed;
+  right: 0;
+  bottom: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  z-index: 999;
+}
+
+/* ================================
+   CONTAINER
+================================= */
+.side-tabs-container {
+  position: fixed;
+  right: 0;
+  bottom: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  z-index: 999;
+}
+
+/* ================================
+   SIDE TAB (PROMINENT VERSION)
 ================================= */
 .side-tab {
   display: flex;
   align-items: center;
   gap: 10px;
 
-  padding: 12px 14px;
+  padding: 14px 16px;
 
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
 
   text-decoration: none;
 
-  color: rgba(226, 232, 240, 0.9);
+  color: #e2e8f0;
 
-  background: rgba(2, 6, 23, 0.65);
-  backdrop-filter: blur(18px);
+  /* 🔥 DARKER + MORE CONTRAST */
+  background: linear-gradient(
+    145deg,
+    rgba(2, 6, 23, 0.95),
+    rgba(15, 23, 42, 0.95)
+  );
 
-  /* 🔥 LEFT BORDER MAIN FOCUS */
-  border-left: 4px solid #38bdf8;
-  border-top: 1px solid rgba(148, 163, 184, 0.15);
-  border-right: 1px solid rgba(148, 163, 184, 0.15);
+  backdrop-filter: blur(20px);
+
+  /* 🔥 STRONG BORDER (RIGHT EDGE) */
+  border-right: 4px solid #0ea5e9;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  border-left: 1px solid rgba(148, 163, 184, 0.15);
   border-bottom: 1px solid rgba(148, 163, 184, 0.15);
 
-  /* 🔥 EDGE STYLE (NO LEFT ROUND GAP FEEL) */
-  border-radius: 0 16px 16px 0;
+  border-radius: 18px 0 0 18px;
 
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  /* 🔥 STRONG SHADOW (DEPTH) */
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(56, 189, 248, 0.25);
 
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 
   position: relative;
   overflow: hidden;
 }
 
 /* ================================
-   DOT ICON
+   GLOW EFFECT (IMPORTANT)
+================================= */
+.side-tab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(56, 189, 248, 0.15),
+    transparent
+  );
+
+  transform: translateX(-100%);
+  transition: 0.4s;
+}
+
+.side-tab:hover::after {
+  transform: translateX(100%);
+}
+
+/* ================================
+   DOT ICON (STRONGER)
 ================================= */
 .side-tab::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
 
   background: #38bdf8;
 
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+  box-shadow:
+    0 0 10px rgba(56, 189, 248, 0.9),
+    0 0 20px rgba(56, 189, 248, 0.6);
 }
 
 /* ================================
-   HOVER EFFECT
+   HOVER (PUNCHY)
 ================================= */
 .side-tab:hover {
-  transform: translateX(10px) scale(1.04);
+  transform: translateX(-14px) scale(1.06);
 
-  background: rgba(56, 189, 248, 0.08);
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 1),
+    rgba(2, 6, 23, 1)
+  );
 
-  border-left: 4px solid #0ea5e9;
+  border-right: 4px solid #38bdf8;
 
   box-shadow:
-    0 18px 40px rgba(14, 165, 233, 0.25),
-    inset 0 0 10px rgba(56, 189, 248, 0.05);
+    0 25px 60px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(56, 189, 248, 0.5);
 }
 
 /* ================================
-   ACTIVE CLICK EFFECT
+   ACTIVE
 ================================= */
 .side-tab:active {
-  transform: translateX(6px) scale(0.98);
+  transform: translateX(-8px) scale(0.97);
+}
+/* ================================
+   ULTRA STYLISH SCROLLBAR
+================================= */
+
+/* width */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+/* track (glass effect) */
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(10px);
+  border-left: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+/* thumb (glow + gradient) */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0ea5e9, #6366f1, #1d4ed8);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+
+  box-shadow:
+    inset 0 0 6px rgba(255, 255, 255, 0.15),
+    0 0 10px rgba(14, 165, 233, 0.6),
+    0 0 20px rgba(99, 102, 241, 0.4);
+
+  transition: all 0.3s ease;
+}
+
+/* hover (strong glow + slight expansion) */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #38bdf8, #3b82f6, #0ea5e9);
+
+  box-shadow:
+    0 0 15px rgba(56, 189, 248, 0.9),
+    0 0 30px rgba(59, 130, 246, 0.7);
+
+  transform: scaleX(1.2);
+}
+
+/* active (click feel) */
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
 }

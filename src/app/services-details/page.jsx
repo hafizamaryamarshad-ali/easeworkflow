@@ -45,6 +45,7 @@ const services = [
 ];
 
 export default function ServicesDetails() {
+  const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("All");
   const [selectedCard, setSelectedCard] = useState(null);
   const router = useRouter();
@@ -328,23 +329,204 @@ export default function ServicesDetails() {
           Ready to Transform Your Healthcare System?
         </h2>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          onClick={() => router.push("/contact")}
-          style={{
-            marginTop: "15px",
-            padding: "14px 28px",
-            background: "#0ea5e9",
-            borderRadius: "30px",
-            border: "none",
-            color: "#fff",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          Contact Us
-        </motion.button>
+       <motion.button
+  whileHover={{ scale: 1.05 }}
+  onClick={() => setOpen(true)}
+  style={{
+    marginTop: "15px",
+    padding: "14px 28px",
+    background: "#0ea5e9",
+    borderRadius: "30px",
+    border: "none",
+    color: "#fff",
+    fontWeight: 600,
+    cursor: "pointer",
+  }}
+>
+  Contact Us
+  
+</motion.button>
+
       </div>
+      {/* MODAL (YOUR EXACT FORM) */}
+{open && (
+  <div
+    onClick={() => setOpen(false)}
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.65)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 999,
+      padding: "20px",
+    }}
+  >
+    <div
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        width: "100%",
+        maxWidth: "520px",
+        maxHeight: "85vh",
+        background: "#0f172a",
+        borderRadius: "18px",
+        padding: "26px",
+        boxShadow: "0 30px 90px rgba(0,0,0,0.6)",
+        position: "relative",
+        overflowY: "auto",
+        border: "1px solid rgba(56,189,248,0.3)",
+      }}
+    >
+      {/* CLOSE BUTTON */}
+      <button
+        onClick={() => setOpen(false)}
+        style={{
+          position: "absolute",
+          top: "14px",
+          right: "14px",
+          width: "34px",
+          height: "34px",
+          borderRadius: "50%",
+          border: "none",
+          background: "#38bdf8",
+          color: "#000",
+          fontWeight: "bold",
+          cursor: "pointer",
+        }}
+      >
+        ✕
+      </button>
+
+      {/* HEADING */}
+      <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: "6px" }}>
+        Get in Touch
+      </h2>
+
+      <p style={{ fontSize: "0.9rem", opacity: 0.75 }}>
+        Have an idea? Let’s turn it into a powerful solution.
+      </p>
+
+      {/* TAGS */}
+      <div style={{ marginTop: "16px", display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        {[
+          "Workflow Automation",
+          "AI Process Automation",
+          "Smart Scheduling",
+          "Robotic Automation",
+          "Healthcare Automation",
+          "Data Automation",
+          "System Integration",
+          "End-to-End Automation",
+        ].map((item, i) => (
+          <span
+            key={i}
+            style={{
+              padding: "6px 12px",
+              borderRadius: "999px",
+              border: "1px solid #38bdf8",
+              fontSize: "0.78rem",
+              color: "#38bdf8",
+            }}
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+
+      {/* FORM */}
+      <form
+        style={{
+          marginTop: "20px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "12px",
+        }}
+      >
+        <div style={{ gridColumn: "span 2" }}>
+          <input
+            placeholder="Name"
+            style={{
+              width: "100%",
+              padding: "10px 0",
+              border: "none",
+              borderBottom: "1px solid rgba(255,255,255,0.2)",
+              background: "transparent",
+              outline: "none",
+              color: "#fff",
+            }}
+          />
+        </div>
+
+        <input
+          placeholder="Email"
+          style={{
+            width: "100%",
+            padding: "10px 0",
+            border: "none",
+            borderBottom: "1px solid rgba(255,255,255,0.2)",
+            background: "transparent",
+            outline: "none",
+            color: "#fff",
+          }}
+        />
+
+        <input
+          placeholder="Phone"
+          style={{
+            width: "100%",
+            padding: "10px 0",
+            border: "none",
+            borderBottom: "1px solid rgba(255,255,255,0.2)",
+            background: "transparent",
+            outline: "none",
+            color: "#fff",
+          }}
+        />
+
+        <div style={{ gridColumn: "span 2" }}>
+          <textarea
+            placeholder="Message"
+            rows={4}
+            style={{
+              width: "100%",
+              padding: "10px 0",
+              border: "none",
+              borderBottom: "1px solid rgba(255,255,255,0.2)",
+              background: "transparent",
+              outline: "none",
+              resize: "none",
+              color: "#fff",
+            }}
+          />
+        </div>
+
+        <div style={{ gridColumn: "span 2" }}>
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "12px",
+              border: "none",
+              background: "#38bdf8",
+              fontWeight: 700,
+              cursor: "pointer",
+              marginTop: "10px",
+            }}
+          >
+            Send Message
+          </button>
+        </div>
+      </form>
+
+      <p style={{ marginTop: "16px", fontSize: "0.85rem", opacity: 0.7 }}>
+        We look forward to hearing from you!
+      </p>
+    </div>
+  </div>
+)}
+      
     </section>
   );
 }

@@ -1,255 +1,330 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FaStethoscope, FaPills, FaHeart, FaSyringe } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { useTheme } from "../../theme/ThemeProvider";
 
 export default function AboutPage() {
-  const router = useRouter();
   const { theme } = useTheme();
 
-  const floatingIcons = [
-    { Icon: FaStethoscope, size: 52, top: "10%", left: "8%", speed: 16, opacity: 0.14 },
-    { Icon: FaPills, size: 44, top: "24%", left: "88%", speed: 18, opacity: 0.12 },
-    { Icon: FaHeart, size: 56, top: "78%", left: "6%", speed: 20, opacity: 0.13 },
-    { Icon: FaStethoscope, size: 40, top: "40%", left: "4%", speed: 19, opacity: 0.1 },
-    { Icon: FaPills, size: 38, top: "62%", left: "92%", speed: 17, opacity: 0.11 },
-    { Icon: FaSyringe, size: 48, top: "16%", left: "80%", speed: 21, opacity: 0.12 },
+  const textColor = theme === "dark" ? "#e2e8f0" : "#0f172a";
+  const subText = theme === "dark" ? "#94a3b8" : "#475569";
+
+  const values = [
+    {
+      title: "Innovation",
+      desc: "We continuously explore and implement advanced technologies to build intelligent healthcare systems that solve real-world problems and improve efficiency.",
+    },
+    {
+      title: "Integrity",
+      desc: "We follow strong ethical principles and ensure honesty in every solution we deliver, building long-term trust with our clients.",
+    },
+    {
+      title: "Transparency",
+      desc: "We maintain clear communication and open processes so that clients remain fully informed throughout the entire development lifecycle.",
+    },
+    {
+      title: "Excellence",
+      desc: "We focus on delivering high-quality, reliable, and scalable solutions that exceed expectations and set new industry standards.",
+    },
+    {
+      title: "Security",
+      desc: "We prioritize data protection and implement secure systems to ensure patient information remains safe and compliant with healthcare standards.",
+    },
+    {
+      title: "Reliability",
+      desc: "Our systems are built for stability and consistency, ensuring they perform seamlessly in critical healthcare environments.",
+    },
+    {
+      title: "Scalability",
+      desc: "Our solutions are designed to grow with your organization, supporting increasing workloads without compromising performance.",
+    },
   ];
 
-  const sectionBg = {
-    dark: "var(--bg-gradient-dark)",
-    light: "#f5f7fa",
-  };
-
-  const textColor = {
-    dark: "var(--color-text-primary)",
-    light: "var(--color-text-dark)",
-  };
-
-  const subText = {
-    dark: "var(--color-text-muted)",
-    light: "var(--color-text-muted-light)",
-  };
-
-  const accent = {
-    dark: "var(--color-primary)",
-    light: "var(--color-secondary)",
-  };
-
-  // ✅ Blue-tinted cards (light + dark)
-  const cardBg = {
-    dark: "linear-gradient(145deg, rgba(14,165,233,0.10), rgba(255,255,255,0.02))",
-    light: "linear-gradient(145deg, #e0f2fe, #ffffff)",
-  };
-
-  const cardBorder = {
-    dark: "1px solid rgba(14,165,233,0.25)",
-    light: "1px solid rgba(14,165,233,0.18)",
-  };
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <section
       style={{
-        position: "relative",
-        padding: "100px 20px",
-        minHeight: "100vh",
-        color: textColor[theme],
-        backgroundColor: theme === "dark" ? "#0f172a" : sectionBg.light,
-        backgroundImage: theme === "dark" ? sectionBg.dark : "none",
-        backgroundSize: "600% 600%",
-        animation: theme === "dark" ? "gradientBG 35s ease infinite" : "none",
+        padding: "60px 20px 120px 20px",
+        background:
+          theme === "dark"
+            ? "radial-gradient(circle at top, #020617, #010314)"
+            : "radial-gradient(circle at top, #f8fafc, #ffffff)",
+        color: textColor,
       }}
     >
-      {floatingIcons.map((icon, i) => (
-        <motion.div
-          key={i}
-          initial={{ y: 0 }}
-          animate={{ y: ["0%", "-18%", "0%"] }}
-          transition={{
-            duration: icon.speed,
-            repeat: Infinity,
-            repeatType: "mirror",
-            ease: "easeInOut",
-          }}
-          style={{
-            position: "absolute",
-            top: icon.top,
-            left: icon.left,
-            fontSize: icon.size,
-            opacity: icon.opacity,
-            pointerEvents: "none",
-            zIndex: 0,
-            color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
-            textShadow:
-              theme === "dark"
-                ? "0 0 12px rgba(14,165,233,0.5), 0 0 24px rgba(37,99,235,0.45)"
-                : "none",
-          }}
-        >
-          <icon.Icon />
-        </motion.div>
-      ))}
-
-      <div style={{ maxWidth: "68.75rem", margin: "auto" }}>
-        {/* Title */}
+      <div style={{ maxWidth: "1180px", margin: "auto" }}>
+        {/* HERO TITLE */}
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           style={{
-            fontSize: "3rem",
+            fontSize: "3.8rem",
             fontWeight: 900,
             textAlign: "center",
-            marginBottom: "30px",
-            color: textColor[theme],
+            letterSpacing: "-1.5px",
           }}
         >
           About EaseWorkflow
         </motion.h1>
 
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <p
           style={{
-            fontSize: "1.15rem",
-            lineHeight: 1.8,
-            maxWidth: "53.125rem",
-            margin: "auto",
             textAlign: "center",
-            opacity: 0.95,
-            color: subText[theme],
+            marginTop: "25px",
+            color: subText,
+            maxWidth: "850px",
+            marginInline: "auto",
+            lineHeight: 1.8,
+            fontSize: "1.15rem",
           }}
         >
-          EaseWorkflow is a premium healthcare automation agency delivering
-          AI-driven solutions, workflow optimization, and digital transformation
-          to modern healthcare institutions.
-        </motion.p>
+          We design intelligent healthcare automation systems that simplify workflows,
+          reduce manual effort, and enhance patient care using modern AI-driven solutions.
+        </p>
 
-        {/* Cards */}
+        {/* ================= STATS (ADDED) ================= */}
         <div
           style={{
-            marginTop: "90px",
+            marginTop: "80px",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "30px",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "25px",
           }}
         >
           {[
-            {
-              title: "Our Mission",
-              icon: <FaStethoscope size={26} />,
-              desc: "Our mission is to transform healthcare operations through smart automation, AI-driven workflows, and digital innovation to reduce manual workload and improve efficiency.",
-            },
-            {
-              title: "Our Vision",
-              icon: <FaPills size={26} />,
-              desc: "Our vision is to become a global leader in healthcare technology by delivering scalable, secure, and intelligent systems that empower medical institutions worldwide.",
-            },
-            {
-              title: "Our Values",
-              icon: <FaHeart size={26} />,
-              desc: "We value innovation, integrity, transparency, and excellence. Every solution is built with long-term reliability, security, and trust at its core.",
-            },
+            { number: "400+", label: "Solutions Delivered" },
+            { number: "10+", label: "Years of Driving Growth" },
+            { number: "95%", label: "Customer Satisfaction" },
+            { number: "15+", label: "Industries Served" },
           ].map((item, i) => (
             <motion.div
               key={i}
-              whileHover={{ scale: 1.05, y: -6 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
               style={{
-                padding: "32px",
-                borderRadius: "22px",
-                background: cardBg[theme],
-                border: cardBorder[theme],
-                backdropFilter: theme === "dark" ? "blur(20px)" : "none",
-                boxShadow:
+                padding: "30px 20px",
+                borderRadius: "16px",
+                textAlign: "center",
+                background:
                   theme === "dark"
-                    ? "0 25px 50px rgba(14,165,233,0.20)"
-                    : "0 10px 25px rgba(14,165,233,0.12)",
-                position: "relative",
-                transition: "all 0.35s ease",
+                    ? "rgba(255,255,255,0.03)"
+                    : "rgba(0,0,0,0.03)",
+                border:
+                  theme === "dark"
+                    ? "1px solid rgba(255,255,255,0.05)"
+                    : "1px solid rgba(0,0,0,0.06)",
               }}
             >
-              <div style={{ color: accent[theme], marginBottom: "12px" }}>
-                {item.icon}
-              </div>
-
-              <h3
+              <h2
                 style={{
-                  fontSize: "1.4rem",
-                  fontWeight: 800,
-                  marginBottom: "10px",
+                  fontSize: "2.3rem",
+                  fontWeight: 900,
+                  color: "#0ea5e9",
                 }}
               >
-                {item.title}
-              </h3>
+                {item.number}
+              </h2>
 
-              <p style={{ lineHeight: 1.7, opacity: 0.95, color: subText[theme] }}>
-                {item.desc}
+              <p
+                style={{
+                  marginTop: "10px",
+                  color: subText,
+                  fontWeight: 500,
+                }}
+              >
+                {item.label}
               </p>
             </motion.div>
           ))}
         </div>
 
-        {/* Images Row */}
+        {/* ================= MISSION ================= */}
         <div
           style={{
-            marginTop: "90px",
+            marginTop: "100px",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "40px",
+            gridTemplateColumns: "1.2fr 0.8fr",
+            gap: "70px",
+            alignItems: "center",
+          }}
+        >
+          <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+            <span style={{ color: "#0ea5e9", fontWeight: 700, letterSpacing: "2px" }}>
+              OUR PURPOSE
+            </span>
+
+            <h2 style={{ fontSize: "3rem", fontWeight: 900, marginTop: "10px" }}>
+              Our Mission
+            </h2>
+
+            <p style={{ marginTop: "25px", lineHeight: 1.9, color: subText }}>
+              Our mission is to transform healthcare systems by integrating intelligent automation,
+              AI-powered workflows, and scalable digital solutions that improve efficiency, accuracy, and performance.
+            </p>
+
+            <p style={{ marginTop: "18px", lineHeight: 1.9, color: subText }}>
+              We aim to reduce administrative burden, eliminate inefficiencies, and enable healthcare professionals
+              to focus entirely on what matters most—delivering exceptional patient care.
+            </p>
+          </motion.div>
+
+          <motion.img
+            src="images/about-illustration.png"
+            alt="Mission"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            style={{
+              width: "100%",
+              borderRadius: "26px",
+              boxShadow:
+                theme === "dark"
+                  ? "0 50px 120px rgba(0,0,0,0.85)"
+                  : "0 50px 120px rgba(0,0,0,0.12)",
+            }}
+          />
+        </div>
+
+        {/* ================= VISION ================= */}
+        <div
+          style={{
+            marginTop: "120px",
+            display: "grid",
+            gridTemplateColumns: "0.8fr 1.2fr",
+            gap: "70px",
             alignItems: "center",
           }}
         >
           <motion.img
-            src="images/about-illustration.png"
-            alt="Healthcare Automation"
-            initial={{ opacity: 0, x: -40 }}
+            src="images/team-collaboration.png"
+            alt="Vision"
+            initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             style={{
               width: "100%",
-              borderRadius: "18px",
+              borderRadius: "26px",
               boxShadow:
                 theme === "dark"
-                  ? "var(--shadow-soft-dark)"
-                  : "var(--shadow-soft-light)",
+                  ? "0 50px 120px rgba(0,0,0,0.85)"
+                  : "0 50px 120px rgba(0,0,0,0.12)",
             }}
           />
 
-          <motion.img
-            src="images/team-collaboration.png"
-            alt="Team Collaboration"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            style={{
-              width: "100%",
-              borderRadius: "18px",
-              boxShadow:
-                theme === "dark"
-                  ? "var(--shadow-soft-dark)"
-                  : "var(--shadow-soft-light)",
-            }}
-          />
+          <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+            <span style={{ color: "#0ea5e9", fontWeight: 700, letterSpacing: "2px" }}>
+              FUTURE DIRECTION
+            </span>
+
+            <h2 style={{ fontSize: "3rem", fontWeight: 900, marginTop: "10px" }}>
+              Our Vision
+            </h2>
+
+            <p style={{ marginTop: "25px", lineHeight: 1.9, color: subText }}>
+              Our vision is to create a fully connected and intelligent healthcare ecosystem
+              where technology works seamlessly to enhance patient outcomes and operational efficiency.
+            </p>
+
+            <p style={{ marginTop: "18px", lineHeight: 1.9, color: subText }}>
+              We strive to become a global leader in healthcare technology by setting new benchmarks in innovation,
+              reliability, and digital transformation across the industry.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* ================= VALUES ================= */}
+        <div
+          style={{
+            marginTop: "130px",
+            display: "grid",
+            gridTemplateColumns: "320px 1fr",
+            gap: "60px",
+          }}
+        >
+          {/* LEFT NAV */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+            {values.map((v, i) => {
+              const active = activeIndex === i;
+
+              return (
+                <motion.button
+                  key={i}
+                  onClick={() => setActiveIndex(i)}
+                  whileHover={{ x: 8 }}
+                  whileTap={{ scale: 0.96 }}
+                  style={{
+                    padding: "16px 18px",
+                    borderRadius: "14px",
+                    textAlign: "left",
+                    fontWeight: 600,
+                    border: active
+                      ? "1px solid rgba(14,165,233,0.6)"
+                      : "1px solid rgba(148,163,184,0.15)",
+                    background: active
+                      ? "linear-gradient(135deg, rgba(14,165,233,0.2), rgba(37,99,235,0.15))"
+                      : "transparent",
+                    color: active
+                      ? "#0ea5e9"
+                      : theme === "dark"
+                      ? "#e2e8f0"
+                      : "#0f172a",
+                  }}
+                >
+                  {v.title}
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* RIGHT CARD */}
+          <div style={{ position: "relative", minHeight: "460px" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIndex}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -40, scale: 0.95 }}
+                transition={{ duration: 0.35 }}
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "330px",
+                  padding: "30px",
+                  borderRadius: "26px",
+                  background:
+                    theme === "dark"
+                      ? "linear-gradient(160deg, #0f172a, #020617)"
+                      : "linear-gradient(160deg, #ffffff, #f8fafc)",
+                  border:
+                    theme === "dark"
+                      ? "1px solid rgba(255,255,255,0.05)"
+                      : "1px solid rgba(0,0,0,0.06)",
+                }}
+              >
+                <h3 style={{ fontSize: "2.3rem", fontWeight: 900 }}>
+                  {values[activeIndex].title}
+                </h3>
+
+                <p
+                  style={{
+                    marginTop: "22px",
+                    lineHeight: 2,
+                    fontSize: "1.1rem",
+                    color: subText,
+                  }}
+                >
+                  {values[activeIndex].desc}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes gradientBG {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
     </section>
   );
 }

@@ -48,7 +48,7 @@ export default function CaseStudy() {
       {/* Heading */}
       <div style={{ textAlign: "center", marginBottom: "90px" }}>
         <h2 style={{ fontSize: "3rem", fontWeight: 900 }}>
-          Our Success Stories
+          Digital Solutions We Delivered
         </h2>
         <p style={{ opacity: 0.7, maxWidth: "600px", margin: "10px auto" }}>
           Powerful automation and web-based solutions that deliver real impact.
