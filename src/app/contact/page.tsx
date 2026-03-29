@@ -13,7 +13,7 @@ export default function ContactPage() {
     width: "100%",
     padding: "12px 14px",
     borderRadius: "14px",
-    border: "1px solid rgba(148,163,184,0.25)",
+    border: `1px solid ${primaryColor}`, // permanent focus color
     outline: "none",
     background: theme === "dark" ? "rgba(15,23,42,0.9)" : "rgba(255,255,255,0.9)",
     color: theme === "dark" ? "#e2e8f0" : "#0f172a",
@@ -25,8 +25,14 @@ export default function ContactPage() {
   const cardStyle: CSSProperties = {
     padding: "14px 16px",
     borderRadius: "16px",
-    background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
-    border: "none",
+    background:
+      theme === "dark"
+        ? "linear-gradient(145deg, rgba(15,23,42,0.95), rgba(15,23,42,0.85))"
+        : "linear-gradient(135deg,#3b82f6,#60a5fa)", // matches form button gradient
+    border:
+      theme === "dark"
+        ? "2px solid #0ea5e9"
+        : "2px solid #3b82f6", // thick border like Send button
     boxShadow:
       theme === "dark"
         ? "0 16px 40px rgba(15,23,42,0.95)"
@@ -188,17 +194,6 @@ export default function ContactPage() {
                     type={i === 1 ? "email" : "text"}
                     placeholder={placeholder}
                     style={inputStyle}
-                    onFocus={(e) => {
-                      e.currentTarget.style.border = `1px solid ${primaryColor}`;
-                      e.currentTarget.style.boxShadow =
-                        theme === "dark"
-                          ? "0 0 0 1px rgba(14,165,233,0.4)"
-                          : "0 0 0 1px rgba(59,130,246,0.25)";
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.border = "1px solid rgba(148,163,184,0.25)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
                   />
                 ))}
 
@@ -206,17 +201,6 @@ export default function ContactPage() {
                   placeholder="Tell us briefly what you’d like to improve."
                   rows={4}
                   style={{ ...inputStyle, resize: "none" }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.border = `1px solid ${primaryColor}`;
-                    e.currentTarget.style.boxShadow =
-                      theme === "dark"
-                        ? "0 0 0 1px rgba(14,165,233,0.4)"
-                        : "0 0 0 1px rgba(59,130,246,0.25)";
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.border = "1px solid rgba(148,163,184,0.25)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
                 />
               </div>
 
@@ -334,7 +318,8 @@ export default function ContactPage() {
             </div>
           </motion.div>
 
-          {/* ILLUSTRATION / VISUAL PANEL */}
+          {/* ILLUSTRATION PANEL remains unchanged */}
+             {/* ILLUSTRATION / VISUAL PANEL */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}

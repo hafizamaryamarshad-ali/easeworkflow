@@ -102,73 +102,92 @@ h3 {
   font-size: 1.4rem;
   font-weight: 700;
 }
+/* ================================
+   SIDE BUTTON WRAPPER (EDGE FIXED)
+================================= */
+.side-buttons {
+  position: fixed;
+  left: 0; /* 🔥 fully left edge */
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  z-index: 9999;
+}
 
 /* ================================
-   BUTTONS
+   SIDE TAB (MODERN + EDGE FIT)
 ================================= */
+.side-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-button,
-a.button {
-  padding: 14px 32px;
-  border: none;
-  border-radius: 20px;
-  background: var(--btn-gradient);
-  color: var(--text-light);
-  font-weight: 700;
-  cursor: pointer;
+  padding: 12px 14px;
+
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+
   text-decoration: none;
-  transition: all 0.3s ease;
-}
 
-button:hover,
-a.button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-dark);
-}
+  color: rgba(226, 232, 240, 0.9);
 
-/* ================================
-   CARDS
-================================= */
-
-.card {
-  background: var(--surface-dark);
+  background: rgba(2, 6, 23, 0.65);
   backdrop-filter: blur(18px);
-  padding: 28px;
-  border-radius: 20px;
-  box-shadow: var(--shadow-dark);
-  transition: 0.3s;
-}
 
-.card:hover {
-  transform: translateY(-6px);
+  /* 🔥 LEFT BORDER MAIN FOCUS */
+  border-left: 4px solid #38bdf8;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  border-right: 1px solid rgba(148, 163, 184, 0.15);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+
+  /* 🔥 EDGE STYLE (NO LEFT ROUND GAP FEEL) */
+  border-radius: 0 16px 16px 0;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+
+  transition: all 0.3s ease;
+
+  position: relative;
+  overflow: hidden;
 }
 
 /* ================================
-   FLOATING SHAPES
+   DOT ICON
 ================================= */
-
-.shape {
-  position: absolute;
+.side-tab::before {
+  content: "";
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  z-index: 0;
-  will-change: transform;
+
+  background: #38bdf8;
+
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
 }
 
-.shape1 { width: 140px; height: 140px; top: 10%; left: 15%; }
-.shape2 { width: 200px; height: 200px; top: 65%; left: 78%; }
-.shape3 { width: 160px; height: 160px; top: 42%; left: 42%; }
-.shape4 { width: 120px; height: 120px; top: 30%; left: 80%; }
-.shape5 { width: 180px; height: 180px; top: 75%; left: 20%; }
+/* ================================
+   HOVER EFFECT
+================================= */
+.side-tab:hover {
+  transform: translateX(10px) scale(1.04);
 
-@keyframes floatBasic {
-  0% { transform: translateY(0px) translateX(0px); }
-  50% { transform: translateY(-50px) translateX(30px); }
-  100% { transform: translateY(0px) translateX(0px); }
+  background: rgba(56, 189, 248, 0.08);
+
+  border-left: 4px solid #0ea5e9;
+
+  box-shadow:
+    0 18px 40px rgba(14, 165, 233, 0.25),
+    inset 0 0 10px rgba(56, 189, 248, 0.05);
 }
 
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* ================================
+   ACTIVE CLICK EFFECT
+================================= */
+.side-tab:active {
+  transform: translateX(6px) scale(0.98);
 }
