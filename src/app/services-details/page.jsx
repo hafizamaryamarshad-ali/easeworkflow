@@ -63,7 +63,7 @@ export default function ServicesDetails() {
       start += 1;
 
       setCount({
-        exp: Math.min(25, start),
+        exp: Math.min(10, start),
         patients: Math.min(10000, start * 400),
         sat: Math.min(99, start * 4),
       });

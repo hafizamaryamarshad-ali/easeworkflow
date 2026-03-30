@@ -21,15 +21,14 @@ export default function FeaturedProjects() {
     load();
   }, []);
 
-  const bg = { dark: "#020617", light: "#f8fafc" };
-  const text = { dark: "#fff", light: "#0f172a" };
+  const isDark = theme === "dark";
 
   return (
     <section
       style={{
-        padding: "30px 15px 50px", // ✅ FIXED spacing
-        background: bg[theme],
-        color: text[theme],
+        padding: "30px 15px 50px",
+        background: isDark ? "#020617" : "#f1f5f9",
+        color: isDark ? "#fff" : "#0f172a",
         textAlign: "center",
       }}
     >
@@ -70,6 +69,7 @@ export default function FeaturedProjects() {
             key={project._id}
             project={project}
             onClick={() => setSelected(project)}
+            isDark={isDark}
           />
         ))}
       </div>
@@ -112,12 +112,15 @@ export default function FeaturedProjects() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#0f172a",
+              background: isDark ? "#0f172a" : "#ffffff",
               padding: "22px",
               borderRadius: "16px",
               maxWidth: "520px",
               width: "100%",
-              color: "#fff",
+              color: isDark ? "#fff" : "#0f172a",
+              boxShadow: isDark
+                ? "none"
+                : "0 20px 50px rgba(0,0,0,0.15)",
             }}
           >
             <h2 style={{ fontSize: "1.5rem", fontWeight: 800 }}>
@@ -155,12 +158,17 @@ export default function FeaturedProjects() {
 function TiltCard({
   project,
   onClick,
+  isDark,
 }: {
   project: Project;
   onClick: () => void;
+  isDark: boolean;
 }) {
   const [style, setStyle] = useState({
     transform: "perspective(1200px)",
+    boxShadow: isDark
+      ? "0 25px 60px rgba(0,0,0,0.5)"
+      : "0 10px 30px rgba(14,165,233,0.12), 0 2px 10px rgba(0,0,0,0.05)",
   });
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -173,6 +181,9 @@ function TiltCard({
 
     setStyle({
       transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`,
+      boxShadow: isDark
+        ? "0 25px 60px rgba(0,0,0,0.5)"
+        : "0 20px 50px rgba(14,165,233,0.18), 0 4px 15px rgba(0,0,0,0.06)",
     });
   };
 
@@ -180,7 +191,12 @@ function TiltCard({
     <motion.div
       onMouseMove={handleMove}
       onMouseLeave={() =>
-        setStyle({ transform: "perspective(1200px)" })
+        setStyle({
+          transform: "perspective(1200px)",
+          boxShadow: isDark
+            ? "0 25px 60px rgba(0,0,0,0.5)"
+            : "0 10px 30px rgba(14,165,233,0.12), 0 2px 10px rgba(0,0,0,0.05)",
+        })
       }
       onClick={onClick}
       style={{
@@ -188,10 +204,12 @@ function TiltCard({
         borderRadius: "22px",
         overflow: "hidden",
         cursor: "pointer",
-        background:
-          "linear-gradient(145deg, rgba(30,41,59,0.7), rgba(15,23,42,0.9))",
-        border: "1px solid rgba(56,189,248,0.25)",
-        boxShadow: "0 25px 60px rgba(0,0,0,0.5)",
+        background: isDark
+          ? "linear-gradient(145deg, rgba(30,41,59,0.7), rgba(15,23,42,0.9))"
+          : "linear-gradient(145deg, #ffffff, #f1f5f9)",
+        border: isDark
+          ? "1px solid rgba(56,189,248,0.25)"
+          : "1px solid rgba(0,0,0,0.08)",
         transition: "0.3s",
         ...style,
       }}
@@ -210,7 +228,7 @@ function TiltCard({
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.65), transparent)",
+              "linear-gradient(to top, rgba(0,0,0,0.55), transparent)",
           }}
         />
       </div>
@@ -222,9 +240,13 @@ function TiltCard({
             fontSize: "11px",
             padding: "5px 12px",
             borderRadius: "999px",
-            background: "rgba(56,189,248,0.15)",
+            background: isDark
+              ? "rgba(56,189,248,0.15)"
+              : "rgba(56,189,248,0.12)",
             color: "#38bdf8",
-            border: "1px solid rgba(56,189,248,0.3)",
+            border: isDark
+              ? "1px solid rgba(56,189,248,0.3)"
+              : "1px solid rgba(56,189,248,0.4)",
             fontWeight: 600,
           }}
         >
@@ -235,7 +257,13 @@ function TiltCard({
           {project.title}
         </h3>
 
-        <p style={{ fontSize: "0.9rem", opacity: 0.75, marginTop: "6px" }}>
+        <p
+          style={{
+            fontSize: "0.9rem",
+            opacity: isDark ? 0.75 : 0.65,
+            marginTop: "6px",
+          }}
+        >
           {project.shortDesc}
         </p>
 

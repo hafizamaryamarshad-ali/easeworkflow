@@ -78,11 +78,18 @@ export default function Services() {
               position: "relative",
               padding: "32px",
               borderRadius: "26px",
+
+              /* 🔥 NEW LIGHT BLUE GLOW STYLE */
               background:
-                "linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03))",
-              border: "1px solid rgba(255,255,255,0.15)",
-              backdropFilter: "blur(22px)",
-              boxShadow: "0 25px 80px rgba(0,0,0,0.65)",
+                "linear-gradient(145deg, rgba(14,165,233,0.18), rgba(14,165,233,0.05))",
+
+              border: "1px solid rgba(14,165,233,0.25)",
+
+              backdropFilter: "blur(18px)",
+
+              boxShadow:
+                "0 10px 40px rgba(14,165,233,0.15), 0 20px 60px rgba(0,0,0,0.25)",
+
               overflow: "hidden",
               cursor: "pointer",
               textAlign: "left",
@@ -97,8 +104,8 @@ export default function Services() {
                 width: "160px",
                 height: "160px",
                 background:
-                  "radial-gradient(circle, rgba(14,165,233,0.35), transparent 70%)",
-                filter: "blur(20px)",
+                  "radial-gradient(circle, rgba(14,165,233,0.4), transparent 70%)",
+                filter: "blur(25px)",
               }}
             />
 
@@ -156,17 +163,10 @@ export default function Services() {
           alignItems: "center",
         }}
       >
-        {/* IMAGE FIXED */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
+        {/* IMAGE */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <motion.img
             src={services[1].image}
-            alt=""
             whileHover={{ scale: 1.02 }}
             style={{
               width: "100%",
@@ -179,7 +179,6 @@ export default function Services() {
 
           <motion.img
             src={services[2].image}
-            alt=""
             whileHover={{ scale: 1.02 }}
             style={{
               width: "100%",
@@ -201,9 +200,7 @@ export default function Services() {
             We are passionate about Healthcare
           </h2>
 
-          <p style={{ opacity: 0.65 }}>
-            {services[0].description}
-          </p>
+          <p style={{ opacity: 0.65 }}>{services[0].description}</p>
 
           <div style={{ marginTop: "22px" }}>
             {services[0].points.map((point, i) => (
@@ -242,7 +239,7 @@ export default function Services() {
               color: "#fff",
               fontWeight: 600,
               cursor: "pointer",
-              boxShadow: "0 0 15px rgba(14,165,233,0.5)",
+              boxShadow: "0 0 20px rgba(14,165,233,0.6)",
             }}
           >
             Discover More

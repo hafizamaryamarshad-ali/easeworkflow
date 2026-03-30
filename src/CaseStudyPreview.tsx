@@ -6,29 +6,29 @@ import { useTheme } from "./theme/ThemeProvider";
 const caseStudies = [
   {
     id: 1,
-    title: "Business Process Automation System",
-    industry: "Automation / SaaS",
+    title: "Hospital Workflow Automation System",
+    industry: "Healthcare / Automation",
     summary:
-      "A web-based platform that automates repetitive workflows like approvals, task assignments, and notifications.",
-    result: "60% reduction in manual work",
+      "A secure workflow automation platform built for European clinics to streamline patient admissions, approvals, and internal coordination while ensuring GDPR compliance.",
+    result: "55% faster patient processing",
     image: "/images/story1.png",
   },
   {
     id: 2,
-    title: "AI Content Generation Dashboard",
-    industry: "AI / Web App",
+    title: "AI Medical Documentation Assistant",
+    industry: "Healthcare AI / Web App",
     summary:
-      "An advanced dashboard that generates blogs, ads, and social content using AI with live editing and previews.",
-    result: "3x faster content creation",
+      "An AI-powered assistant that helps doctors generate clinical notes, prescriptions, and reports instantly with real-time editing and multilingual support tailored for European healthcare systems.",
+    result: "3x faster documentation",
     image: "/images/story2.png",
   },
   {
     id: 3,
-    title: "CRM & Lead Management System",
-    industry: "Business / Web App",
+    title: "Smart CRM for Clinics & Patient Management",
+    industry: "Healthcare / CRM System",
     summary:
-      "A powerful CRM system to track leads, manage customer data, and automate follow-ups with smart insights.",
-    result: "40% increase in conversions",
+      "A GDPR-ready CRM solution to manage patient records, automate follow-ups, and track treatment history with intelligent insights for modern clinics.",
+    result: "40% improvement in patient retention",
     image: "/images/story3.png",
   },
 ];
@@ -48,10 +48,11 @@ export default function CaseStudy() {
       {/* Heading */}
       <div style={{ textAlign: "center", marginBottom: "90px" }}>
         <h2 style={{ fontSize: "3rem", fontWeight: 900 }}>
-          Digital Solutions We Delivered
+          Healthcare Automation Solutions We Delivered
         </h2>
-        <p style={{ opacity: 0.7, maxWidth: "600px", margin: "10px auto" }}>
-          Powerful automation and web-based solutions that deliver real impact.
+        <p style={{ opacity: 0.7, maxWidth: "650px", margin: "10px auto" }}>
+          Real-world healthcare systems designed for European clinics — focused
+          on automation, compliance, and better patient outcomes.
         </p>
       </div>
 
@@ -111,7 +112,7 @@ export default function CaseStudy() {
                   {item.result}
                 </p>
 
-                {/* ⭐ NEW UNIQUE ELEMENT (instead of button) */}
+                {/* UPDATED BADGE */}
                 <div
                   style={{
                     marginTop: "20px",
@@ -129,7 +130,7 @@ export default function CaseStudy() {
                     color: "#38bdf8",
                   }}
                 >
-                  🚀 Live Production Project
+                  🇪🇺 GDPR Compliant System
                   <span
                     style={{
                       width: "6px",

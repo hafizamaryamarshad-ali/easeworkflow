@@ -117,10 +117,10 @@ export default function Footer() {
               </h4>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", opacity: 0.8 }}>
-                <span>Web Development</span>
+                <span>Custom Dashboards</span>
                 <span>AI Integration</span>
                 <span>Automation Systems</span>
-                <span>UI/UX Design</span>
+                <span>Stats and Analytics</span>
               </div>
             </div>
 
@@ -175,7 +175,7 @@ export default function Footer() {
             }}
           >
             <p>© {new Date().getFullYear()} EaseWorkflow</p>
-            <p>Built with Next.js</p>
+            <p></p>
           </div>
         </div>
       </footer>
