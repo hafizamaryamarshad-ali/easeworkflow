@@ -328,23 +328,60 @@ export default function ServicesDetails() {
         <h2 style={{ fontSize: "2rem", fontWeight: 800 }}>
           Ready to Transform Your Healthcare System?
         </h2>
-
-       <motion.button
-  whileHover={{ scale: 1.05 }}
+<motion.button
+  whileHover={{ 
+    scale: 1.05,
+    boxShadow: "0 0 25px rgba(14, 165, 233, 0.6), 0 0 50px rgba(56, 189, 248, 0.3)" 
+  }}
+  whileTap={{ scale: 0.95 }}
   onClick={() => setOpen(true)}
   style={{
-    marginTop: "15px",
-    padding: "14px 28px",
-    background: "#0ea5e9",
-    borderRadius: "30px",
-    border: "none",
+    marginTop: "25px",
+    padding: "16px 40px",
+    background: "linear-gradient(90deg, #0ea5e9, #3b82f6)",
+    borderRadius: "50px",
+    border: "1px solid rgba(255,255,255,0.2)",
     color: "#fff",
-    fontWeight: 600,
+    fontSize: "1.1rem",
+    fontWeight: 800,
+    letterSpacing: "1px",
+    textTransform: "uppercase",
     cursor: "pointer",
+    position: "relative",
+    overflow: "hidden",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "12px",
+    transition: "all 0.3s ease",
+    boxShadow: "0 10px 30px rgba(14, 165, 233, 0.3)",
   }}
 >
-  Contact Us
+  {/* Shine Animation Effect */}
+  <motion.div
+    initial={{ x: "-100%" }}
+    animate={{ x: "200%" }}
+    transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "50%",
+      height: "100%",
+      background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+      transform: "skewX(-25deg)",
+    }}
+  />
+
+  <span style={{ position: "relative", zIndex: 1 }}>Initiate Transformation</span>
   
+  {/* Small arrow icon for extra touch */}
+  <motion.span 
+    animate={{ x: [0, 5, 0] }} 
+    transition={{ repeat: Infinity, duration: 1.5 }}
+    style={{ fontSize: "1.2rem" }}
+  >
+    →
+  </motion.span>
 </motion.button>
 
       </div>
