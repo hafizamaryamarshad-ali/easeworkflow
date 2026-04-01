@@ -8,6 +8,8 @@ import {
   FiMail, FiPhone, FiSun, FiMoon, FiMenu, FiX, FiLock
 } from "react-icons/fi";
 import { useTheme } from "./theme/ThemeProvider";
+import Image from "next/image";
+import CalendlyButton from "./components/CalendlyButton";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -131,20 +133,31 @@ export default function Navbar() {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "6px",
+          gap: "18px",
           position: "relative",
           zIndex: 1,
           flexShrink: 0,
         }}
       >
-        <FiHexagon size={24} color={mainColor} />
+        <Image
+  src="/logo13.png"
+  alt="logo"
+  width={50}
+  height={38} 
+  priority
+  style={{
+    transform: "scale(1.8)",
+    objectFit: "contain",
+
+  }}
+/>
         <Link
           href="/"
           style={{
             display: "inline-block",
             whiteSpace: "nowrap",
             fontSize: "1.5rem",
-            fontWeight: 700,
+            fontWeight: 800,
             backgroundImage: theme === "dark"
               ? "linear-gradient(270deg, #0ea5e9, #3b82f6)"
               : "linear-gradient(270deg, #2563eb, #3b82f6)",
@@ -158,7 +171,7 @@ export default function Navbar() {
             textShadow: theme === "dark" ? "0 0 10px rgba(0,198,255,0.2)" : "none",
           }}
         >
-          EaseWorkflow
+         
         </Link>
       </div>
 
@@ -246,25 +259,8 @@ export default function Navbar() {
             Book Consultation
           </Link>
 
-          {/* Call */}
-          <Link
-            href="tel:+1234567890"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "36px",
-              height: "36px",
-              fontSize: "0.85rem",
-              fontWeight: 600,
-              borderRadius: "50%",
-              background: mainColor,
-              color: "#fff",
-              textDecoration: "none",
-            }}
-          >
-            <FiPhone size={16} />
-          </Link>
+         {/* Calendly Button */}
+<CalendlyButton mainColor={mainColor} />
         </div>
       )}
 

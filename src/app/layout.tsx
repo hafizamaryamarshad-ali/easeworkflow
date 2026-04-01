@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import ThemeProvider from "../theme/ThemeProvider";
 import BackButton from "../BackButton";
 import SideButtons from "../../src/SideButtons"; // ✅ ADDED
+import Script from "next/script";
 
 export const metadata = {
   title: "EaseWorkflow - Healthcare Automation",
@@ -31,6 +32,11 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
         </ThemeProvider>
+         {/* ✅ ADD THIS (VERY IMPORTANT) */}
+        <Script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
