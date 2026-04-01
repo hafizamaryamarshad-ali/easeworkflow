@@ -273,6 +273,98 @@ h3 {
 .side-tab:active {
   transform: translateX(-8px) scale(0.97);
 }
+
+/* ================================
+   RESPONSIVE LAYOUT UTILITIES
+   (Mobile-first overrides via breakpoints)
+================================= */
+
+/* Mobile: max-width 480px */
+@media (max-width: 480px) {
+  section {
+    padding: 70px 16px;
+  }
+
+  /* Featured projects: cards full-width on small screens */
+  .featured-projects-grid {
+    gap: 18px;
+  }
+
+  .featured-project-card {
+    width: 100% !important;
+    max-width: 340px;
+  }
+
+  /* Process section: stack and scale down orbits */
+  .process-section {
+    padding: 60px 16px;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+    transform: scale(0.9) !important;
+  }
+
+  .process-orbit-wrapper {
+    height: 520px !important;
+  }
+
+  .process-orbit {
+    width: 360px !important;
+    height: 360px !important;
+  }
+
+  /* Testimonials: stack phone and detail vertically */
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .testimonials-phone {
+    width: 100% !important;
+    height: 560px !important;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .testimonials-detail-wrapper {
+    min-height: 0 !important;
+  }
+
+  /* FAQ: stack list and detail card */
+  .faq-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+/* Tablet: max-width 768px */
+@media (max-width: 768px) {
+  nav {
+    max-width: 100% !important;
+    border-radius: 0 0 12px 12px;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .faq-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Laptop: max-width 1024px */
+@media (max-width: 1024px) {
+  .process-grid {
+    gap: 72px !important;
+  }
+
+  .testimonials-grid {
+    gap: 56px !important;
+  }
+}
 /* =============================================
    ULTRA-LUXURY NEON BLADE SCROLLBAR
 ============================================= */

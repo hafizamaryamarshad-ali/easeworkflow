@@ -48,7 +48,7 @@ export default function ServicesDetails() {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("All");
   const [selectedCard, setSelectedCard] = useState(null);
-  const router = useRouter();
+    const router = useRouter(); // Added router for navigation
 
   const [count, setCount] = useState({
     exp: 0,
@@ -334,7 +334,7 @@ export default function ServicesDetails() {
     boxShadow: "0 0 25px rgba(14, 165, 233, 0.6), 0 0 50px rgba(56, 189, 248, 0.3)" 
   }}
   whileTap={{ scale: 0.95 }}
-  onClick={() => setOpen(true)}
+    onClick={() => router.push("/contact")}
   style={{
     marginTop: "25px",
     padding: "16px 40px",

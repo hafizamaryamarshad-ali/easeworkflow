@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTheme } from "./theme/ThemeProvider";
 
 export default function Footer() {
   const { theme } = useTheme();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const baseInputStyle = {
     width: "100%",
@@ -135,7 +137,7 @@ export default function Footer() {
               </p>
 
               <button
-                onClick={() => setOpen(true)}
+                onClick={() => router.push("/contact")}
                 style={{
                   marginTop: "15px",
                   padding: "12px 22px",

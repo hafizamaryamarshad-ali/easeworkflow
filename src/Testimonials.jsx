@@ -36,17 +36,20 @@ export default function TestimonialChat() {
   };
 
   return (
-    <section style={{
-      padding: "100px 20px",
-      background: colors.sectionBg,
-      color: colors.mainText,
-      fontFamily: "'Inter', sans-serif",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      transition: "background 0.5s ease"
-    }}>
+    <section
+      className="testimonials-section"
+      style={{
+        padding: "100px 20px",
+        background: colors.sectionBg,
+        color: colors.mainText,
+        fontFamily: "'Inter', sans-serif",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        transition: "background 0.5s ease",
+      }}
+    >
       
       <div style={{ textAlign: "center", marginBottom: "60px" }}>
         <h2 style={{ fontSize: "2.8rem", fontWeight: 800, marginBottom: "15px" }}>Clinical Excellence Validated</h2>
@@ -55,20 +58,32 @@ export default function TestimonialChat() {
         </p>
       </div>
 
-      <div style={{
-        display: "grid", gridTemplateColumns: "380px 1fr", gap: "80px",
-        maxWidth: "1350px", width: "100%", alignItems: "center"
-      }}>
+      <div
+        className="testimonials-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "380px 1fr",
+          gap: "80px",
+          maxWidth: "1350px",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
         
         {/* LEFT SIDE: PHONE FRAME */}
-        <div 
+        <div
+          className="testimonials-phone"
           style={{
             background: colors.phoneFrame,
-            borderRadius: "50px", padding: "12px",
+            borderRadius: "50px",
+            padding: "12px",
             border: `12px solid ${colors.phoneBorder}`,
-            height: "680px", position: "relative",
+            height: "680px",
+            position: "relative",
             overflow: "hidden",
-            boxShadow: isDark ? "0 50px 100px rgba(0,0,0,0.7)" : "0 30px 60px rgba(0,0,0,0.08)"
+            boxShadow: isDark
+              ? "0 50px 100px rgba(0,0,0,0.7)"
+              : "0 30px 60px rgba(0,0,0,0.08)",
           }}
         >
           <div style={{ 
@@ -121,7 +136,10 @@ export default function TestimonialChat() {
         </div>
 
         {/* RIGHT SIDE: DETAILED VIEW */}
-        <div style={{ minHeight: "600px", display: "flex", alignItems: "center" }}>
+        <div
+          className="testimonials-detail-wrapper"
+          style={{ minHeight: "600px", display: "flex", alignItems: "center" }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab.id}

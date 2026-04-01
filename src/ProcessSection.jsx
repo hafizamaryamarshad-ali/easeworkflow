@@ -30,32 +30,38 @@ export default function ProcessSection() {
   };
 
   return (
-    <section style={{
-      padding: "80px 40px",
-      background: colors.bg, 
-      color: colors.text,
-      fontFamily: "'Inter', sans-serif",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      overflow: "hidden",
-      transition: "all 0.5s ease" // Smooth transition
-    }}>
+    <section
+      className="process-section"
+      style={{
+        padding: "80px 40px",
+        background: colors.bg,
+        color: colors.text,
+        fontFamily: "'Inter', sans-serif",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        overflow: "hidden",
+        transition: "all 0.5s ease" // Smooth transition
+      }}
+    >
       
       <h2 style={{ textAlign: "center", fontSize: "3rem", fontWeight: "800", marginBottom: "80px" }}>
         How We Build Your AI Product: Our Process
       </h2>
 
-      <div style={{
-        maxWidth: "1550px",
-        margin: "0 auto",
-        display: "grid",
-        gridTemplateColumns: "1fr 1.3fr",
-        gap: "110px",
-        alignItems: "center",
-        transform: "scale(0.92)", 
-      }}>
+      <div
+        className="process-grid"
+        style={{
+          maxWidth: "1550px",
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "1fr 1.3fr",
+          gap: "110px",
+          alignItems: "center",
+          transform: "scale(0.92)",
+        }}
+      >
 
         {/* LEFT SECTION: GANTT CHART */}
         <div style={{ position: "relative" }}>
@@ -103,7 +109,16 @@ export default function ProcessSection() {
         </div>
 
         {/* RIGHT SECTION: ORBIT DESIGN */}
-        <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center", height: "700px" }}>
+        <div
+          className="process-orbit-wrapper"
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "700px",
+          }}
+        >
           
           <div style={{ position: "absolute", width: "260px", textAlign: "center", zIndex: 100, pointerEvents: "none" }}>
             <AnimatePresence mode="wait">
@@ -116,7 +131,10 @@ export default function ProcessSection() {
             </AnimatePresence>
           </div>
 
-          <div style={{ position: "relative", width: "580px", height: "580px" }}>
+          <div
+            className="process-orbit"
+            style={{ position: "relative", width: "580px", height: "580px" }}
+          >
             {/* Center Gradient Depth */}
             <div style={{ 
                 position: "absolute", 

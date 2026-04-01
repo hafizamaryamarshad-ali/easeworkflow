@@ -39,26 +39,48 @@ export default function FAQSection() {
   };
 
   return (
-    <section style={{ 
-      background: colors.bg, 
-      color: colors.text, 
-      fontFamily: "'Inter', sans-serif", 
-      padding: "20px 20px 60px", // Top padding mazeed kam (20px) kar di hai
-      display: "flex", 
-      flexDirection: "column", 
-      alignItems: "center", 
-      position: "relative",
-      minHeight: "auto",
-      transition: "background 0.5s ease"
-    }}>
+    <section
+      className="faq-section"
+      style={{
+        background: colors.bg,
+        color: colors.text,
+        fontFamily: "'Inter', sans-serif",
+        padding: "20px 20px 60px", // Top padding mazeed kam (20px) kar di hai
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        position: "relative",
+        minHeight: "auto",
+        transition: "background 0.5s ease",
+      }}
+    >
       
       {/* HEADER - Margins minimized */}
-      <div style={{ textAlign: "left", width: "100%", maxWidth: "1200px", marginBottom: "30px", marginTop: "10px" }}>
+      <div
+        className="faq-header"
+        style={{
+          textAlign: "left",
+          width: "100%",
+          maxWidth: "1200px",
+          marginBottom: "30px",
+          marginTop: "10px",
+        }}
+      >
         <p style={{ color: "#0ea5e9", fontWeight: 800, letterSpacing: "5px", textTransform: "uppercase", fontSize: "0.75rem", margin: 0 }}>Knowledge Base</p>
         <h2 style={{ fontSize: "3.2rem", fontWeight: 900, marginTop: "5px", marginBottom: 0 }}>The <span style={{ color: "#0ea5e9" }}>Intelligence</span> Hub</h2>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: "40px", maxWidth: "1200px", width: "100%", marginBottom: "40px" }}>
+      <div
+        className="faq-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1.6fr",
+          gap: "40px",
+          maxWidth: "1200px",
+          width: "100%",
+          marginBottom: "40px",
+        }}
+      >
         
         {/* LEFT SIDE: FAQ LIST (Height limited for better scroll) */}
         <div style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "600px", overflowY: "auto", paddingRight: "10px" }}>
