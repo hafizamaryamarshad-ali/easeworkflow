@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, FormEvent } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiPhone, FiMapPin, FiTwitter, FiLinkedin } from "react-icons/fi";
 import { useTheme } from "../../theme/ThemeProvider";
@@ -52,6 +52,19 @@ export default function ContactPage() {
     { Icon: FiTwitter, top: "70%", left: "92%", size: 34, duration: 28, opacity: 0.08 },
     { Icon: FiLinkedin, top: "40%", left: "4%", size: 36, duration: 30, opacity: 0.09 },
   ];
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    // At this stage all required fields are valid.
+    // Integrate with backend or email service here if needed.
+  };
 
   return (
     <section
@@ -157,7 +170,7 @@ export default function ContactPage() {
           style={{
             display: "flex",
             gap: "26px",
-            alignItems: "stretch",
+            alignItems: "flex-start",
             flexWrap: "wrap",
           }}
         >
@@ -168,7 +181,8 @@ export default function ContactPage() {
             transition={{ duration: 0.45 }}
             style={{ flex: "1 1 420px" }}
           >
-            <div
+            <form
+              onSubmit={handleSubmit}
               style={{
                 padding: "24px 24px 22px",
                 borderRadius: "22px",
@@ -193,6 +207,7 @@ export default function ContactPage() {
                     key={placeholder}
                     type={i === 1 ? "email" : "text"}
                     placeholder={placeholder}
+                    required
                     style={inputStyle}
                   />
                 ))}
@@ -202,9 +217,56 @@ export default function ContactPage() {
                   rows={4}
                   style={{ ...inputStyle, resize: "none" }}
                 />
+
+                <input
+                  type="text"
+                  placeholder="Company / Business Name (optional)"
+                  style={inputStyle}
+                />
+
+                <select
+                  required
+                  style={inputStyle}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Estimated budget
+                  </option>
+                  <option value="under-5k">Under $5,000</option>
+                  <option value="5k-15k">$5,000 – $15,000</option>
+                  <option value="15k-50k">$15,000 – $50,000</option>
+                  <option value="50k-plus">$50,000+</option>
+                </select>
+
+                <input
+                  type="text"
+                  placeholder="Timeline (optional)"
+                  style={inputStyle}
+                />
+
+                <textarea
+                  placeholder="Project description (goals, scope, current tools)."
+                  rows={5}
+                  required
+                  style={{ ...inputStyle, resize: "none" }}
+                />
+
+                <select
+                  required
+                  style={inputStyle}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Preferred contact method
+                  </option>
+                  <option value="email">Email</option>
+                  <option value="phone">Phone</option>
+                  <option value="whatsapp">WhatsApp</option>
+                </select>
               </div>
 
               <button
+                type="submit"
                 style={{
                   marginTop: "16px",
                   width: "100%",
@@ -242,7 +304,7 @@ export default function ContactPage() {
               >
                 Send message
               </button>
-            </div>
+            </form>
 
             {/* CONTACT INFO CARDS under the form */}
             <div
@@ -280,6 +342,15 @@ export default function ContactPage() {
                     flex: "1 1 calc(33.333% - 10px)",
                     minWidth: "210px",
                   }}
+                  onClick={
+                    item.title === "Phone"
+                      ? () => window.open("https://wa.me/923000335194", "_blank")
+                      : item.title === "Email"
+                      ? () => {
+                          window.location.href = "mailto:contact@easeworkflow.com";
+                        }
+                      : undefined
+                  }
                 >
                   <div
                     style={{
@@ -324,13 +395,13 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.45 }}
-            style={{ flex: "1 1 380px", display: "flex", alignItems: "stretch" }}
+            style={{ flex: "1 1 380px", display: "flex", alignItems: "flex-start" }}
           >
             <div
               style={{
                 position: "relative",
                 borderRadius: "24px",
-                padding: "22px 22px 20px",
+                padding: "24px 24px 22px",
                 width: "100%",
                 background:
                   theme === "dark"
@@ -348,7 +419,7 @@ export default function ContactPage() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                gap: 18,
+                gap: 20,
               }}
             >
               {/* Top: image + label */}
@@ -391,6 +462,17 @@ export default function ContactPage() {
                   >
                     A dedicated team for your clinic rollout.
                   </h3>
+                  <p
+                    style={{
+                      margin: "6px 0 0",
+                      fontSize: "0.88rem",
+                      lineHeight: 1.6,
+                      maxWidth: "320px",
+                      color: theme === "dark" ? "#cbd5e1" : "#475569",
+                    }}
+                  >
+                    Available for quick, hands-on support from first call to full automation.
+                  </p>
                 </div>
 
                 <div
@@ -435,7 +517,7 @@ export default function ContactPage() {
                   display: "grid",
                   gridTemplateColumns: "repeat(2,minmax(0,1fr))",
                   gap: 10,
-                  marginTop: 4,
+                  marginTop: 8,
                 }}
               >
                 {["HIPAA-aware setup", "Training included", "US-based clinics", "Secure by design"].map(
@@ -466,7 +548,7 @@ export default function ContactPage() {
               {/* Stats row */}
               <div
                 style={{
-                  marginTop: 8,
+                  marginTop: 10,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",

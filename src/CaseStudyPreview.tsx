@@ -130,16 +130,8 @@ export default function CaseStudy() {
                     color: "#38bdf8",
                   }}
                 >
-                  🇪🇺 GDPR Compliant System
-                  <span
-                    style={{
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      background: "#22c55e",
-                      display: "inline-block",
-                    }}
-                  ></span>
+                  <span>View Case Study</span>
+                  <span style={{ fontSize: "1rem" }}>→</span>
                 </div>
               </div>
             </motion.div>

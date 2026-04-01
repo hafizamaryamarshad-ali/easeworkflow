@@ -4,16 +4,133 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useTheme } from "./theme/ThemeProvider";
 
-const testimonials = [
-  { id: 1, name: "Dr. Sarah Williams", role: "Clinic Director, UK", image: "https://randomuser.me/api/portraits/women/1.jpg", shortText: "Reduced admin workload by 60%...", fullText: "The implementation of this AI system has been nothing short of revolutionary for our facility. We've seen a 60% reduction in administrative overhead, allowing our medical staff to redirect their focus entirely toward patient care.", rating: 5, time: "2m" },
-  { id: 2, name: "Dr. Marco Rossi", role: "Healthcare Consultant, Germany", image: "https://randomuser.me/api/portraits/men/2.jpg", shortText: "Highly secure and efficient...", fullText: "Highly secure and efficient system. Perfectly aligned with GDPR standards. It processes complex diagnostic data while maintaining absolute patient anonymity. It's the most reliable AI tool we've used to date.", rating: 5, time: "15m" },
-  { id: 3, name: "Dr. Elena Novak", role: "Hospital Manager, Netherlands", image: "https://randomuser.me/api/portraits/women/3.jpg", shortText: "Exactly what we needed...", fullText: "The team delivered exactly what we needed. Smooth integration and excellent support throughout. Highly recommended for complex hospital workflows. The ROI was evident within the first quarter.", rating: 4, time: "1h" },
+const chats = [
+  {
+    id: 1,
+    name: "Dr. Sarah Williams",
+    role: "Clinic Director, UK",
+    image: "https://randomuser.me/api/portraits/women/1.jpg",
+    preview: "We reduced admin workload by nearly 60% in 3 months.",
+    fullMessage:
+      "We reduced admin workload by nearly 60% in 3 months. Before EaseWorkflow, our nurses were buried in repetitive data entry; now those tasks are automated, our documentation is more consistent, and our team can stay focused on patients.",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Dr. Marco Rossi",
+    role: "Healthcare Consultant, Germany",
+    image: "https://randomuser.me/api/portraits/men/2.jpg",
+    preview: "Security and compliance checks have finally stopped slowing us down.",
+    fullMessage:
+      "Security and compliance checks have finally stopped slowing us down. The platform bakes GDPR and audit requirements into every workflow, so our teams can move faster without cutting corners or worrying about data exposure.",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Dr. Elena Novak",
+    role: "Hospital Manager, Netherlands",
+    image: "https://randomuser.me/api/portraits/women/3.jpg",
+    preview: "We finally have end‑to‑end visibility on our clinical operations.",
+    fullMessage:
+      "We finally have end‑to‑end visibility on our clinical operations. From triage to discharge, every step is tracked and surfaced in real time, which has made weekly governance meetings shorter, sharper, and far more data‑driven.",
+    rating: 4,
+  },
+  {
+    id: 4,
+    name: "Dr. James Patel",
+    role: "Medical Director, US",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+    preview: "Nurses report that the new workflow feels natural, not technical.",
+    fullMessage:
+      "Nurses report that the new workflow feels natural, not technical. The interface mirrors how they already think about patient journeys, so adoption was almost immediate and we avoided the usual training fatigue.",
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: "Dr. Amina Yusuf",
+    role: "Head of Outpatient Services, UAE",
+    image: "https://randomuser.me/api/portraits/women/65.jpg",
+    preview: "Missed follow‑ups dropped dramatically within the first quarter.",
+    fullMessage:
+      "Missed follow‑ups dropped dramatically within the first quarter. Automated reminders, escalations, and clear task ownership mean no patient is left waiting for a callback or test result without someone accountable.",
+    rating: 5,
+  },
+  {
+    id: 6,
+    name: "Dr. Lucas Meyer",
+    role: "Chief Information Officer, Germany",
+    image: "https://randomuser.me/api/portraits/men/28.jpg",
+    preview: "Integration with our legacy EMR was smoother than expected.",
+    fullMessage:
+      "Integration with our legacy EMR was smoother than expected. The engineering team mapped complex data structures without disrupting our clinicians, and we were able to roll out the new automation layer in controlled phases.",
+    rating: 4,
+  },
+  {
+    id: 7,
+    name: "Dr. Isabella Conti",
+    role: "Practice Owner, Italy",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+    preview: "Our front desk now runs on three clicks instead of three forms.",
+    fullMessage:
+      "Our front desk now runs on three clicks instead of three forms. Check‑ins, insurance verification, and follow‑up scheduling are all orchestrated behind the scenes, which patients notice as shorter waiting times and fewer errors.",
+    rating: 5,
+  },
+  {
+    id: 8,
+    name: "Dr. Henrik Olsen",
+    role: "Operations Lead, Norway",
+    image: "https://randomuser.me/api/portraits/men/45.jpg",
+    preview: "We finally trust our operational data enough to act on it.",
+    fullMessage:
+      "We finally trust our operational data enough to act on it. Dashboards are no longer just reports; they trigger clear actions and ownership, making our improvement cycles much faster and more measurable.",
+    rating: 4,
+  },
+  {
+    id: 9,
+    name: "Dr. Sofia Martins",
+    role: "Clinical Lead, Portugal",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+    preview: "Staff onboarding times for new clinics have been cut in half.",
+    fullMessage:
+      "Staff onboarding times for new clinics have been cut in half. Templates, playbooks, and guard‑rails are already in the system, so new teams can go live safely without weeks of back‑and‑forth with IT.",
+    rating: 5,
+  },
+  {
+    id: 10,
+    name: "Dr. Oliver Grant",
+    role: "Chief Medical Officer, US",
+    image: "https://randomuser.me/api/portraits/men/52.jpg",
+    preview: "Our clinicians see the AI as a teammate, not a black box.",
+    fullMessage:
+      "Our clinicians see the AI as a teammate, not a black box. Explanations are clear, overrides are easy, and every recommendation is logged, which has built a lot of confidence with both doctors and compliance.",
+    rating: 5,
+  },
+  {
+    id: 11,
+    name: "Dr. Emma Laurent",
+    role: "Quality Lead, France",
+    image: "https://randomuser.me/api/portraits/women/52.jpg",
+    preview: "Audit preparation has gone from stressful to almost trivial.",
+    fullMessage:
+      "Audit preparation has gone from stressful to almost trivial. Documentation, trails, and approvals are centralised and searchable, so we no longer scramble for evidence in the days before an inspection.",
+    rating: 4,
+  },
+  {
+    id: 12,
+    name: "Dr. Noah Fischer",
+    role: "Digital Health Lead, Switzerland",
+    image: "https://randomuser.me/api/portraits/men/39.jpg",
+    preview: "The platform gives us a safe way to experiment with automation.",
+    fullMessage:
+      "The platform gives us a safe way to experiment with automation. We can pilot new flows with a subset of clinics, observe the impact, and then promote the best patterns across the network with confidence.",
+    rating: 5,
+  },
 ];
 
-const doubleTestimonials = [...testimonials, ...testimonials, ...testimonials];
+const doubleChats = [...chats, ...chats, ...chats];
 
 export default function TestimonialChat() {
-  const [activeTab, setActiveTab] = useState(testimonials[0]);
+  const [activeChat, setActiveChat] = useState(chats[0]);
   const [isPaused, setIsPaused] = useState(false);
   const { theme } = useTheme();
 
@@ -97,7 +214,7 @@ export default function TestimonialChat() {
                 <span>9:41</span>
                 <div style={{ display: "flex", gap: "6px" }}>📶 🔋</div>
              </div>
-             <h3 style={{ fontSize: "1.5rem", margin: 0, color: colors.mainText }}>Messages</h3>
+             <h3 style={{ fontSize: "1.5rem", margin: 0, color: colors.mainText }}>Feedbacks</h3>
           </div>
 
           <motion.div 
@@ -107,27 +224,27 @@ export default function TestimonialChat() {
             onMouseLeave={() => setIsPaused(false)}
             style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "110px", padding: "0 10px" }}
           >
-            {doubleTestimonials.map((item, index) => (
+            {doubleChats.map((item, index) => (
               <div
                 key={index}
-                onMouseEnter={() => { setActiveTab(item); setIsPaused(true); }}
+                onMouseEnter={() => { setActiveChat(item); setIsPaused(true); }}
+                onClick={() => { setActiveChat(item); setIsPaused(true); }}
                 style={{
                   display: "flex", gap: "15px", padding: "18px", borderRadius: "22px",
                   cursor: "pointer",
-                  background: activeTab.id === item.id ? colors.activeMessageBg : colors.messageBg,
+                  background: activeChat.id === item.id ? colors.activeMessageBg : colors.messageBg,
                   border: "1px solid",
-                  borderColor: activeTab.id === item.id ? "rgba(14,165,233,0.4)" : "transparent",
+                  borderColor: activeChat.id === item.id ? "rgba(14,165,233,0.4)" : "transparent",
                   transition: "all 0.3s ease"
                 }}
               >
                 <img src={item.image} alt="" style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover" }} />
                 <div style={{ flex: 1, overflow: "hidden" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
+                  <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: "4px" }}>
                     <span style={{ fontWeight: 700, fontSize: "1rem", color: colors.mainText }}>{item.name}</span>
-                    <span style={{ fontSize: "0.7rem", opacity: 0.4, color: colors.mainText }}>{item.time}</span>
                   </div>
                   <p style={{ fontSize: "0.85rem", color: colors.mainText, opacity: 0.5, margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {item.shortText}
+                    {item.preview}
                   </p>
                 </div>
               </div>
@@ -142,7 +259,7 @@ export default function TestimonialChat() {
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeTab.id}
+              key={activeChat.id}
               initial={{ opacity: 0, y: 15, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -15, scale: 0.95 }}
@@ -174,20 +291,20 @@ export default function TestimonialChat() {
                 color: "#0ea5e9",
                 fontSize: "1.1rem", fontWeight: 700
               }}>
-                {"★".repeat(activeTab.rating)} 
+                {"★".repeat(activeChat.rating)} 
                 <span style={{color: colors.mainText, opacity: 0.6}}>
-                  {activeTab.rating}.0 / 5
+                  {activeChat.rating}.0 / 5
                 </span>
               </div>
 
               <h3 style={{ fontSize: "2.8rem", fontWeight: 900, marginBottom: "50px", color: colors.mainText }}>
-                {activeTab.name}
+                {activeChat.name}
               </h3>
               
               <div style={{ position: "relative", marginBottom: "50px" }}>
                 <span style={{ position: "absolute", top: "-50px", left: "-30px", fontSize: "7rem", opacity: 0.15, color: "#0ea5e9" }}>“</span>
                 <p style={{ fontSize: "1.6rem", lineHeight: "1.8", color: isDark ? "#E2E8F0" : "#334155" }}>
-                  {activeTab.fullText}
+                  {activeChat.fullMessage}
                 </p>
               </div>
 
@@ -196,10 +313,10 @@ export default function TestimonialChat() {
                 borderRadius: "50px", width: "fit-content",
                 border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`
               }}>
-                <img src={activeTab.image} alt="" style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid #0ea5e9" }} />
+                 <img src={activeChat.image} alt="" style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid #0ea5e9" }} />
                 <div>
-                   <p style={{ fontWeight: 800, fontSize: "1.1rem", color: colors.mainText, margin: 0 }}>{activeTab.name}</p>
-                   <p style={{ fontSize: "0.85rem", color: "#0ea5e9", fontWeight: 700, margin: 0 }}>{activeTab.role}</p>
+                   <p style={{ fontWeight: 800, fontSize: "1.1rem", color: colors.mainText, margin: 0 }}>{activeChat.name}</p>
+                   <p style={{ fontSize: "0.85rem", color: "#0ea5e9", fontWeight: 700, margin: 0 }}>{activeChat.role}</p>
                 </div>
               </div>
 
