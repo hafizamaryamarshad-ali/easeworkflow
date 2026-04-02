@@ -8,6 +8,7 @@ import { fetchBlogBySlug, type BlogPost } from "../../../lib/fetchBlogs";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
 import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
+import { PortableText } from '@portabletext/react';
 
 type ThemeMode = "dark" | "light";
 
@@ -122,7 +123,9 @@ export default function BlogDetail() {
           {/* Media slider inside the main card, below the header */}
           <BlogMediaSection blog={blog} />
 
-          <p style={content(subTextColor, theme)}>{blog.content}</p>
+          <div style={content(subTextColor, theme)}>
+      <PortableText value={(blog as any)?.content} />
+      </div>
         </div>
       </div>
     </Wrapper>

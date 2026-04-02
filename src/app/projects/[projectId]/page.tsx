@@ -8,6 +8,7 @@ import { FiAlertTriangle, FiTool, FiAward } from "react-icons/fi";
 import { fetchProjectBySlug, type Project } from "../../../lib/fetchProjects";
 import { useTheme } from "../../../theme/ThemeProvider";
 import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
+import { PortableText } from "@portabletext/react";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -97,7 +98,10 @@ export default function ProjectDetailPage() {
 
       const baseOverview = project.shortDesc || project.longDesc || "";
 
-      if (!project.longDesc) {
+      const longDescText =
+        typeof (project as any).longDesc === "string" ? ((project as any).longDesc as string) : "";
+
+      if (!longDescText) {
         return {
           overview: baseOverview,
           problem: "",
@@ -106,7 +110,7 @@ export default function ProjectDetailPage() {
         };
       }
 
-      const sentences = project.longDesc
+      const sentences = longDescText
         .split(/(?<=[.!?])\s+/)
         .filter(Boolean);
 
@@ -394,7 +398,7 @@ export default function ProjectDetailPage() {
                 >
                   <FiAlertTriangle size={18} /> Problem / Challenge
                 </h2>
-                <p
+                <div
                   style={{
                     margin: 0,
                     marginTop: "6px",
@@ -403,8 +407,12 @@ export default function ProjectDetailPage() {
                     color: subTextColor[theme],
                   }}
                 >
-                  {sectionTexts.problem}
-                </p>
+                  {Array.isArray((project as any).longDesc) && (project as any).longDesc.length > 0 ? (
+                    <PortableText value={(project as any).longDesc} />
+                  ) : (
+                    <p style={{ margin: 0 }}>{sectionTexts.problem}</p>
+                  )}
+                </div>
               </div>
             )}
 
