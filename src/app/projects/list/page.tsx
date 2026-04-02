@@ -47,7 +47,10 @@ export default function ProjectsList() {
           slug: project.slug,
           title: project.title,
           shortDesc: project.shortDesc,
-          longDesc: project.longDesc,
+          longDesc:
+            typeof project.longDesc === "string"
+              ? project.longDesc
+              : "",
           video: project.videoUrl ?? (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? ""),
           thumbnail: project.thumbnailUrl ?? "",
           clientName: project.clientName,

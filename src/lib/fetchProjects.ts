@@ -157,7 +157,10 @@ const mapProject = (project: ProjectQueryResult): Project => {
     longDesc: project.longDesc,
     metaTitle: project.metaTitle || project.title,
     metaDescription:
-      project.metaDescription || project.shortDesc || project.longDesc || "",
+      project.metaDescription ||
+      project.shortDesc ||
+      (typeof project.longDesc === "string" ? project.longDesc : "") ||
+      "",
     tags: Array.isArray(project.tags) ? project.tags.filter(Boolean) : [],
     video: project.video ?? null,
     thumbnail: project.thumbnail ?? null,
