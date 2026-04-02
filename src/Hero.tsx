@@ -107,7 +107,7 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         style={{
-          fontSize: "3rem",
+          fontSize: "4rem",
           fontWeight: 900,
           lineHeight: "1.2",
           maxWidth: "900px",

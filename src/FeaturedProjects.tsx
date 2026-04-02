@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { fetchProjects, type Project } from "./lib/fetchProjects";
@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 
 export default function FeaturedProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [selected, setSelected] = useState<Project | null>(null);
   const { theme } = useTheme();
   const router = useRouter();
 
@@ -69,7 +68,8 @@ export default function FeaturedProjects() {
           <TiltCard
             key={project._id}
             project={project}
-            onClick={() => setSelected(project)}
+            // Card click par detailed page par navigate karega
+            onClick={() => router.push(`/projects/${project.slug || project._id}`)}
             isDark={isDark}
           />
         ))}
@@ -94,62 +94,6 @@ export default function FeaturedProjects() {
       >
         See All Projects →
       </motion.button>
-
-      {/* MODAL */}
-      {selected && (
-        <div
-          onClick={() => setSelected(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.75)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 50,
-            padding: "20px",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: isDark ? "#0f172a" : "#ffffff",
-              padding: "22px",
-              borderRadius: "16px",
-              maxWidth: "520px",
-              width: "100%",
-              color: isDark ? "#fff" : "#0f172a",
-              boxShadow: isDark
-                ? "none"
-                : "0 20px 50px rgba(0,0,0,0.15)",
-            }}
-          >
-            <h2 style={{ fontSize: "1.5rem", fontWeight: 800 }}>
-              {selected.title}
-            </h2>
-
-            <p style={{ opacity: 0.7, marginTop: "10px" }}>
-              {selected.shortDesc}
-            </p>
-
-            <button
-              onClick={() => setSelected(null)}
-              style={{
-                marginTop: "18px",
-                padding: "10px 22px",
-                borderRadius: "999px",
-                border: "none",
-                background: "#38bdf8",
-                color: "#000",
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
@@ -172,7 +116,7 @@ function TiltCard({
       : "0 10px 30px rgba(14,165,233,0.12), 0 2px 10px rgba(0,0,0,0.05)",
   });
 
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMove = (e: MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
@@ -224,7 +168,6 @@ function TiltCard({
           fill
           style={{ objectFit: "cover" }}
         />
-
         <div
           style={{
             position: "absolute",

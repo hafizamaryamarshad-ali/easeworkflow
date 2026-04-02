@@ -65,7 +65,7 @@ export default function ServicesDetails() {
       setCount({
         exp: Math.min(10, start),
         patients: Math.min(10000, start * 400),
-        sat: Math.min(99, start * 4),
+        sat: Math.min(100, start * 4),
       });
 
       if (start >= 25) clearInterval(interval);

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiShield, FiLock, FiUserCheck, FiServer, FiEye } from "react-icons/fi";
+import { FiShield, FiLock, FiUserCheck, FiServer, FiEye, FiCheckCircle } from "react-icons/fi"; // FiCheckCircle add kiya
 import { useTheme } from "./theme/ThemeProvider";
 import { useState, useEffect } from "react";
 
@@ -73,11 +73,10 @@ export default function PrivacySection() {
     },
   ];
 
- return (
-  <section
-    id="privacy"  
-    style={{
-
+  return (
+    <section
+      id="privacy"  
+      style={{
         position: "relative",
         minHeight: "100vh",
         display: "flex",
@@ -118,6 +117,29 @@ export default function PrivacySection() {
       >
         {/* LEFT SIDE */}
         <div>
+          {/* DPA HIGHLIGHT TAG */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "6px 12px",
+              borderRadius: "8px",
+              background: "rgba(34, 197, 94, 0.1)",
+              border: "1px solid rgba(34, 197, 94, 0.3)",
+              color: "#22c55e",
+              fontSize: "12px",
+              fontWeight: "700",
+              marginBottom: "16px",
+              textTransform: "uppercase",
+              letterSpacing: "1px"
+            }}
+          >
+            <FiCheckCircle size={14} /> DPA Agreement Guaranteed
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -145,9 +167,9 @@ export default function PrivacySection() {
               lineHeight: 1.75,
             }}
           >
-            We build systems where privacy is not an add-on — it’s the
-            foundation. Every layer is designed to protect sensitive data
-            while keeping workflows smooth.
+            We build systems where privacy is not an add-on — it’s the foundation. 
+            <strong> We sign a formal Data Processing Agreement (DPA) </strong> 
+            to guarantee that your sensitive medical data is handled with the highest legal and technical standards.
           </motion.p>
 
           {/* LEFT CARDS */}
@@ -161,9 +183,9 @@ export default function PrivacySection() {
           >
             {[{
               Icon: FiShield,
-              title: "Data Protection",
+              title: "DPA & Data Protection",
               body:
-                "HIPAA-aware architecture, encrypted storage, and secure data handling.",
+                "Full DPA compliance with HIPAA-aware architecture and encrypted storage for total peace of mind.",
             }, {
               Icon: FiUserCheck,
               title: "User Privacy",

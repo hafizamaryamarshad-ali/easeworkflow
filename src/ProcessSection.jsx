@@ -2,12 +2,13 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { useTheme } from "./theme/ThemeProvider"; // Theme import kiya
+import { useTheme } from "./theme/ThemeProvider";
 
 const steps = [
-  { title: "Strategy", desc: "Analyzing healthcare workflows to identify AI opportunities compliant with GDPR.", sprint: 1, pos: "0%", width: "40%", color: "#00D1FF", textColor: "#000", icon: "💡" },
-  { title: "Design", desc: "User-centric UI/UX design for medical staff and secure AI architecture.", sprint: 1.5, pos: "15%", width: "45%", color: "#3b82f6", textColor: "#fff", icon: "🎨" },
-  { title: "Development & Testing", desc: "Building high-performance AI solutions with rigorous clinical validation.", sprint: 2, pos: "30%", width: "50%", color: "#00D1FF", textColor: "#000", icon: "⚙️" },
+  { title: "Strategy", desc: "Analyzing healthcare workflows to identify AI opportunities compliant with GDPR.", sprint: 1, pos: "0%", width: "35%", color: "#00D1FF", textColor: "#000", icon: "💡" },
+  { title: "Design", desc: "User-centric UI/UX design for medical staff and secure AI architecture.", sprint: 1.5, pos: "12%", width: "40%", color: "#3b82f6", textColor: "#fff", icon: "🎨" },
+  { title: "Development", desc: "Building high-performance AI solutions with rigorous clinical validation.", sprint: 2, pos: "25%", width: "45%", color: "#00D1FF", textColor: "#000", icon: "⚙️" },
+  { title: "Security & Privacy", desc: "We sign a Data Processing Agreement (DPA) to guarantee rigorous data security and protect patient privacy.", sprint: 2.5, pos: "45%", width: "40%", color: "#10b981", textColor: "#fff", icon: "🛡️" },
   { title: "Launch", desc: "Seamless deployment of the AI system into your clinical environment.", sprint: 3, pos: "70%", width: "24%", color: "#3b82f6", textColor: "#fff", icon: "🚀" },
   { title: "Support", desc: "Ongoing maintenance and optimization to ensure your system thrives.", sprint: 3.5, pos: "80%", width: "25%", color: "#00D1FF", textColor: "#000", icon: "👥" },
 ];
@@ -15,9 +16,8 @@ const steps = [
 export default function ProcessSection() {
   const [activeStep, setActiveStep] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
-  const { theme } = useTheme(); // Theme access kiya
+  const { theme } = useTheme();
 
-  // Theme-based dynamic colors
   const isDark = theme === "dark";
   const colors = {
     bg: isDark ? "#08081A" : "#f8fafc",
@@ -42,7 +42,7 @@ export default function ProcessSection() {
         flexDirection: "column",
         justifyContent: "center",
         overflow: "hidden",
-        transition: "all 0.5s ease" // Smooth transition
+        transition: "all 0.5s ease"
       }}
     >
       
@@ -80,14 +80,14 @@ export default function ProcessSection() {
                 key={i} 
                 onMouseEnter={() => setActiveStep(step)}
                 onMouseLeave={() => setActiveStep(null)}
-                style={{ height: "95px", borderBottom: `1px solid ${colors.border}`, position: "relative", display: "flex", alignItems: "center" }}
+                style={{ height: "85px", borderBottom: `1px solid ${colors.border}`, position: "relative", display: "flex", alignItems: "center" }}
               >
                 <motion.div
                   style={{
                     position: "absolute",
                     left: step.pos,
                     width: step.width,
-                    height: "50px",
+                    height: "45px",
                     background: step.color,
                     borderRadius: "50px",
                     display: "flex",
@@ -95,10 +95,11 @@ export default function ProcessSection() {
                     justifyContent: "center",
                     color: step.textColor,
                     fontWeight: "800",
-                    fontSize: "1.1rem",
+                    fontSize: "1rem",
                     cursor: "pointer",
-                    padding: "0 35px",
+                    padding: "0 25px",
                     boxShadow: activeStep?.title === step.title ? `0 0 35px ${step.color}aa` : "0 4px 15px rgba(0,0,0,0.1)",
+                    zIndex: activeStep?.title === step.title ? 10 : 1
                   }}
                 >
                   {step.title}
@@ -120,7 +121,7 @@ export default function ProcessSection() {
           }}
         >
           
-          <div style={{ position: "absolute", width: "260px", textAlign: "center", zIndex: 100, pointerEvents: "none" }}>
+          <div style={{ position: "absolute", width: "280px", textAlign: "center", zIndex: 100, pointerEvents: "none" }}>
             <AnimatePresence mode="wait">
               {activeStep && (
                 <motion.div key={activeStep.title} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
@@ -168,7 +169,7 @@ export default function ProcessSection() {
                     >
                       <motion.div
                         animate={{ 
-                            backgroundColor: isActive ? (isDark ? "#FFF" : "#3b82f6") : (isDark ? "#00D1FF" : "#94a3b8"), 
+                            backgroundColor: isActive ? (isDark ? "#FFF" : "#3b82f6") : (isDark ? step.color : "#94a3b8"), 
                             scale: isActive ? 1.25 : 1,
                             color: isActive && !isDark ? "#fff" : "inherit"
                         }}
@@ -176,14 +177,12 @@ export default function ProcessSection() {
                           width: "72px", height: "72px", borderRadius: "50%",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           fontSize: "2rem", border: `6px solid ${colors.bg}`,
-                          boxShadow: isActive ? `0 0 40px ${isDark ? "#FFF" : "#3b82f6"}` : "0 0 20px rgba(0, 209, 255, 0.2)"
+                          boxShadow: isActive ? `0 0 40px ${isDark ? "#FFF" : "#3b82f6"}` : "0 0 20px rgba(0, 209, 255, 0.1)"
                         }}
                       >
                         {step.icon}
                       </motion.div>
                     </div>
-                    {/* Decorative Orbit Dot */}
-                    <div style={{ position: "absolute", top: "0px", left: "50%", width: "18px", height: "18px", background: isDark ? "#FFF" : "#3b82f6", borderRadius: "50%", border: `4px solid ${colors.bg}`, transform: `rotate(36deg) translateX(-50%) translateY(-50%)`, transformOrigin: "50% 240px" }} />
                   </div>
                 );
               })}

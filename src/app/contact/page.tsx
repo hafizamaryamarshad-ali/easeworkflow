@@ -1,6 +1,8 @@
 "use client";
 
 import type { CSSProperties, FormEvent } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import { FiMail, FiPhone, FiMapPin, FiTwitter, FiLinkedin } from "react-icons/fi";
 import { useTheme } from "../../theme/ThemeProvider";
@@ -8,6 +10,14 @@ import { useTheme } from "../../theme/ThemeProvider";
 export default function ContactPage() {
   const { theme } = useTheme();
   const primaryColor = "#0ea5e9";
+
+  const [budgetOpen, setBudgetOpen] = useState(false);
+  const [budgetLabel, setBudgetLabel] = useState("Estimated budget");
+  const budgetSelectRef = useRef<HTMLSelectElement | null>(null);
+
+  const [contactOpen, setContactOpen] = useState(false);
+  const [contactLabel, setContactLabel] = useState("Preferred contact method");
+  const contactSelectRef = useRef<HTMLSelectElement | null>(null);
 
   const inputStyle: CSSProperties = {
     width: "100%",
@@ -62,9 +72,33 @@ export default function ContactPage() {
       return;
     }
 
-    // At this stage all required fields are valid.
-    // Integrate with backend or email service here if needed.
+    // At this stage all required fields are valid. Send via EmailJS.
+    emailjs
+      .sendForm("service_36oazwd", "template_tfwle9l", form, "kQmGW82fdh4WwUSIY")
+      .then(() => {
+        alert("Message sent successfully! We'll be in touch soon.");
+        form.reset();
+      })
+      .catch((error) => {
+        console.error("EmailJS error", error);
+        alert("Something went wrong while sending your message. Please try again.");
+      });
   };
+
+  const budgetOptions = [
+    { label: "Estimated budget", value: "", disabled: true },
+    { label: "Under $5,000", value: "under-5k" },
+    { label: "$5,000 – $15,000", value: "5k-15k" },
+    { label: "$15,000 – $50,000", value: "15k-50k" },
+    { label: "$50,000+", value: "50k-plus" },
+  ];
+
+  const contactOptions = [
+    { label: "Preferred contact method", value: "", disabled: true },
+    { label: "Email", value: "email" },
+    { label: "Phone", value: "phone" },
+    { label: "WhatsApp", value: "whatsapp" },
+  ];
 
   return (
     <section
@@ -199,6 +233,8 @@ export default function ContactPage() {
                     ? "0 24px 60px rgba(15,23,42,0.9)"
                     : "0 20px 50px rgba(15,23,42,0.12)",
                 backdropFilter: "blur(20px)",
+                position: "relative",
+                zIndex: 10,
               }}
             >
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -206,6 +242,7 @@ export default function ContactPage() {
                   <input
                     key={placeholder}
                     type={i === 1 ? "email" : "text"}
+                    name={i === 1 ? "workEmail" : "yourName"}
                     placeholder={placeholder}
                     required
                     style={inputStyle}
@@ -213,6 +250,7 @@ export default function ContactPage() {
                 ))}
 
                 <textarea
+                  name="introMessage"
                   placeholder="Tell us briefly what you’d like to improve."
                   rows={4}
                   style={{ ...inputStyle, resize: "none" }}
@@ -220,49 +258,215 @@ export default function ContactPage() {
 
                 <input
                   type="text"
+                  name="companyName"
                   placeholder="Company / Business Name (optional)"
                   style={inputStyle}
                 />
 
-                <select
-                  required
-                  style={inputStyle}
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Estimated budget
-                  </option>
-                  <option value="under-5k">Under $5,000</option>
-                  <option value="5k-15k">$5,000 – $15,000</option>
-                  <option value="15k-50k">$15,000 – $50,000</option>
-                  <option value="50k-plus">$50,000+</option>
-                </select>
+                {/* Estimated Budget Dropdown */}
+                <div style={{ position: "relative", zIndex: 50 }}>
+                  <select
+                    ref={budgetSelectRef}
+                    required
+                    name="estimatedBudget"
+                    defaultValue=""
+                    style={{
+                      ...inputStyle,
+                      paddingRight: "40px",
+                      color: "transparent",
+                      textShadow: "0 0 0 transparent",
+                    }}
+                  >
+                    {budgetOptions.map((opt) => (
+                      <option key={opt.value || "placeholder"} value={opt.value} disabled={opt.disabled}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    onClick={() => setBudgetOpen((o) => !o)}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "0 14px",
+                      borderRadius: inputStyle.borderRadius,
+                      cursor: "pointer",
+                      color: theme === "dark" ? "#e2e8f0" : "#0f172a",
+                      fontSize: "0.9rem",
+                      fontWeight: 600,
+                      background: "transparent",
+                    }}
+                  >
+                    <span style={{ opacity: budgetLabel === "Estimated budget" ? 0.7 : 1 }}>
+                      {budgetLabel}
+                    </span>
+                    <span style={{ fontSize: "0.8rem" }}>▼</span>
+                  </div>
+                  {budgetOpen && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "calc(100% + 8px)",
+                        left: 0,
+                        width: "100%",
+                        background: "#050b1a",
+                        borderRadius: 12,
+                        overflow: "hidden",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                        border: "1px solid rgba(0, 209, 255, 0.3)",
+                        zIndex: 999,
+                      }}
+                    >
+                      <div style={{ maxHeight: 260, overflowY: "auto", borderRight: "4px solid #00d1ff" }}>
+                        {budgetOptions
+                          .filter((opt) => !opt.disabled)
+                          .map((opt) => (
+                            <div
+                              key={opt.value}
+                              onClick={() => {
+                                if (budgetSelectRef.current) {
+                                  budgetSelectRef.current.value = opt.value;
+                                }
+                                setBudgetLabel(opt.label);
+                                setBudgetOpen(false);
+                              }}
+                              style={{
+                                padding: "12px 18px",
+                                cursor: "pointer",
+                                fontSize: "0.9rem",
+                                color: "#fff",
+                                fontWeight: 500,
+                                borderBottom: "1px solid rgba(255,255,255,0.05)",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "rgba(0, 209, 255, 0.1)";
+                                e.currentTarget.style.color = "#00d1ff";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "transparent";
+                                e.currentTarget.style.color = "#fff";
+                              }}
+                            >
+                              {opt.label}
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <input
                   type="text"
+                  name="timeline"
                   placeholder="Timeline (optional)"
                   style={inputStyle}
                 />
 
                 <textarea
+                  name="projectDescription"
                   placeholder="Project description (goals, scope, current tools)."
                   rows={5}
                   required
                   style={{ ...inputStyle, resize: "none" }}
                 />
 
-                <select
-                  required
-                  style={inputStyle}
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Preferred contact method
-                  </option>
-                  <option value="email">Email</option>
-                  <option value="phone">Phone</option>
-                  <option value="whatsapp">WhatsApp</option>
-                </select>
+                {/* Preferred Contact Method Dropdown */}
+                <div style={{ position: "relative", zIndex: 50 }}>
+                  <select
+                    ref={contactSelectRef}
+                    required
+                    name="preferredContactMethod"
+                    defaultValue=""
+                    style={{
+                      ...inputStyle,
+                      paddingRight: "40px",
+                      color: "transparent",
+                      textShadow: "0 0 0 transparent",
+                    }}
+                  >
+                    {contactOptions.map((opt) => (
+                      <option key={opt.value || "placeholder"} value={opt.value} disabled={opt.disabled}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    onClick={() => setContactOpen((o) => !o)}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "0 14px",
+                      borderRadius: inputStyle.borderRadius,
+                      cursor: "pointer",
+                      color: theme === "dark" ? "#e2e8f0" : "#0f172a",
+                      fontSize: "0.9rem",
+                      fontWeight: 600,
+                      background: "transparent",
+                    }}
+                  >
+                    <span style={{ opacity: contactLabel === "Preferred contact method" ? 0.7 : 1 }}>
+                      {contactLabel}
+                    </span>
+                    <span style={{ fontSize: "0.8rem" }}>▼</span>
+                  </div>
+                  {contactOpen && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "calc(100% + 8px)",
+                        left: 0,
+                        width: "100%",
+                        background: "#050b1a",
+                        borderRadius: 12,
+                        overflow: "hidden",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                        border: "1px solid rgba(0, 209, 255, 0.3)",
+                        zIndex: 999,
+                      }}
+                    >
+                      <div style={{ maxHeight: 260, overflowY: "auto", borderRight: "4px solid #00d1ff" }}>
+                        {contactOptions
+                          .filter((opt) => !opt.disabled)
+                          .map((opt) => (
+                            <div
+                              key={opt.value}
+                              onClick={() => {
+                                if (contactSelectRef.current) {
+                                  contactSelectRef.current.value = opt.value;
+                                }
+                                setContactLabel(opt.label);
+                                setContactOpen(false);
+                              }}
+                              style={{
+                                padding: "12px 18px",
+                                cursor: "pointer",
+                                fontSize: "0.9rem",
+                                color: "#fff",
+                                fontWeight: 500,
+                                borderBottom: "1px solid rgba(255,255,255,0.05)",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "rgba(0, 209, 255, 0.1)";
+                                e.currentTarget.style.color = "#00d1ff";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "transparent";
+                                e.currentTarget.style.color = "#fff";
+                              }}
+                            >
+                              {opt.label}
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <button
@@ -341,6 +545,8 @@ export default function ContactPage() {
                     ...cardStyle,
                     flex: "1 1 calc(33.333% - 10px)",
                     minWidth: "210px",
+                    position: "relative",
+                    zIndex: 0,
                   }}
                   onClick={
                     item.title === "Phone"
