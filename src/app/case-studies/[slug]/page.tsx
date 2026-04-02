@@ -188,9 +188,25 @@ export default function CaseStudyDetail() {
                 <h3 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '35px', display: 'flex', alignItems: 'center', gap: '15px' }}><FiCheck color="#22c55e"/> Key Outcomes</h3>
                 <div style={{ display: 'grid', gap: '15px' }}>
                   {study.results!.map((res, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'start', gap: '15px', background: colors.card, padding: '20px', borderRadius: '20px', border: `1px solid ${colors.border}` }}>
-                      <div style={{ marginTop: '3px' }}><FiCheck color="#22c55e" strokeWidth={3} /></div>
-                      <span style={{ fontWeight: 500, fontSize: '1rem' }}>{res}</span>
+                    <div
+                      key={i}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'start',
+                        gap: '15px',
+                        background: colors.card,
+                        padding: '20px',
+                        borderRadius: '20px',
+                        border: `1px solid ${colors.border}`,
+                      }}
+                    >
+                      <div style={{ marginTop: '3px' }}>
+                        <FiCheck color="#22c55e" strokeWidth={3} />
+                      </div>
+                      <span style={{ fontWeight: 500, fontSize: '1rem' }}>
+                        {/* Each result entry is a Portable Text block; render it properly */}
+                        <PortableText value={[res as any]} />
+                      </span>
                     </div>
                   ))}
                 </div>
