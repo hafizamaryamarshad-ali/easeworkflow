@@ -24,9 +24,8 @@ function BlogMediaSection({ blog }: { blog: BlogPost }) {
     items.push({ type: "image", src: blog.thumbnailUrl, alt: blog.title });
   }
 
-  const gallery = (blog as any).galleryImageUrls as string[] | undefined;
-  if (Array.isArray(gallery)) {
-    gallery.forEach((url) => {
+  if (Array.isArray(blog.galleryImageUrls)) {
+    blog.galleryImageUrls.forEach((url) => {
       if (url) items.push({ type: "image", src: url, alt: blog.title });
     });
   }
@@ -35,9 +34,8 @@ function BlogMediaSection({ blog }: { blog: BlogPost }) {
     items.push({ type: "video", src: blog.videoUrl });
   }
 
-  const extraVideos = (blog as any).videoUrls as string[] | undefined;
-  if (Array.isArray(extraVideos)) {
-    extraVideos.forEach((url) => {
+  if (Array.isArray(blog.videoUrls)) {
+    blog.videoUrls.forEach((url) => {
       if (url) items.push({ type: "video", src: url });
     });
   }
@@ -123,9 +121,11 @@ export default function BlogDetail() {
           {/* Media slider inside the main card, below the header */}
           <BlogMediaSection blog={blog} />
 
-          <div style={content(subTextColor, theme)}>
-      <PortableText value={(blog as any)?.content} />
-      </div>
+          {Array.isArray(blog.content) && blog.content.length > 0 && (
+            <div style={content(subTextColor, theme)}>
+              <PortableText value={blog.content} />
+            </div>
+          )}
         </div>
       </div>
     </Wrapper>

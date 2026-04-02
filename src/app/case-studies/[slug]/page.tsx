@@ -45,6 +45,14 @@ export default function CaseStudyDetail() {
   if (loading || !study) return null;
 
   const sliderImages = [study.featuredImageUrl, ...(study.galleryImageUrls || [])].filter(Boolean);
+  const hasSliderImages = sliderImages.length > 0;
+
+  const hasProblem = Array.isArray(study.problem) && study.problem.length > 0;
+  const hasExplanation = Array.isArray(study.explanation) && study.explanation.length > 0;
+  const hasSolution = Array.isArray(study.solution) && study.solution.length > 0;
+  const hasSolutionContent = hasExplanation || hasSolution;
+  const hasTools = Array.isArray(study.tools) && study.tools.length > 0;
+  const hasResults = Array.isArray(study.results) && study.results.length > 0;
 
   const colors = {
     bg: isDark ? "#0a0c10" : "#fbfdfd",
@@ -64,7 +72,7 @@ export default function CaseStudyDetail() {
       <section style={{ width: "100%", padding: "80px 20px 0", background: isDark ? `radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), ${colors.bg}` : "linear-gradient(135deg, #e0f2e9 0%, #ffffff 100%)", textAlign: "center", position: "relative", overflow: "hidden" }}>
         
         <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ color: colors.accent, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '15px' }}>
-            {study.industry} Case Study
+            {study.industry ? `${study.industry} Case Study` : "Case Study"}
         </motion.p>
         
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, maxWidth: "800px", margin: "0 auto 50px" }}>
@@ -72,50 +80,55 @@ export default function CaseStudyDetail() {
         </motion.h1>
         
         {/* Auto-Slider */}
-        <div style={{ position: "relative", width: "100%", maxWidth: "850px", height: "480px", margin: "0 auto", display: "flex", justifyContent: "center", alignItems: "flex-end" }}>
-          <AnimatePresence mode="wait">
-      <motion.img 
-        key={currentSlide}
-        src={sliderImages[currentSlide] ?? ""} 
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={{ duration: 0.8 }}
-              style={{ 
-                width: "100%", height: "100%", objectFit: "cover", borderRadius: "40px", 
-                zIndex: 2, marginBottom: "-40px", boxShadow: "0 30px 70px rgba(0,0,0,0.3)", 
-                border: `8px solid ${colors.card}` 
-              }} 
-            />
-          </AnimatePresence>
-          
-          <div style={{ position: 'absolute', bottom: '0', display: 'flex', gap: '10px', zIndex: 10 }}>
-            {sliderImages.map((_, i) => (
-              <div key={i} style={{ width: currentSlide === i ? '30px' : '10px', height: '10px', borderRadius: '10px', background: currentSlide === i ? colors.accent : colors.subText, transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)' }} />
-            ))}
+        {hasSliderImages && (
+          <div style={{ position: "relative", width: "100%", maxWidth: "850px", height: "480px", margin: "0 auto", display: "flex", justifyContent: "center", alignItems: "flex-end" }}>
+            <AnimatePresence mode="wait">
+              <motion.img 
+                key={currentSlide}
+                src={sliderImages[currentSlide] as string} 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.8 }}
+                style={{ 
+                  width: "100%", height: "100%", objectFit: "cover", borderRadius: "40px", 
+                  zIndex: 2, marginBottom: "-40px", boxShadow: "0 30px 70px rgba(0,0,0,0.3)", 
+                  border: `8px solid ${colors.card}` 
+                }} 
+              />
+            </AnimatePresence>
+            
+            <div style={{ position: 'absolute', bottom: '0', display: 'flex', gap: '10px', zIndex: 10 }}>
+              {sliderImages.map((_, i) => (
+                <div key={i} style={{ width: currentSlide === i ? '30px' : '10px', height: '10px', borderRadius: '10px', background: currentSlide === i ? colors.accent : colors.subText, transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)' }} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* 2. PROBLEM SECTION (Rocket Replaced with Teddy Bear 🐻) */}
-      <section style={{ padding: "140px 20px 100px", position: "relative" }}>
-        <div style={{ textAlign: 'center', position: 'relative', zIndex: 2, marginBottom: '80px' }}>
+      {hasProblem && (
+        <section style={{ padding: "140px 20px 100px", position: "relative" }}>
+          <div style={{ textAlign: 'center', position: 'relative', zIndex: 2, marginBottom: '80px' }}>
             {/* Rocky Remove Kiya, Teddy Bear Lagaya 🐻 */}
             <div style={{ fontSize: '3.5rem', marginBottom: '15px' }}>🐻</div>
             <div style={{ background: colors.card, padding: '15px 50px', borderRadius: '20px', display: 'inline-block', border: `1px solid ${colors.border}`, boxShadow: '0 15px 35px rgba(0,0,0,0.05)' }}>
                 <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: colors.accent, margin: 0 }}>The Problem</h2>
             </div>
-            <p style={{ maxWidth: '700px', margin: '30px auto', color: colors.subText, fontSize: '1.2rem', lineHeight: 1.8 }}>{study.problem}</p>
-        </div>
+            <div style={{ maxWidth: '700px', margin: '30px auto', color: colors.subText, fontSize: '1.2rem', lineHeight: 1.8 }}>
+              <PortableText value={study.problem} />
+            </div>
+          </div>
 
-        <svg style={{ position: 'absolute', top: '280px', left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: '1100px', height: '300px', zIndex: 1, pointerEvents: 'none', opacity: 0.5 }}>
+          <svg style={{ position: 'absolute', top: '280px', left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: '1100px', height: '300px', zIndex: 1, pointerEvents: 'none', opacity: 0.5 }}>
             <path d="M550,0 C550,120 150,80 150,250" stroke={colors.line} fill="transparent" strokeWidth="2" strokeDasharray="6,6" />
             <path d="M550,0 C550,120 420,80 420,250" stroke={colors.line} fill="transparent" strokeWidth="2" strokeDasharray="6,6" />
             <path d="M550,0 C550,120 680,80 680,250" stroke={colors.line} fill="transparent" strokeWidth="2" strokeDasharray="6,6" />
             <path d="M550,0 C550,120 950,80 950,250" stroke={colors.line} fill="transparent" strokeWidth="2" strokeDasharray="6,6" />
-        </svg>
+          </svg>
 
-        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "25px", position: 'relative', zIndex: 2 }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "25px", position: 'relative', zIndex: 2 }}>
             {[
               {t:"Integration Issues", i:<FiLock/>}, {t:"User Friction", i:<FiUsers/>}, 
               {t:"Inconsistency", i:<FiTag/>}, {t:"Performance", i:<FiShoppingBag/>}
@@ -126,19 +139,21 @@ export default function CaseStudyDetail() {
                     <p style={{ fontSize: '0.95rem', color: colors.subText }}>Strategic resolution of {item.t.toLowerCase()} for the {study.title} ecosystem.</p>
                 </motion.div>
             ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* 3. SOLUTION SECTION */}
-      <section style={{ padding: "100px 20px", background: isDark ? "rgba(255,255,255,0.02)" : "#f8fafc" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+      {hasSolutionContent && (
+        <section style={{ padding: "100px 20px", background: isDark ? "rgba(255,255,255,0.02)" : "#f8fafc" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             <div style={{ textAlign: 'center', marginBottom: '70px' }}>
                 <h2 style={{ fontSize: '3.5rem', fontWeight: 900 }}>The Solution</h2>
                 <div style={{ maxWidth: '750px', margin: '20px auto', color: colors.subText, fontSize: '1.1rem', lineHeight: 1.7 }}>
-                  {Array.isArray(study.explanation) && study.explanation.length > 0 ? (
+                  {hasExplanation ? (
                     <PortableText value={study.explanation} />
                   ) : (
-                    <p style={{ margin: 0 }}>{study.solution}</p>
+                    <PortableText value={study.solution} />
                   )}
                 </div>
             </div>
@@ -151,31 +166,36 @@ export default function CaseStudyDetail() {
                     </motion.div>
                 ))}
             </div>
-        </div>
-      </section>
+            </div>
+          </section>
+          )}
 
       {/* 4. TECH & RESULTS */}
       <section style={{ padding: "120px 20px", maxWidth: "1200px", margin: "0 auto" }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px' }}>
-            <div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px' }}>
+            {hasTools && (
+              <div>
                 <h3 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '35px', display: 'flex', alignItems: 'center', gap: '15px' }}><FiCpu color={colors.accent}/> Tech Stack</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                    {study.tools?.map((tool, i) => (
-                        <span key={i} style={{ background: colors.card, border: `1px solid ${colors.border}`, padding: '12px 25px', borderRadius: '100px', fontSize: '0.95rem', fontWeight: 700, color: colors.text }}>{tool}</span>
-                    ))}
+                  {study.tools!.map((tool, i) => (
+                    <span key={i} style={{ background: colors.card, border: `1px solid ${colors.border}`, padding: '12px 25px', borderRadius: '100px', fontSize: '0.95rem', fontWeight: 700, color: colors.text }}>{tool}</span>
+                  ))}
                 </div>
-            </div>
-            <div>
+              </div>
+            )}
+            {hasResults && (
+              <div>
                 <h3 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '35px', display: 'flex', alignItems: 'center', gap: '15px' }}><FiCheck color="#22c55e"/> Key Outcomes</h3>
                 <div style={{ display: 'grid', gap: '15px' }}>
-                    {study.results?.map((res, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'start', gap: '15px', background: colors.card, padding: '20px', borderRadius: '20px', border: `1px solid ${colors.border}` }}>
-                            <div style={{ marginTop: '3px' }}><FiCheck color="#22c55e" strokeWidth={3} /></div>
-                            <span style={{ fontWeight: 500, fontSize: '1rem' }}>{res}</span>
-                        </div>
-                    ))}
+                  {study.results!.map((res, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'start', gap: '15px', background: colors.card, padding: '20px', borderRadius: '20px', border: `1px solid ${colors.border}` }}>
+                      <div style={{ marginTop: '3px' }}><FiCheck color="#22c55e" strokeWidth={3} /></div>
+                      <span style={{ fontWeight: 500, fontSize: '1rem' }}>{res}</span>
+                    </div>
+                  ))}
                 </div>
-            </div>
+              </div>
+            )}
         </div>
       </section>
 

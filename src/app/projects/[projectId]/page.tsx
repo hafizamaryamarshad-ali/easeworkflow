@@ -96,12 +96,12 @@ export default function ProjectDetailPage() {
         };
       }
 
-      const baseOverview = project.shortDesc || project.longDesc || "";
-
-      const longDescText =
+      const longDescString =
         typeof (project as any).longDesc === "string" ? ((project as any).longDesc as string) : "";
 
-      if (!longDescText) {
+      const baseOverview = project.shortDesc || longDescString || "";
+
+      if (!longDescString) {
         return {
           overview: baseOverview,
           problem: "",
@@ -110,7 +110,7 @@ export default function ProjectDetailPage() {
         };
       }
 
-      const sentences = longDescText
+      const sentences = longDescString
         .split(/(?<=[.!?])\s+/)
         .filter(Boolean);
 
@@ -370,7 +370,7 @@ export default function ProjectDetailPage() {
               gap: "28px",
             }}
           >
-            {sectionTexts.problem && (
+            {(Array.isArray((project as any).longDesc) && (project as any).longDesc.length > 0) || sectionTexts.problem ? (
               <div
                 style={{
                   padding: "20px 22px",
@@ -414,7 +414,7 @@ export default function ProjectDetailPage() {
                   )}
                 </div>
               </div>
-            )}
+            ) : null}
 
             {sectionTexts.solution && (
               <div
@@ -486,7 +486,7 @@ export default function ProjectDetailPage() {
                 >
                   <FiAward size={18} /> Results / Outcome
                 </h2>
-                <p
+                <div
                   style={{
                     margin: 0,
                     marginTop: "6px",
@@ -495,8 +495,12 @@ export default function ProjectDetailPage() {
                     color: subTextColor[theme],
                   }}
                 >
-                  {displayedResults}
-                </p>
+                  {Array.isArray(project.results) && project.results.length > 0 ? (
+                    <PortableText value={project.results} />
+                  ) : (
+                    <p style={{ margin: 0 }}>{sectionTexts.results}</p>
+                  )}
+                </div>
               </div>
             )}
           </div>

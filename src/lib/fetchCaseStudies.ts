@@ -18,18 +18,18 @@ type CaseStudyQueryResult = {
   _id: string;
   slug: SanitySlug;
   title: string;
-  summary: string;
+  summary: string | any[];
   metaTitle?: string | null;
   metaDescription?: string | null;
   tags?: string[] | null;
   featuredImage: SanityImage | string | null;
   client: string;
   industry: string;
-  problem: string;
-  solution: string;
-   explanation?: any[] | null;
+  problem: string | any[];
+  solution: string | any[];
+  explanation?: any[] | null;
   tools: string[] | null;
-  results: string[] | null;
+  results: (string | any)[] | null;
   galleryImageUrls?: string[] | null;
   videoUrls?: string[] | null;
 };
@@ -38,21 +38,42 @@ export type CaseStudy = {
   _id: string;
   slug: string;
   title: string;
-  summary: string;
+  summary: any[];
   metaTitle: string;
   metaDescription: string;
   tags: string[];
   featuredImage: SanityImage | string | null;
   client: string;
   industry: string;
-  problem: string;
-  solution: string;
-    explanation: any[];
+  problem: any[];
+  solution: any[];
+  explanation: any[];
   tools: string[];
-  results: string[];
+  results: any[];
   featuredImageUrl: string | null;
   galleryImageUrls: string[];
   videoUrls: string[];
+};
+
+const toBlocks = (value: unknown): any[] => {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string" && value.trim().length > 0) {
+    return [
+      {
+        _type: "block",
+        style: "normal",
+        children: [
+          {
+            _type: "span",
+            text: value,
+            marks: [],
+          },
+        ],
+        markDefs: [],
+      },
+    ];
+  }
+  return [];
 };
 
 const caseStudiesQuery = groq`
@@ -130,18 +151,20 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
         _id: study._id,
         slug: resolveSlug(study.slug),
         title: study.title,
-        summary: study.summary,
+        summary: toBlocks(study.summary),
         metaTitle: study.metaTitle || study.title,
-        metaDescription: study.metaDescription || study.summary,
+        metaDescription: study.metaDescription || String(study.summary ?? ""),
         tags: Array.isArray(study.tags) ? study.tags.filter(Boolean) : [],
         featuredImage: study.featuredImage,
         client: study.client,
         industry: study.industry,
-        problem: study.problem,
-        solution: study.solution,
+        problem: toBlocks(study.problem),
+        solution: toBlocks(study.solution),
         explanation: Array.isArray(study.explanation) ? study.explanation : [],
         tools: Array.isArray(study.tools) ? study.tools : [],
-        results: Array.isArray(study.results) ? study.results : [],
+        results: Array.isArray(study.results)
+          ? study.results.flatMap((item) => toBlocks(item))
+          : [],
         featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),
         galleryImageUrls: Array.isArray(study.galleryImageUrls)
           ? study.galleryImageUrls.filter(Boolean)

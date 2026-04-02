@@ -6,6 +6,19 @@ import { motion } from "framer-motion";
 import { fetchCaseStudies, type CaseStudy } from "../../lib/fetchCaseStudies";
 import { useTheme } from "../../theme/ThemeProvider";
 
+const portableTextToPlain = (blocks: any[] | undefined): string => {
+  if (!Array.isArray(blocks)) return "";
+  return blocks
+    .filter((block) => block && block._type === "block" && Array.isArray(block.children))
+    .map((block) =>
+      block.children
+        .map((child: any) => (typeof child.text === "string" ? child.text : ""))
+        .join("")
+    )
+    .join(" ")
+    .trim();
+};
+
 export default function CaseStudiesPage() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -83,10 +96,7 @@ export default function CaseStudiesPage() {
         <div style={{ maxWidth: "1100px", margin: "auto" }}>
           {caseStudies.map((study, i) => {
             const reverse = i % 2 !== 0;
-            const mainResult =
-              Array.isArray(study.results) && study.results.length > 0
-                ? study.results[0]
-                : "";
+            const mainResult = portableTextToPlain(study.results).split(". ")[0] ?? "";
 
             return (
               <Link
@@ -133,7 +143,7 @@ export default function CaseStudiesPage() {
                     </p>
 
                     <p style={{ marginTop: "12px", opacity: 0.85 }}>
-                      {study.summary}
+                      {portableTextToPlain(study.summary)}
                     </p>
 
                     {mainResult && (

@@ -25,7 +25,9 @@ export type Project = {
   slug: string;
   title: string;
   shortDesc: string;
-  longDesc: string;
+  // Rich text field in Sanity schema (array of blocks),
+  // but may also be stored as a plain string for legacy content.
+  longDesc: any[] | string | null;
   metaTitle: string;
   metaDescription: string;
   tags: string[];
@@ -35,7 +37,9 @@ export type Project = {
   industry: string;
   technologies: string[];
   updated: string;
-   results: string | null;
+  // Results are now rich text (Portable Text array) in schema,
+  // but legacy documents may still store a plain string.
+  results: any[] | string | null;
   videoUrl: string | null;
   thumbnailUrl: string | null;
   extraVideoUrls: string[];
@@ -52,6 +56,27 @@ type ProjectQueryResult = Omit<
   tags?: string[] | null;
   extraVideoUrls?: string[] | null;
   galleryImageUrls?: string[] | null;
+};
+
+const toBlocks = (value: unknown): any[] => {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string" && value.trim().length > 0) {
+    return [
+      {
+        _type: "block",
+        style: "normal",
+        children: [
+          {
+            _type: "span",
+            text: value,
+            marks: [],
+          },
+        ],
+        markDefs: [],
+      },
+    ];
+  }
+  return [];
 };
 
 const projectsQuery = groq`
@@ -142,7 +167,7 @@ const mapProject = (project: ProjectQueryResult): Project => {
       ? project.technologies
       : [],
     updated: project.updated,
-    results: project.results ?? null,
+    results: toBlocks(project.results ?? null),
     videoUrl:
       typeof project.video === "string"
         ? project.video

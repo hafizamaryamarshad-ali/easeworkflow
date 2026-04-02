@@ -18,7 +18,41 @@ export default {
       name: "longDesc",
       title: "Long Description",
       type: "array",
-      of: [{ type: "block" }],
+      of: [
+        {
+          type: "block",
+          styles: [
+            { title: "Normal", value: "normal" },
+            { title: "H1", value: "h1" },
+            { title: "H2", value: "h2" },
+            { title: "H3", value: "h3" },
+            { title: "H4", value: "h4" },
+          ],
+          lists: [{ title: "Bullet", value: "bullet" }],
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+              { title: "Underline", value: "underline" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  { name: "href", type: "url", title: "URL" },
+                  {
+                    name: "openInNewTab",
+                    type: "boolean",
+                    title: "Open in new tab",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
     },
 
     { name: "metaTitle", title: "Meta Title", type: "string" },
@@ -52,7 +86,40 @@ export default {
     { name: "clientName", title: "Client Name", type: "string" },
     { name: "industry", title: "Industry", type: "string" },
 
-    { name: "results", title: "Results", type: "text" },
+    {
+      name: "results",
+      title: "Results",
+      type: "array",
+      of: [
+        {
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [{ title: "Bullet", value: "bullet" }],
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+              { title: "Underline", value: "underline" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  { name: "href", type: "url", title: "URL" },
+                  {
+                    name: "openInNewTab",
+                    type: "boolean",
+                    title: "Open in new tab",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    },
 
     {
       name: "technologies",

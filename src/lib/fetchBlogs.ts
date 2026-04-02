@@ -19,7 +19,8 @@ type BlogQueryResult = {
   title: string;
   slug: SanitySlug;
   excerpt: string;
-  content: string;
+  // Portable Text content (array of blocks in Sanity schema)
+  content: any[];
   thumbnail: SanityImage | string | null;
   category: string;
   tags: string[] | string | null;
@@ -43,7 +44,8 @@ export type BlogPost = {
   title: string;
   slug: string;
   excerpt: string;
-  content: string;
+  // Portable Text content (array of blocks in Sanity schema)
+  content: any[];
    thumbnail: SanityImage | string | null;
    thumbnailUrl: string | null;
   category: string;
