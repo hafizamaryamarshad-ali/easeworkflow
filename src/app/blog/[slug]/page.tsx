@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
+import Head from "next/head";
 import { fetchBlogBySlug, type BlogPost } from "../../../lib/fetchBlogs";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
@@ -50,15 +50,15 @@ function BlogMediaSection({ blog }: { blog: BlogPost }) {
 }
 
 export default function BlogDetail() {
-  const params = useParams();
+  const params = useParams() as { slug?: string | string[] };
   const router = useRouter();
   const { theme } = useTheme();
 
-  const slugParam = params?.slug;
   const slug = useMemo(() => {
-    if (Array.isArray(slugParam)) return slugParam[0];
-    return slugParam as string | undefined;
-  }, [slugParam]);
+    const value = params?.slug;
+    if (Array.isArray(value)) return value[0];
+    return value as string | undefined;
+  }, [params]);
 
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
@@ -82,6 +82,8 @@ export default function BlogDetail() {
     const load = async () => {
       if (!slug) return;
       const data = await fetchBlogBySlug(slug);
+      // Debug: verify all fields coming from Sanity
+      console.log("[BlogDetail] fetched blog", data);
       setBlog(data);
       setLoading(false);
     };
@@ -111,24 +113,165 @@ export default function BlogDetail() {
   }
 
   return (
-    <Wrapper theme={theme} pageBg={pageBg} textColor={textColor} floatingIcons={floatingIcons}>
-      <div style={outerContainer}>
-        <div style={card(theme)}>
-          <h1 style={title}>{blog.title}</h1>
+    <>
+      <Head>
+        <title>{blog.metaTitle || blog.title}</title>
+        {blog.metaDescription && (
+          <meta name="description" content={blog.metaDescription} />
+        )}
+      </Head>
 
-          <div style={divider(theme)} />
+      <Wrapper theme={theme} pageBg={pageBg} textColor={textColor} floatingIcons={floatingIcons}>
+        <div style={outerContainer}>
+          <div style={card(theme)}>
+            <h1 style={title}>{blog.title}</h1>
 
-          {/* Media slider inside the main card, below the header */}
-          <BlogMediaSection blog={blog} />
+            {/* Category + publish date row */}
+            {(blog.category || blog.publishDate) && (
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  gap: "10px",
+                  marginBottom: "16px",
+                }}
+              >
+                {blog.category && (
+                  <span
+                    style={{
+                      fontSize: "0.8rem",
+                      padding: "4px 10px",
+                      borderRadius: "999px",
+                      backgroundColor:
+                        theme === "dark" ? "rgba(56,189,248,0.15)" : "rgba(59,130,246,0.1)",
+                      border:
+                        theme === "dark"
+                          ? "1px solid rgba(56,189,248,0.6)"
+                          : "1px solid rgba(59,130,246,0.4)",
+                    }}
+                  >
+                    {blog.category}
+                  </span>
+                )}
 
-          {Array.isArray(blog.content) && blog.content.length > 0 && (
-            <div style={content(subTextColor, theme)}>
-              <PortableText value={blog.content} />
-            </div>
-          )}
+                {blog.publishDate && (
+                  <span
+                    style={{
+                      fontSize: "0.86rem",
+                      color: subTextColor[theme],
+                    }}
+                  >
+                    {new Date(blog.publishDate).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "short",
+                      day: "2-digit",
+                    })}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Excerpt */}
+            {blog.excerpt && blog.excerpt.trim().length > 0 && (
+              <p
+                style={{
+                  fontSize: "1.02rem",
+                  lineHeight: 1.7,
+                  color: subTextColor[theme],
+                  marginBottom: "24px",
+                }}
+              >
+                {blog.excerpt}
+              </p>
+            )}
+
+            <div style={divider(theme)} />
+
+            {/* Media slider inside the main card, below the header */}
+            <BlogMediaSection blog={blog} />
+
+            {/* Main rich text content */}
+            {Array.isArray(blog.content) && blog.content.length > 0 && (
+              <div style={content(subTextColor, theme)}>
+                <PortableText value={blog.content} />
+              </div>
+            )}
+
+            {/* Tags */}
+            {Array.isArray(blog.tags) && blog.tags.length > 0 && (
+              <div
+                style={{
+                  marginTop: "24px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                }}
+              >
+                {blog.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      fontSize: "0.78rem",
+                      padding: "4px 10px",
+                      borderRadius: "999px",
+                      backgroundColor:
+                        theme === "dark"
+                          ? "rgba(15,23,42,0.9)"
+                          : "rgba(226,232,240,0.9)",
+                      border:
+                        theme === "dark"
+                          ? "1px solid rgba(148,163,184,0.6)"
+                          : "1px solid rgba(148,163,184,0.7)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Author info */}
+            {(blog.authorName || blog.authorBio) && (
+              <div
+                style={{
+                  marginTop: "32px",
+                  paddingTop: "18px",
+                  borderTop:
+                    theme === "dark"
+                      ? "1px solid rgba(148,163,184,0.4)"
+                      : "1px solid rgba(148,163,184,0.3)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
+                }}
+              >
+                {blog.authorName && (
+                  <span
+                    style={{
+                      fontWeight: 600,
+                      fontSize: "0.98rem",
+                    }}
+                  >
+                    By {blog.authorName}
+                  </span>
+                )}
+                {blog.authorBio && (
+                  <span
+                    style={{
+                      fontSize: "0.9rem",
+                      color: subTextColor[theme],
+                    }}
+                  >
+                    {blog.authorBio}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </Wrapper>
+      </Wrapper>
+    </>
   );
 }
 
