@@ -151,7 +151,7 @@ export default function Navbar() {
         }}
       >
         <Image
-          src="/logo13.png"
+          src="/logo18.png"
           alt="EaseWorkflow logo"
           width={45}
           height={38}
