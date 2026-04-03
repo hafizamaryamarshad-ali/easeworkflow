@@ -107,7 +107,7 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         style={{
-          fontSize: "4rem",
+          fontSize: "clamp(2.4rem, 6vw, 4rem)",
           fontWeight: 900,
           lineHeight: "1.2",
           maxWidth: "900px",
@@ -123,7 +123,7 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.3 }}
         style={{
-          fontSize: "1.25rem",
+          fontSize: "clamp(1.05rem, 3.2vw, 1.25rem)",
           marginTop: "20px",
           maxWidth: "700px",
           lineHeight: "1.5",

@@ -169,8 +169,23 @@ export default function TestimonialChat() {
     >
       
       <div style={{ textAlign: "center", marginBottom: "60px" }}>
-        <h2 style={{ fontSize: "2.8rem", fontWeight: 800, marginBottom: "15px" }}>Clinical Excellence Validated</h2>
-        <p style={{ color: colors.subText, fontSize: "1.2rem", maxWidth: "600px", margin: "0 auto" }}>
+        <h2
+          style={{
+            fontSize: "clamp(2.1rem, 4.2vw, 2.8rem)",
+            fontWeight: 800,
+            marginBottom: "15px",
+          }}
+        >
+          Clinical Excellence Validated
+        </h2>
+        <p
+          style={{
+            color: colors.subText,
+            fontSize: "clamp(1rem, 2.6vw, 1.2rem)",
+            maxWidth: "600px",
+            margin: "0 auto",
+          }}
+        >
           Hear from the healthcare leaders who have transformed their operations using our advanced AI architecture.
         </p>
       </div>
@@ -271,7 +286,7 @@ export default function TestimonialChat() {
               style={{
                 width: "100%",
                 background: colors.cardBg,
-                padding: "60px",
+                padding: "40px 36px",
                 borderRadius: "40px",
                 border: `1px solid ${colors.cardBorder}`,
                 backdropFilter: "blur(20px)",
@@ -297,13 +312,26 @@ export default function TestimonialChat() {
                 </span>
               </div>
 
-              <h3 style={{ fontSize: "2.8rem", fontWeight: 900, marginBottom: "50px", color: colors.mainText }}>
+              <h3
+                style={{
+                  fontSize: "clamp(2.1rem, 4.5vw, 2.8rem)",
+                  fontWeight: 900,
+                  marginBottom: "40px",
+                  color: colors.mainText,
+                }}
+              >
                 {activeChat.name}
               </h3>
               
               <div style={{ position: "relative", marginBottom: "50px" }}>
                 <span style={{ position: "absolute", top: "-50px", left: "-30px", fontSize: "7rem", opacity: 0.15, color: "#0ea5e9" }}>“</span>
-                <p style={{ fontSize: "1.6rem", lineHeight: "1.8", color: isDark ? "#E2E8F0" : "#334155" }}>
+                <p
+                  style={{
+                    fontSize: "clamp(1.2rem, 3.2vw, 1.6rem)",
+                    lineHeight: "1.8",
+                    color: isDark ? "#E2E8F0" : "#334155",
+                  }}
+                >
                   {activeChat.fullMessage}
                 </p>
               </div>

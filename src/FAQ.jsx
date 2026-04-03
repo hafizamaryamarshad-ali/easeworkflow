@@ -131,7 +131,16 @@ export default function FAQSection() {
         }}
       >
         <p style={{ color: "#0ea5e9", fontWeight: 800, letterSpacing: "5px", textTransform: "uppercase", fontSize: "0.75rem", margin: 0 }}>Knowledge Base</p>
-        <h2 style={{ fontSize: "3.2rem", fontWeight: 900, marginTop: "5px", marginBottom: 0 }}>The <span style={{ color: "#0ea5e9" }}>Intelligence</span> Hub</h2>
+        <h2
+          style={{
+            fontSize: "clamp(2.2rem, 4.8vw, 3.2rem)",
+            fontWeight: 900,
+            marginTop: "5px",
+            marginBottom: 0,
+          }}
+        >
+          The <span style={{ color: "#0ea5e9" }}>Intelligence</span> Hub
+        </h2>
       </div>
 
       <div
@@ -209,8 +218,26 @@ export default function FAQSection() {
               />
               
               <span style={{ color: "#0ea5e9", fontWeight: 800, fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "2px" }}>{faqs[selectedFaq].tag}</span>
-              <h3 style={{ fontSize: "1.9rem", fontWeight: 800, margin: "20px 0", lineHeight: "1.3", color: colors.text }}>{faqs[selectedFaq].q}</h3>
-              <p style={{ fontSize: "1.1rem", lineHeight: "1.7", color: colors.subText }}>{faqs[selectedFaq].a}</p>
+              <h3
+                style={{
+                  fontSize: "clamp(1.4rem, 4vw, 1.9rem)",
+                  fontWeight: 800,
+                  margin: "20px 0",
+                  lineHeight: "1.3",
+                  color: colors.text,
+                }}
+              >
+                {faqs[selectedFaq].q}
+              </h3>
+              <p
+                style={{
+                  fontSize: "clamp(0.98rem, 3.2vw, 1.1rem)",
+                  lineHeight: "1.7",
+                  color: colors.subText,
+                }}
+              >
+                {faqs[selectedFaq].a}
+              </p>
               
               <span style={{ 
                 fontSize: "8rem", fontWeight: 900, 

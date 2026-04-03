@@ -121,11 +121,17 @@ export default function AboutPage() {
 
       {/* --- PERSONAL & VISION SECTION --- */}
       {/* Margin bottom barha diya taaki niche wali heading se gap milay */}
-      <section style={{ maxWidth: "1200px", margin: "0 auto 150px", padding: "0 20px" }}>
+      <section
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto 150px",
+          padding: "0 20px",
+        }}
+      >
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
             gap: "28px",
             alignItems: "stretch",
           }}
@@ -530,7 +536,16 @@ export default function AboutPage() {
 
       {/* --- CORE VALUES --- */}
       <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
-        <h2 style={{ fontSize: "3rem", fontWeight: 900, textAlign: "center", marginBottom: "60px" }}>Core Values</h2>
+        <h2
+          style={{
+            fontSize: "clamp(2.2rem, 5vw, 3rem)",
+            fontWeight: 900,
+            textAlign: "center",
+            marginBottom: "60px",
+          }}
+        >
+          Core Values
+        </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "25px" }}>
           {coreValues.map((v, i) => (
             <motion.div key={i} whileHover={{ y: -10, borderColor: accentColor, boxShadow: colors.glow }} style={{ 

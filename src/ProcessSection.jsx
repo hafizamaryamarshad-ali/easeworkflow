@@ -46,7 +46,14 @@ export default function ProcessSection() {
       }}
     >
       
-      <h2 style={{ textAlign: "center", fontSize: "3rem", fontWeight: "800", marginBottom: "80px" }}>
+      <h2
+        style={{
+          textAlign: "center",
+          fontSize: "clamp(2.2rem, 4.5vw, 3rem)",
+          fontWeight: "800",
+          marginBottom: "80px",
+        }}
+      >
         How We Build Your AI Product: Our Process
       </h2>
 

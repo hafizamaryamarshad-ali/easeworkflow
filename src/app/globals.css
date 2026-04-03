@@ -285,6 +285,16 @@ h3 {
     padding: 70px 16px;
   }
 
+  nav {
+    padding: 8px 16px !important;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .side-buttons,
+  .side-tabs-container {
+    display: none !important;
+  }
+
   /* Featured projects: cards full-width on small screens */
   .featured-projects-grid {
     gap: 18px;
@@ -346,6 +356,12 @@ h3 {
     border-radius: 0 0 12px 12px;
   }
 
+   /* Hide fixed edge UI on tablet for more space */
+  .side-buttons,
+  .side-tabs-container {
+    display: none !important;
+  }
+
   .testimonials-grid {
     grid-template-columns: 1fr !important;
   }
@@ -363,6 +379,35 @@ h3 {
 
   .testimonials-grid {
     gap: 56px !important;
+  }
+}
+
+/* Tablet-specific tuning: 769px–1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  section {
+    padding: 90px 32px;
+  }
+
+  .process-section {
+    padding: 80px 24px;
+  }
+
+  .process-grid {
+    gap: 80px !important;
+    transform: scale(0.9) !important;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: minmax(320px, 380px) 1.1fr !important;
+    gap: 60px !important;
+  }
+
+  .testimonials-phone {
+    height: 640px !important;
+  }
+
+  .faq-grid {
+    gap: 40px !important;
   }
 }
 /* =============================================

@@ -33,15 +33,19 @@ const services = [
 ];
 
 export default function Services() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setViewportWidth(window.innerWidth);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const isMobile = viewportWidth !== null && viewportWidth < 768;
+  const isTablet =
+    viewportWidth !== null && viewportWidth >= 768 && viewportWidth < 1024;
 
   return (
     <section
@@ -56,7 +60,9 @@ export default function Services() {
     >
       {/* HEADER */}
       <div style={{ textAlign: "center", marginBottom: "70px" }}>
-        <h2 style={{ fontSize: "3rem", fontWeight: 800 }}>Our Services</h2>
+        <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800 }}>
+          Our Services
+        </h2>
         <p style={{ opacity: 0.6, marginTop: "10px" }}>
           AI-powered healthcare solutions built for efficiency
         </p>
@@ -66,7 +72,11 @@ export default function Services() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)",
+          gridTemplateColumns: isMobile
+            ? "1fr"
+            : isTablet
+            ? "repeat(2,1fr)"
+            : "repeat(3,1fr)",
           gap: "30px",
           maxWidth: "1100px",
           margin: "0 auto 90px",
@@ -162,7 +172,7 @@ export default function Services() {
           margin: "0 auto",
           display: "grid",
           gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-          gap: "60px",
+          gap: isTablet ? "40px" : "60px",
           alignItems: "center",
         }}
       >

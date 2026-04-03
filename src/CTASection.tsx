@@ -87,7 +87,7 @@ export default function CTA() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         style={{
-          fontSize: "2.8rem",
+          fontSize: "clamp(2rem, 4.5vw, 2.8rem)",
           fontWeight: 900,
           marginBottom: "20px",
           maxWidth: "800px",
@@ -105,7 +105,7 @@ export default function CTA() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.3 }}
         style={{
-          fontSize: "1.25rem",
+          fontSize: "clamp(1.05rem, 3.2vw, 1.25rem)",
           marginBottom: "40px",
           maxWidth: "700px",
           lineHeight: "1.5",

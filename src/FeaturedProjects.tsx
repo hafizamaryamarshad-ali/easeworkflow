@@ -36,7 +36,7 @@ export default function FeaturedProjects() {
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         style={{
-          fontSize: "3rem",
+          fontSize: "clamp(2.2rem, 4.5vw, 3rem)",
           fontWeight: 900,
           marginBottom: "4px",
           marginTop: "0px",

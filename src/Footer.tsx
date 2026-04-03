@@ -49,7 +49,7 @@ export default function Footer() {
         id="site-footer"
         style={{
           position: "relative",
-          padding: "100px 20px 40px",
+          padding: "80px 20px 40px",
           background:
             theme === "dark"
               ? "linear-gradient(180deg, #020617, #020617)"
@@ -218,7 +218,7 @@ export default function Footer() {
             }}
           >
             <p>© {new Date().getFullYear()} EaseWorkflow</p>
-            <div style={{ display: "flex", gap: "20px" }}>
+            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
               <Link href="/terms" style={{ color: "inherit", textDecoration: "none" }}>Terms</Link>
               <Link href="/privacy" style={{ color: "inherit", textDecoration: "none" }}>Privacy</Link>
             </div>

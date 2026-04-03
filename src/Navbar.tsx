@@ -15,6 +15,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -28,7 +29,11 @@ export default function Navbar() {
 
   // Detect mobile
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => {
+      const width = window.innerWidth;
+      setViewportWidth(width);
+      setIsMobile(width < 768);
+    };
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -107,6 +112,9 @@ export default function Navbar() {
     ? "0 18px 45px rgba(15,23,42,0.9)"
     : "0 10px 30px rgba(15,23,42,0.12)";
 
+  const isTabletMid =
+    viewportWidth !== null && viewportWidth >= 769 && viewportWidth <= 999;
+
   return (
     <nav
       style={{
@@ -116,7 +124,7 @@ export default function Navbar() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "10px 40px",
+        padding: isTabletMid ? "8px 24px" : "10px 40px",
         background: navBg,
         backdropFilter: "blur(16px)",
         border: navBorder,
@@ -125,7 +133,7 @@ export default function Navbar() {
         maxWidth: "1400px",
         margin: "0 auto",
         transition: "all 0.4s ease",
-        flexWrap: "wrap",
+        flexWrap: isTabletMid ? "nowrap" : "wrap",
       }}
     >
       {/* Logo */}
@@ -155,7 +163,16 @@ export default function Navbar() {
 
       {/* Desktop Nav Links */}
       {!isMobile && (
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: isTabletMid ? "12px" : "16px",
+            flex: isTabletMid ? 1 : undefined,
+            justifyContent: isTabletMid ? "center" : undefined,
+            minWidth: 0,
+          }}
+        >
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -168,9 +185,9 @@ export default function Navbar() {
                 position: "relative",
                 color: isLinkActive(link.href) ? mainColor : navTextColor,
                 fontWeight: 600,
-                fontSize: "0.9rem",
+                fontSize: isTabletMid ? "0.82rem" : "0.9rem",
                 textDecoration: "none",
-                padding: "4px 6px",
+                padding: isTabletMid ? "2px 4px" : "4px 6px",
                 borderRadius: "6px",
                 transition: "all 0.25s ease",
               }}
@@ -197,19 +214,26 @@ export default function Navbar() {
 
       {/* Desktop Buttons */}
       {!isMobile && (
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: isTabletMid ? "8px" : "12px",
+            flexShrink: 0,
+          }}
+        >
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             style={{
-              padding: "6px 12px",
+              padding: isTabletMid ? "4px 10px" : "6px 12px",
               borderRadius: "12px",
               background: theme === "dark" ? "#fff" : mainColor,
               color: theme === "dark" ? "#0f172a" : "#fff",
               border: "none",
               cursor: "pointer",
               fontWeight: 600,
-              fontSize: "0.8rem",
+              fontSize: isTabletMid ? "0.75rem" : "0.8rem",
               transition: "all 0.3s ease",
               display: "flex",
               alignItems: "center",
@@ -224,8 +248,8 @@ export default function Navbar() {
           <Link
             href="/contact"
             style={{
-              padding: "8px 20px",
-              fontSize: "0.88rem",
+              padding: isTabletMid ? "6px 16px" : "8px 20px",
+              fontSize: isTabletMid ? "0.8rem" : "0.88rem",
               fontWeight: 600,
               borderRadius: "16px",
               background: mainColor,
