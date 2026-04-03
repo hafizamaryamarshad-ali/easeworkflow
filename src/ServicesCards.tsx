@@ -46,10 +46,13 @@ export default function Services() {
   return (
     <section
       style={{
+        scrollMarginTop: "80px",
+        
         padding: "110px 20px",
         background: "var(--color-bg)",
         color: "var(--color-text-primary)",
       }}
+      id="services"
     >
       {/* HEADER */}
       <div style={{ textAlign: "center", marginBottom: "70px" }}>

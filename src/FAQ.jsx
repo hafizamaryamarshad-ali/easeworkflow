@@ -4,16 +4,80 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "./theme/ThemeProvider";
 
-// --- DATA: FAQ (8 Questions) ---
+// --- DATA: FAQ (SEO-Optimized Questions) ---
 const faqs = [
-  { id: "01", q: "Is your system compliant with European data regulations?", a: "Our architecture is built on 'Privacy-by-Design' engineering. We utilize end-to-end AES-256 encryption and strictly adhere to GDPR, HIPAA, and local EU health data sovereign laws. Every data packet is audited before it ever touches the cloud.", tag: "Compliance" },
-  { id: "02", q: "Can your system integrate with our existing EMR?", a: "Seamlessly. We support HL7, FHIR, and custom RESTful API hooks. Whether you use Epic, Cerner, or a custom-built legacy system, our AI acts as an intelligent 'Bridge Layer'—syncing data in real-time.", tag: "Integration" },
-  { id: "03", q: "How long does it take to develop a solution?", a: "We don't believe in long-drawn-out cycles. Using our pre-built AI modules, we can deploy a functional MVP (Minimum Viable Product) within 4-6 weeks. Full-scale clinical integration typically completes in 3 months.", tag: "Timeline" },
-  { id: "04", q: "Do you provide ongoing support?", a: "Our partnership doesn't end at launch. We provide a 'Nervous System' support model—24/7 proactive monitoring where our AI flags potential infrastructure bottlenecks before they impact your medical staff.", tag: "Maintenance" },
-  { id: "05", q: "What is the accuracy of your diagnostic AI?", a: "Our models achieve over 98% accuracy in specific clinical validations. We use multi-modal deep learning that cross-references imaging with patient history for high-fidelity verification.", tag: "Performance" },
-  { id: "06", q: "Can the AI handle multi-language medical terms?", a: "Yes, our NLP engines are trained on medical datasets in 15+ languages, allowing them to understand complex clinical terminology and regional medical dialects accurately.", tag: "Technical" },
-  { id: "07", q: "How do you handle model bias in healthcare?", a: "We implement 'Fairness-First' training protocols, using diverse global datasets to ensure our AI recommendations are equitable across different demographics and ethnicities.", tag: "Ethics" },
-  { id: "08", q: "Is there a cloud-free 'On-Premise' option?", a: "For high-security facilities, we offer a dedicated 'Edge-Deployment' where the AI runs entirely on your local servers without requiring an external internet connection.", tag: "Infrastructure" }
+  {
+    id: "01",
+    q: "Is your healthcare software GDPR compliant in Europe?",
+    a: "Yes. EaseWorkflow is designed with full compliance for European healthcare regulations, including GDPR. We follow a strict Privacy-by-Design approach, use end-to-end AES-256 encryption, and apply role-based access control so only authorized staff can view patient data. Our infrastructure and policies are regularly reviewed to align with EU data protection, medical data sovereignty requirements, and other healthcare security standards.",
+    tag: "Compliance",
+  },
+  {
+    id: "02",
+    q: "How secure is patient data in your AI healthcare automation platform?",
+    a: "Patient data security is a core foundation of EaseWorkflow. All data in transit and at rest is encrypted using industry-standard protocols, and sensitive information is segmented in secure databases with limited access. We provide detailed audit logs, access tracking, and configurable permissions so clinic administrators can monitor exactly who accessed what data and when. Our goal is to help you meet and exceed hospital security guidelines without adding extra complexity to your daily workflows.",
+    tag: "Compliance",
+  },
+  {
+    id: "03",
+    q: "Can EaseWorkflow integrate with my existing EMR or hospital software?",
+    a: "Yes. EaseWorkflow is built to integrate with leading EMR and hospital information systems through standards like HL7 and FHIR, as well as secure REST APIs. Whether you are using Epic, Cerner, a regional EMR, or a custom system, our team works with your IT department to connect data flows for appointments, clinical notes, billing, and more. This lets you add AI-powered automation on top of your existing tools instead of replacing everything at once.",
+    tag: "EMR Integration",
+  },
+  {
+    id: "04",
+    q: "Can I integrate this system with my existing clinic management software?",
+    a: "In most cases, yes. If your current clinic management or practice management software exposes APIs, integration is straightforward. EaseWorkflow acts as a smart automation layer that reads and writes data—such as appointments, patient records, and status updates—so your staff can keep using familiar tools while benefiting from AI in the background. During onboarding, we assess your current stack and outline exactly how the integration will work.",
+    tag: "Integration",
+  },
+  {
+    id: "05",
+    q: "How can I automate appointment scheduling in my clinic?",
+    a: "EaseWorkflow includes an AI-powered appointment scheduling software module that automates bookings, reminders, and follow-ups. Patients can schedule visits online, while the system checks provider availability, visit type, and clinic rules in real time. Automated SMS or email reminders help reduce no-shows, and staff can view an optimized schedule that balances provider workload and patient flow. This makes your appointment scheduling process smarter and less dependent on manual phone calls and spreadsheets.",
+    tag: "Appointment Scheduling",
+  },
+  {
+    id: "06",
+    q: "How does AI improve clinic management and patient workflows?",
+    a: "AI in healthcare can significantly improve daily clinic management and patient workflows. EaseWorkflow analyzes patterns across appointments, waiting times, documentation, and resource usage to highlight bottlenecks and recommend improvements. Routine tasks—like sending reminders, updating EMR fields, routing forms, or flagging missing information—are automated so your team can focus on patient care. Over time, the system learns from your healthcare workflows to suggest better processes, helping you deliver a smoother, more predictable patient experience.",
+    tag: "AI in Healthcare",
+  },
+  {
+    id: "07",
+    q: "Is EaseWorkflow suitable for small clinics as well as large hospitals?",
+    a: "Yes. EaseWorkflow is designed to scale from small outpatient clinics to multi-site hospitals. Smaller practices typically start with healthcare automation features like appointment scheduling, patient intake, and basic EMR integration. Larger organizations often roll out additional modules for multi-department workflows, advanced analytics, and complex routing. Our pricing and deployment options are flexible, so you can start with what you need today and expand as your clinic or hospital grows.",
+    tag: "Scalability",
+  },
+  {
+    id: "08",
+    q: "What is the best AI solution for healthcare workflow automation?",
+    a: "The best AI solution for healthcare automation is one that fits your current systems and real-world clinical workflows. EaseWorkflow focuses specifically on automating everyday tasks such as scheduling, documentation, triage routing, and EMR updates, rather than being a generic AI tool. Our platform combines healthcare-specific AI models with deep EMR integration capabilities, so your team gets practical medical AI solutions that work in live clinical settings, not just in demos.",
+    tag: "Healthcare Automation",
+  },
+  {
+    id: "09",
+    q: "How accurate is your medical AI for clinical decision support?",
+    a: "Our medical AI models are trained and validated on healthcare datasets with strong clinical oversight. For specific use cases, they have achieved over 98% accuracy in internal tests and pilot programs. However, we position EaseWorkflow as a decision-support and workflow automation tool—not a replacement for medical professionals. Every recommendation is designed to support clinicians by surfacing the right information at the right time, keeping the final clinical decision in the hands of your medical staff.",
+    tag: "Medical AI Solutions",
+  },
+  {
+    id: "10",
+    q: "Does your healthcare automation software support multiple languages?",
+    a: "Yes. EaseWorkflow supports multi-language environments commonly found in international clinics and hospitals. Our natural language processing (NLP) components are trained on medical terminology across multiple languages, allowing the system to understand and process key clinical terms, patient notes, and templates. This is especially valuable for organizations that serve diverse populations or operate across regions with different primary languages.",
+    tag: "Technical",
+  },
+  {
+    id: "11",
+    q: "How do you reduce bias in your AI healthcare workflows?",
+    a: "We follow strict fairness and quality guidelines when developing AI in healthcare. Our models are trained on diverse datasets and regularly evaluated for potential bias across demographics such as age, gender, and ethnicity. We work with clinical partners to review outputs and tune models so recommendations remain equitable and clinically appropriate. In addition, we provide transparency around how AI suggestions are generated so clinicians can understand and trust the system.",
+    tag: "Ethics",
+  },
+  {
+    id: "12",
+    q: "Can EaseWorkflow run on-premise without using the public cloud?",
+    a: "Yes. For hospitals and clinics with strict data residency or security requirements, we offer an on-premise and private-cloud deployment option. In this model, the healthcare automation engine runs inside your own secure infrastructure or dedicated environment, so sensitive healthcare data never leaves your controlled network. Our team helps your IT staff plan the deployment, performance requirements, and ongoing updates while maintaining compliance with your internal policies.",
+    tag: "Infrastructure",
+  },
 ];
 
 export default function FAQSection() {

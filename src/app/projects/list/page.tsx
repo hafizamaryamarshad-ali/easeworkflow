@@ -160,29 +160,44 @@ export default function ProjectsList() {
                   {project.shortDesc}
                 </p>
 
-                {/* Details Section */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "4px" }}>
-                  {[ {label: "Client", val: project.clientName}, {label: "Industry", val: project.industry}, {label: "Last Updated", val: project.updated} ].map((item, idx) => (
-                    <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                      <span style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: subText[theme] }}>{item.label}</span>
-                      <span style={{ fontSize: "0.88rem", fontWeight: 400 }}>{item.val || "—"}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Technologies */}
+                {/* Technologies as pill tags */}
                 {project.technologies && project.technologies.length > 0 && (
-                  <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                    {project.technologies.slice(0, 3).map((tech) => (
-                      <span key={tech} style={{ fontSize: "0.75rem", padding: "3px 8px", borderRadius: "999px", backgroundColor: theme === "dark" ? "rgba(15,23,42,0.5)" : "rgba(191,219,254,0.4)", border: `1px solid ${theme === "dark" ? "rgba(148,163,184,0.3)" : "rgba(59,130,246,0.3)"}` }}>
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "8px",
+                    }}
+                  >
+                    {project.technologies.slice(0, 4).map((tech) => (
+                      <span
+                        key={tech}
+                        style={{
+                          fontSize: "0.78rem",
+                          padding: "4px 10px",
+                          borderRadius: "999px",
+                          backgroundColor:
+                            theme === "dark"
+                              ? "rgba(15,23,42,0.9)"
+                              : "rgba(219,234,254,0.95)",
+                          color: theme === "dark" ? "#e5e7eb" : "#1e293b",
+                          border:
+                            theme === "dark"
+                              ? "1px solid rgba(148,163,184,0.7)"
+                              : "1px solid rgba(59,130,246,0.7)",
+                          lineHeight: 1.3,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
                         {tech}
                       </span>
                     ))}
                   </div>
                 )}
 
-                {/* READ MORE BUTTON ADDED HERE */}
-                <div style={{ marginTop: "20px", paddingTop: "15px", borderTop: theme === "dark" ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.05)" }}>
+                {/* READ MORE */}
+                <div style={{ marginTop: "18px" }}>
                   <motion.div
                     whileHover={{ x: 5 }}
                     style={{

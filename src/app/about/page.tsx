@@ -65,15 +65,21 @@ export default function AboutPage() {
   ];
 
   const cardStyle = {
-    padding: "35px 32px", // Height kam karne ke liye padding thodi kam ki
-    borderRadius: "40px",
-    background: colors.cardBg,
+    padding: "28px 26px",
+    borderRadius: "30px",
+    background: isDark
+      ? "linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.85))"
+      : "linear-gradient(135deg, rgba(255,255,255,0.96), rgba(226,232,240,0.9))",
     border: `1px solid ${colors.cardBorder}`,
     boxShadow: colors.glow,
-    backdropFilter: "blur(20px)",
+    backdropFilter: "blur(22px)",
     display: "flex",
     flexDirection: "column" as const,
-    height: "100%", 
+    height: "100%",
+    position: "relative" as const,
+    overflow: "hidden" as const,
+    transition:
+      "transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease",
   };
 
   return (
@@ -116,91 +122,408 @@ export default function AboutPage() {
       {/* --- PERSONAL & VISION SECTION --- */}
       {/* Margin bottom barha diya taaki niche wali heading se gap milay */}
       <section style={{ maxWidth: "1200px", margin: "0 auto 150px", padding: "0 20px" }}>
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))", 
-          gap: "30px", 
-          alignItems: "stretch" 
-        }}>
-          
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))",
+            gap: "28px",
+            alignItems: "stretch",
+          }}
+        >
+          {/* PROFILE CARD */}
           <motion.div
-            whileHover={{ y: -10, borderColor: accentColor }}
-            style={{ ...cardStyle, alignItems: "center", textAlign: "center", justifyContent: "center" }}
-          >
-            <div style={{ 
-              width: "120px", 
-              height: "120px", 
-              borderRadius: "50%", 
-              overflow: "hidden", 
-              border: `4px solid ${accentColor}`,
-              boxShadow: `0 0 20px ${accentColor}33`,
-              marginBottom: "15px",
-              background: isDark ? "#1e293b" : "#e2e8f0",
-              display: "flex",
+            whileHover={{ y: -10, scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 220, damping: 18 }}
+            style={{
+              ...cardStyle,
+              padding: "30px 26px",
+              display: "grid",
+              gridTemplateColumns: "auto 1fr",
+              columnGap: 22,
+              rowGap: 16,
               alignItems: "center",
-              justifyContent: "center"
-            }}>
-              <img 
-                src="\images\profile.jpeg" 
-                alt="Muhammad Umer"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                onError={(e) => { e.currentTarget.src = "https://ui-avatars.com/api/?name=Muhammad+Umer&background=0ea5e9&color=fff"; }}
+            }}
+          >
+            {/* Left: avatar + status */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+              <div
+                style={{
+                  width: 120,
+                  height: 120,
+                  borderRadius: "32px",
+                  padding: 3,
+                  background:
+                    "linear-gradient(135deg, " + accentColor + " 0%, transparent 60%)," +
+                    (isDark
+                      ? "radial-gradient(circle at 0 0, rgba(148,163,184,0.25), transparent 60%)"
+                      : "radial-gradient(circle at 0 0, rgba(148,163,184,0.25), transparent 60%)"),
+                  boxShadow: `0 20px 45px ${accentColor}3d`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "26px",
+                    overflow: "hidden",
+                    background: isDark ? "#020617" : "#e2e8f0",
+                  }}
+                >
+                  <img
+                    src="\images\profile.jpeg"
+                    alt="Muhammad Umer"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://ui-avatars.com/api/?name=Muhammad+Umer&background=0ea5e9&color=fff";
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: "4px 10px",
+                  borderRadius: "999px",
+                  background: isDark
+                    ? "rgba(15,23,42,0.9)"
+                    : "rgba(226,232,240,0.9)",
+                  border: `1px solid ${accentColor}55`,
+                  fontSize: "0.72rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.18em",
+                  color: colors.subText,
+                }}
+              >
+                Product Engineer · MedTech
+              </div>
+            </div>
+
+            {/* Right: text + socials */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                gap: 14,
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <span
+                  style={{
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.18em",
+                    color: colors.subText,
+                  }}
+                >
+                  Founder Profile
+                </span>
+                <h2
+                  style={{
+                    fontSize: "1.9rem",
+                    fontWeight: 900,
+                    letterSpacing: "-0.04em",
+                    margin: 0,
+                  }}
+                >
+                  Muhammad Umer
+                </h2>
+                <p
+                  style={{
+                    color: accentColor,
+                    fontSize: "0.9rem",
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.16em",
+                    margin: "2px 0 6px",
+                  }}
+                >
+                  Lead Developer · Founder
+                </p>
+                <p
+                  style={{
+                    color: colors.subText,
+                    fontSize: "0.95rem",
+                    lineHeight: 1.7,
+                    maxWidth: 380,
+                    margin: 0,
+                  }}
+                >
+                  Designing healthcare automation experiences that feel human, predictable, and performance‑driven —
+                  from appointment flows to EMR integrations.
+                </p>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  marginTop: 4,
+                }}
+              >
+                <div style={{ display: "flex", gap: 10 }}>
+                  {[
+                    { icon: <FaLinkedin />, link: "#" },
+                    { icon: <FaGithub />, link: "#" },
+                  ].map((social, idx) => (
+                    <motion.a
+                      key={idx}
+                      href={social.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ y: -3, scale: 1.08 }}
+                      whileTap={{ scale: 0.96 }}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 999,
+                        background: isDark
+                          ? "linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.8))"
+                          : "linear-gradient(135deg, #ffffff, #e5edff)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: colors.text,
+                        fontSize: "1.05rem",
+                        boxShadow: isDark
+                          ? "0 10px 24px rgba(15,23,42,0.9)"
+                          : "0 8px 20px rgba(15,23,42,0.18)",
+                        border: `1px solid ${accentColor}66`,
+                        transition: "all 0.3s ease",
+                      }}
+                    >
+                      {social.icon}
+                    </motion.a>
+                  ))}
+                </div>
+
+                <div
+                  style={{
+                    fontSize: "0.8rem",
+                    color: colors.subText,
+                    textAlign: "right",
+                  }}
+                >
+                  Shipping AI products for
+                  <br />
+                  clinics & health systems.
+                </div>
+              </div>
+            </div>
+
+            {/* subtle top accent line */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 2,
+                background:
+                  "linear-gradient(90deg, transparent, " + accentColor + ", transparent)",
+                opacity: 0.4,
+              }}
+            />
+          </motion.div>
+
+          {/* VISION CARD */}
+          <motion.div
+            whileHover={{ y: -10, scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 220, damping: 18 }}
+            style={{
+              ...cardStyle,
+              padding: "30px 26px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 18,
+            }}
+          >
+            {/* Background glow chips */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: -60,
+                  right: -40,
+                  width: 200,
+                  height: 200,
+                  borderRadius: "999px",
+                  background:
+                    theme === "dark"
+                      ? "radial-gradient(circle, rgba(56,189,248,0.4), transparent 70%)"
+                      : "radial-gradient(circle, rgba(59,130,246,0.3), transparent 70%)",
+                  filter: "blur(42px)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: -60,
+                  left: -40,
+                  width: 180,
+                  height: 180,
+                  borderRadius: "999px",
+                  background:
+                    theme === "dark"
+                      ? "radial-gradient(circle, rgba(30,64,175,0.5), transparent 70%)"
+                      : "radial-gradient(circle, rgba(129,140,248,0.45), transparent 70%)",
+                  filter: "blur(40px)",
+                }}
               />
             </div>
 
-            <h2 style={{ fontSize: "2rem", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>
-              Muhammad Umer
-            </h2>
-            <p style={{ color: accentColor, fontSize: "0.9rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", margin: "8px 0" }}>
-              Lead Developer / Founder
-            </p>
-            <p style={{ color: colors.subText, fontSize: "0.95rem", lineHeight: "1.5", maxWidth: "320px", marginBottom: "15px" }}>
-              Building efficient, high-performance digital solutions for the healthcare industry.
-            </p>
-
-            <div style={{ display: "flex", gap: "12px" }}>
-              {[
-                { icon: <FaLinkedin />, link: "#" },
-                { icon: <FaGithub />, link: "#" }
-              ].map((social, idx) => (
-                <motion.a 
-                  key={idx}
-                  href={social.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, backgroundColor: accentColor, color: "#fff" }}
-                  style={{ 
-                    width: "42px", 
-                    height: "42px", 
-                    borderRadius: "12px", 
-                    background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    color: colors.text,
-                    fontSize: "1.2rem",
-                    transition: "all 0.3s ease"
+            <div style={{ position: "relative", zIndex: 1, display: "flex", gap: 14, alignItems: "center" }}>
+              <div
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: "18px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background:
+                    theme === "dark"
+                      ? "linear-gradient(135deg, #0ea5e9, #22c55e)"
+                      : "linear-gradient(135deg, #2563eb, #22c55e)",
+                  boxShadow: `0 14px 30px ${accentColor}66`,
+                  color: "#f9fafb",
+                }}
+              >
+                <FaEye size={24} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <span
+                  style={{
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.18em",
+                    color: colors.subText,
                   }}
                 >
-                  {social.icon}
-                </motion.a>
+                  Product Vision
+                </span>
+                <h2
+                  style={{
+                    fontSize: "2rem",
+                    fontWeight: 900,
+                    letterSpacing: "-0.04em",
+                    margin: 0,
+                  }}
+                >
+                  Our Vision for Care
+                </h2>
+              </div>
+            </div>
+
+            <p
+              style={{
+                position: "relative",
+                zIndex: 1,
+                color: colors.subText,
+                fontSize: "0.98rem",
+                lineHeight: 1.8,
+                margin: 0,
+                maxWidth: 520,
+              }}
+            >
+              We imagine healthcare teams supported by quiet, reliable automation — where admin friction disappears
+              and every interaction is focused on the patient, not the system.
+            </p>
+
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: 12,
+                marginTop: 6,
+              }}
+            >
+              {[
+                {
+                  label: "Connected Workflows",
+                  desc: "From intake to discharge, every touchpoint stays in sync.",
+                },
+                {
+                  label: "Safe Automation",
+                  desc: "AI handles the busywork; clinicians keep every decision.",
+                },
+                {
+                  label: "Scalable Clinics",
+                  desc: "Designed to grow from single sites to large networks.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    padding: "10px 12px",
+                    borderRadius: 18,
+                    background: isDark
+                      ? "rgba(15,23,42,0.9)"
+                      : "rgba(241,245,249,0.9)",
+                    border: `1px solid ${accentColor}33`,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "0.85rem",
+                      fontWeight: 700,
+                      color: colors.text,
+                      marginBottom: 4,
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.86rem",
+                      color: colors.subText,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {item.desc}
+                  </div>
+                </div>
               ))}
             </div>
-          </motion.div>
 
-          <motion.div
-            whileHover={{ y: -10, borderColor: accentColor }}
-            style={{ ...cardStyle, alignItems: "flex-start", textAlign: "left" }}
-          >
-            <div style={{ fontSize: "2.2rem", color: accentColor, marginBottom: "10px" }}><FaEye /></div>
-            <h2 style={{ fontSize: "2.1rem", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>
-              Our Vision
-            </h2>
-            <p style={{ color: colors.subText, fontSize: "1rem", lineHeight: "1.7", margin: 0 }}>
-              We envision healthcare systems that are fully connected, automated, and data‑driven—where every workflow is efficient, secure, and clinically meaningful. 
-              <br/><br/>
-              EaseWorkflow aims to lead this shift by building smart, adaptive tools that support clinicians, eliminate friction, and make high‑quality care consistently accessible.
-            </p>
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                marginTop: 10,
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                fontSize: "0.82rem",
+                color: colors.subText,
+              }}
+            >
+              <div
+                style={{
+                  width: 38,
+                  height: 1,
+                  background:
+                    "linear-gradient(90deg, " + accentColor + ", transparent)",
+                  opacity: 0.7,
+                }}
+              />
+              Built for teams who want healthcare automation that feels
+              <span style={{ color: accentColor, fontWeight: 600 }}>invisible yet powerful</span>.
+            </div>
           </motion.div>
         </div>
       </section>

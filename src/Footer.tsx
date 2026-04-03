@@ -31,16 +31,16 @@ export default function Footer() {
       href: "https://www.youtube.com/@easeworkflow", // Link ki jagah chorr di hai yahan aap add kar sakti hain
       label: "YouTube" 
     },
-    { 
-      icon: <FiLinkedin size={18} />, 
-      href: "https://www.linkedin.com/in/itsmuhammadumer", 
-      label: "Personal LinkedIn" 
-    },
-    { 
-      icon: <FiGithub size={18} />, 
-      href: "https://github.com/am-muhammadumer", 
-      label: "GitHub" 
-    },
+    // { 
+    //   icon: <FiLinkedin size={18} />, 
+    //   href: "https://www.linkedin.com/in/itsmuhammadumer", 
+    //   label: "Personal LinkedIn" 
+    // },
+    // { 
+    //   icon: <FiGithub size={18} />, 
+    //   href: "https://github.com/am-muhammadumer", 
+    //   label: "GitHub" 
+    // },
   ];
 
   return (

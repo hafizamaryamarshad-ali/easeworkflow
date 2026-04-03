@@ -116,7 +116,7 @@ export default function Navbar() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "10px 24px",
+        padding: "10px 40px",
         background: navBg,
         backdropFilter: "blur(16px)",
         border: navBorder,
@@ -129,51 +129,29 @@ export default function Navbar() {
       }}
     >
       {/* Logo */}
-      <div
+      <Link
+        href="/"
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "18px",
           position: "relative",
           zIndex: 1,
           flexShrink: 0,
+          textDecoration: "none",
         }}
       >
         <Image
-  src="/logo13.png"
-  alt="logo"
-  width={45}
-  height={38} 
-  priority
-  style={{
-    transform: "scale(1.8)",
-    objectFit: "contain",
-
-  }}
-/>
-        <Link
-          href="/"
+          src="/logo13.png"
+          alt="EaseWorkflow logo"
+          width={45}
+          height={38}
+          priority
           style={{
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            fontSize: "1.5rem",
-            fontWeight: 800,
-            backgroundImage: theme === "dark"
-              ? "linear-gradient(270deg, #0ea5e9, #3b82f6)"
-              : "linear-gradient(270deg, #2563eb, #3b82f6)",
-            backgroundSize: "400% 400%",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            color: mainColor,
-            opacity: 1,
-            visibility: "visible",
-            textDecoration: "none",
-            textShadow: theme === "dark" ? "0 0 10px rgba(0,198,255,0.2)" : "none",
+            transform: "scale(1.8)",
+            objectFit: "contain",
           }}
-        >
-         
-        </Link>
-      </div>
+        />
+      </Link>
 
       {/* Desktop Nav Links */}
       {!isMobile && (
