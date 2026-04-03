@@ -74,7 +74,7 @@ export default function ContactPage() {
 
     // At this stage all required fields are valid. Send via EmailJS.
     emailjs
-      .sendForm("service_36oazwd", "template_tfwle9l", form, "kQmGW82fdh4WwUSIY")
+      .sendForm("service_x1nbyuf", "template_zs0puip", form, "mrGHg0-L-cfJJZz6x")
       .then(() => {
         alert("Message sent successfully! We'll be in touch soon.");
         form.reset();
