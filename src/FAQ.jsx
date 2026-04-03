@@ -98,9 +98,8 @@ export default function FAQSection() {
   };
 
   const handleWhatsAppChat = () => {
-    const phoneNumber = "923000335194"; 
-    const message = "Hello! I am interested in your AI Healthcare solutions. Can we discuss?";
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
+    if (typeof window === "undefined") return;
+    window.location.href = "/contact";
   };
 
   // Detect mobile viewport so we can switch to accordion behavior only on small screens
