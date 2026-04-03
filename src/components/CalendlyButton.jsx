@@ -3,7 +3,7 @@
 export default function CalendlyButton({ mainColor }) {
   const openCalendly = () => {
     window.open(
-      "https://calendly.com/hafizamaryamarshada/30min",
+      "https://calendly.com/iamumershaheen/30min",
       "_blank"
     );
   };
