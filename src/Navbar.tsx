@@ -124,14 +124,16 @@ export default function Navbar() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: isTabletMid ? "8px 24px" : "10px 40px",
+        padding: isMobile ? "8px 16px" : isTabletMid ? "8px 24px" : "10px 40px",
         background: navBg,
         backdropFilter: "blur(16px)",
         border: navBorder,
         boxShadow: navShadow,
         borderRadius: "0 0 12px 12px",
+        width: "100%",
         maxWidth: "1400px",
         margin: "0 auto",
+        boxSizing: "border-box",
         transition: "all 0.4s ease",
         flexWrap: isTabletMid ? "nowrap" : "wrap",
       }}
@@ -298,8 +300,9 @@ export default function Navbar() {
                 padding: "16px 24px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "4px",
-                zIndex: 998,
+                gap: "6px",
+                alignItems: "center",
+                zIndex: 1000,
               }}
             >
               {navLinks.map((link) => (
@@ -314,32 +317,47 @@ export default function Navbar() {
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
+                    justifyContent: "center",
                     color: isLinkActive(link.href) ? mainColor : navTextColor,
                     fontWeight: 600,
                     fontSize: "1rem",
                     textDecoration: "none",
                     padding: "10px 8px",
                     borderRadius: "8px",
-                    borderBottom: `1px solid ${theme === "dark" ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)"}`
+                    width: "100%",
+                    textAlign: "center",
+                    borderBottom: `1px solid ${
+                      theme === "dark"
+                        ? "rgba(255,255,255,0.07)"
+                        : "rgba(0,0,0,0.07)"
+                    }`,
                   }}
                 >
                   {link.icon} {link.name}
                 </Link>
               ))}
 
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "12px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  marginTop: "12px",
+                  width: "100%",
+                }}
+              >
                 <button
                   onClick={toggleTheme}
                   style={{
                     flex: 1,
-                    padding: "8px 12px",
+                    padding: "10px 14px",
                     borderRadius: "12px",
                     background: theme === "dark" ? "#fff" : mainColor,
                     color: theme === "dark" ? "#0f172a" : "#fff",
                     border: "none",
                     cursor: "pointer",
                     fontWeight: 600,
-                    fontSize: "0.85rem",
+                    fontSize: "0.9rem",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -355,8 +373,8 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   style={{
                     flex: 2,
-                    padding: "8px 16px",
-                    fontSize: "0.88rem",
+                    padding: "10px 14px",
+                    fontSize: "0.9rem",
                     fontWeight: 600,
                     borderRadius: "12px",
                     background: mainColor,
@@ -367,6 +385,18 @@ export default function Navbar() {
                 >
                   Book Consultation
                 </Link>
+              </div>
+
+              {/* Mobile Calendly button inside menu for calendar visibility */}
+              <div
+                style={{
+                  marginTop: "10px",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <CalendlyButton mainColor={mainColor} />
               </div>
             </div>
           )}

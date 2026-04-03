@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "./theme/ThemeProvider";
 
@@ -82,6 +82,7 @@ const faqs = [
 
 export default function FAQSection() {
   const [selectedFaq, setSelectedFaq] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -101,6 +102,18 @@ export default function FAQSection() {
     const message = "Hello! I am interested in your AI Healthcare solutions. Can we discuss?";
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
   };
+
+  // Detect mobile viewport so we can switch to accordion behavior only on small screens
+  useEffect(() => {
+    const checkIsMobile = () => {
+      if (typeof window === "undefined") return;
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
 
   return (
     <section
@@ -142,114 +155,276 @@ export default function FAQSection() {
           The <span style={{ color: "#0ea5e9" }}>Intelligence</span> Hub
         </h2>
       </div>
+      {isMobile ? (
+        // Mobile: accordion behavior – each question toggles its own answer below it
+        <div
+          style={{
+            maxWidth: "1200px",
+            width: "100%",
+            marginBottom: "40px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+          }}
+        >
+          {faqs.map((item, i) => {
+            const isOpen = selectedFaq === i;
+            return (
+              <div
+                key={i}
+                onClick={() => setSelectedFaq(isOpen ? -1 : i)}
+                style={{
+                  padding: "16px 18px",
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  position: "relative",
+                  background: isOpen ? colors.faqItemBg : "transparent",
+                  transition: "0.2s",
+                  border: `1px solid ${isOpen ? colors.cardBorder : "transparent"}`,
+                }}
+              >
+                <div style={{ display: "flex", gap: "12px", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", gap: "12px", alignItems: "center", flex: 1 }}>
+                    <span
+                      style={{
+                        fontSize: "0.75rem",
+                        fontWeight: 900,
+                        color: isOpen ? "#0ea5e9" : colors.faqInactiveText,
+                      }}
+                    >
+                      {item.id}
+                    </span>
+                    <h3
+                      style={{
+                        fontSize: "0.98rem",
+                        fontWeight: 700,
+                        color: isOpen ? colors.text : colors.subText,
+                        margin: 0,
+                      }}
+                    >
+                      {item.q}
+                    </h3>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "1.1rem",
+                      fontWeight: 700,
+                      color: "#0ea5e9",
+                      marginLeft: "8px",
+                    }}
+                  >
+                    {isOpen ? "−" : "+"}
+                  </span>
+                </div>
 
-      <div
-        className="faq-grid"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1.6fr",
-          gap: "40px",
-          maxWidth: "1200px",
-          width: "100%",
-          marginBottom: "40px",
-        }}
-      >
-        
-        {/* LEFT SIDE: FAQ LIST (Height limited for better scroll) */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "600px", overflowY: "auto", paddingRight: "10px" }}>
-          {faqs.map((item, i) => (
-            <div 
-              key={i} 
-              onMouseEnter={() => setSelectedFaq(i)} 
-              style={{ 
-                padding: "18px 25px", 
-                borderRadius: "15px", 
-                cursor: "pointer", 
-                position: "relative", 
-                background: selectedFaq === i ? colors.faqItemBg : "transparent", 
-                transition: "0.2s" 
-              }}
-            >
-              {selectedFaq === i && (
-                <motion.div 
-                  layoutId="faqBar" 
-                  style={{ 
-                    position: "absolute", left: "-5px", top: "20%", bottom: "20%", 
-                    width: "3px", background: "#0ea5e9", borderRadius: "10px", 
-                    boxShadow: "0 0 15px #0ea5e9" 
-                  }} 
-                />
-              )}
-              <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
-                <span style={{ fontSize: "0.75rem", fontWeight: 900, color: selectedFaq === i ? "#0ea5e9" : colors.faqInactiveText }}>{item.id}</span>
-                <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: selectedFaq === i ? colors.text : colors.subText, margin: 0 }}>{item.q}</h3>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="answer"
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.22 }}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <p
+                        style={{
+                          fontSize: "0.9rem",
+                          lineHeight: 1.6,
+                          color: colors.subText,
+                          margin: 0,
+                        }}
+                      >
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+      ) : (
+        // Desktop / tablet: keep existing two-column layout with side detail card
+        <div
+          className="faq-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1.6fr",
+            gap: "40px",
+            maxWidth: "1200px",
+            width: "100%",
+            marginBottom: "40px",
+          }}
+        >
+          {/* LEFT SIDE: FAQ LIST */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "6px",
+              maxHeight: "600px",
+              overflowY: "auto",
+              paddingRight: "10px",
+            }}
+          >
+            {faqs.map((item, i) => (
+              <div
+                key={i}
+                onMouseEnter={() => setSelectedFaq(i)}
+                style={{
+                  padding: "18px 25px",
+                  borderRadius: "15px",
+                  cursor: "pointer",
+                  position: "relative",
+                  background:
+                    selectedFaq === i ? colors.faqItemBg : "transparent",
+                  transition: "0.2s",
+                }}
+              >
+                {selectedFaq === i && (
+                  <motion.div
+                    layoutId="faqBar"
+                    style={{
+                      position: "absolute",
+                      left: "-5px",
+                      top: "20%",
+                      bottom: "20%",
+                      width: "3px",
+                      background: "#0ea5e9",
+                      borderRadius: "10px",
+                      boxShadow: "0 0 15px #0ea5e9",
+                    }}
+                  />
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "15px",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "0.75rem",
+                      fontWeight: 900,
+                      color:
+                        selectedFaq === i
+                          ? "#0ea5e9"
+                          : colors.faqInactiveText,
+                    }}
+                  >
+                    {item.id}
+                  </span>
+                  <h3
+                    style={{
+                      fontSize: "1.05rem",
+                      fontWeight: 700,
+                      color:
+                        selectedFaq === i ? colors.text : colors.subText,
+                      margin: 0,
+                    }}
+                  >
+                    {item.q}
+                  </h3>
+                </div>
+              </div>
+            ))}
+          </div>
 
-        {/* RIGHT SIDE: DYNAMIC ANSWER CARD */}
-        <div style={{ position: "relative" }}>
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={selectedFaq} 
-              initial={{ opacity: 0, scale: 0.98 }} 
-              animate={{ opacity: 1, scale: 1 }} 
-              exit={{ opacity: 0, scale: 0.98 }} 
-              style={{ 
-                background: colors.cardBg, 
-                padding: "40px", 
-                borderRadius: "28px", 
-                border: `1px solid ${colors.cardBorder}`, 
-                position: "relative", 
-                overflow: "hidden", 
-                minHeight: "400px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                boxShadow: isDark ? "0 25px 50px rgba(0,0,0,0.4)" : "0 15px 30px rgba(0,0,0,0.04)",
-                backdropFilter: "blur(10px)"
-              }}
-            >
-              <motion.div 
-                animate={{ top: ["0%", "100%"] }} 
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }} 
-                style={{ position: "absolute", left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent, #0ea5e9, transparent)", opacity: 0.2 }} 
-              />
-              
-              <span style={{ color: "#0ea5e9", fontWeight: 800, fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "2px" }}>{faqs[selectedFaq].tag}</span>
-              <h3
+          {/* RIGHT SIDE: DYNAMIC ANSWER CARD */}
+          <div style={{ position: "relative" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedFaq}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
                 style={{
-                  fontSize: "clamp(1.4rem, 4vw, 1.9rem)",
-                  fontWeight: 800,
-                  margin: "20px 0",
-                  lineHeight: "1.3",
-                  color: colors.text,
+                  background: colors.cardBg,
+                  padding: "40px",
+                  borderRadius: "28px",
+                  border: `1px solid ${colors.cardBorder}`,
+                  position: "relative",
+                  overflow: "hidden",
+                  minHeight: "400px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  boxShadow: isDark
+                    ? "0 25px 50px rgba(0,0,0,0.4)"
+                    : "0 15px 30px rgba(0,0,0,0.04)",
+                  backdropFilter: "blur(10px)",
                 }}
               >
-                {faqs[selectedFaq].q}
-              </h3>
-              <p
-                style={{
-                  fontSize: "clamp(0.98rem, 3.2vw, 1.1rem)",
-                  lineHeight: "1.7",
-                  color: colors.subText,
-                }}
-              >
-                {faqs[selectedFaq].a}
-              </p>
-              
-              <span style={{ 
-                fontSize: "8rem", fontWeight: 900, 
-                position: "absolute", bottom: "-30px", right: "10px", 
-                color: colors.watermark, pointerEvents: "none" 
-              }}>
-                {faqs[selectedFaq].id}
-              </span>
-            </motion.div>
-          </AnimatePresence>
+                <motion.div
+                  animate={{ top: ["0%", "100%"] }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    height: "1px",
+                    background:
+                      "linear-gradient(90deg, transparent, #0ea5e9, transparent)",
+                    opacity: 0.2,
+                  }}
+                />
+
+                <span
+                  style={{
+                    color: "#0ea5e9",
+                    fontWeight: 800,
+                    fontSize: "0.7rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "2px",
+                  }}
+                >
+                  {faqs[selectedFaq].tag}
+                </span>
+                <h3
+                  style={{
+                    fontSize: "clamp(1.4rem, 4vw, 1.9rem)",
+                    fontWeight: 800,
+                    margin: "20px 0",
+                    lineHeight: "1.3",
+                    color: colors.text,
+                  }}
+                >
+                  {faqs[selectedFaq].q}
+                </h3>
+                <p
+                  style={{
+                    fontSize: "clamp(0.98rem, 3.2vw, 1.1rem)",
+                    lineHeight: "1.7",
+                    color: colors.subText,
+                  }}
+                >
+                  {faqs[selectedFaq].a}
+                </p>
+
+                <span
+                  style={{
+                    fontSize: "8rem",
+                    fontWeight: 900,
+                    position: "absolute",
+                    bottom: "-30px",
+                    right: "10px",
+                    color: colors.watermark,
+                    pointerEvents: "none",
+                  }}
+                >
+                  {faqs[selectedFaq].id}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* FOOTER CTA */}
       <div style={{ width: "100%", maxWidth: "1200px", textAlign: "center", paddingTop: "30px", borderTop: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}` }}>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "./theme/ThemeProvider";
 
 const chats = [
@@ -132,6 +132,8 @@ const doubleChats = [...chats, ...chats, ...chats];
 export default function TestimonialChat() {
   const [activeChat, setActiveChat] = useState(chats[0]);
   const [isPaused, setIsPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobilePaused, setIsMobilePaused] = useState(false);
   const { theme } = useTheme();
 
   const isDark = theme === "dark";
@@ -151,6 +153,33 @@ export default function TestimonialChat() {
     cardBorder: isDark ? "rgba(14,165,233,0.15)" : "rgba(14,165,233,0.2)",
     pillBg: isDark ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.04)"
   };
+
+  // Detect mobile viewport so auto-rotation only runs on small screens
+  useEffect(() => {
+    const checkIsMobile = () => {
+      if (typeof window === "undefined") return;
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
+
+  // Auto-rotate detailed review on mobile only
+  useEffect(() => {
+    if (!isMobile || isMobilePaused) return;
+
+    const interval = setInterval(() => {
+      setActiveChat((prev) => {
+        const currentIndex = chats.findIndex((c) => c.id === prev.id);
+        const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % chats.length;
+        return chats[nextIndex];
+      });
+    }, 4000); // 4 seconds between reviews
+
+    return () => clearInterval(interval);
+  }, [isMobile, isMobilePaused]);
 
   return (
     <section
@@ -244,6 +273,7 @@ export default function TestimonialChat() {
                 key={index}
                 onMouseEnter={() => { setActiveChat(item); setIsPaused(true); }}
                 onClick={() => { setActiveChat(item); setIsPaused(true); }}
+                className={`review-card${activeChat.id === item.id ? " active" : ""}`}
                 style={{
                   display: "flex", gap: "15px", padding: "18px", borderRadius: "22px",
                   cursor: "pointer",
@@ -283,6 +313,9 @@ export default function TestimonialChat() {
                 borderColor: "rgba(14,165,233,0.3)",
                 boxShadow: isDark ? "0 40px 100px rgba(14,165,233,0.15)" : "0 30px 80px rgba(0,0,0,0.05)"
               }}
+              onTouchStart={() => { if (isMobile) setIsMobilePaused(true); }}
+              onTouchEnd={() => { if (isMobile) setIsMobilePaused(false); }}
+              className="review-card-detail"
               style={{
                 width: "100%",
                 background: colors.cardBg,
