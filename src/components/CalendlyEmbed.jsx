@@ -13,7 +13,7 @@ export default function CalendlyEmbed() {
   return (
     <div
       className="calendly-inline-widget"
-      data-url="https://calendly.com/hafizamaryamarshada/30min"
+      data-url="https://calendly.com/iamumershaheen/30min"
       style={{ minWidth: "320px", height: "700px" }}
     />
   );

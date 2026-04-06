@@ -52,7 +52,7 @@ export default function AboutPage() {
     { label: "Years Experience", value: "10+", icon: <FaClock /> },
     { label: "Patients Served", value: "10,000+", icon: <FaUserMd /> },
     { label: "Satisfaction", value: "100%", icon: <FaCheckCircle /> },
-    { label: "Clinics Integrated", value: "300+", icon: <FaHospital /> },
+  { label: "Clinics Integrated", value: "30+", icon: <FaHospital /> },
   ];
 
   const coreValues = [

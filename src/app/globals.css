@@ -64,6 +64,7 @@ html {
 
 body {
   margin: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
   color: var(--text-light);
   overflow-x: hidden;
@@ -411,7 +412,7 @@ h3 {
   flex-direction: column;
   align-items: center;
   gap: 48px;
-  padding: 80px 0 60px;
+  padding: 0 0 60px;
 }
 
 .hero-left,
@@ -438,7 +439,7 @@ h3 {
 @media (min-width: 900px) {
   .hero-layout {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 56px;
   }

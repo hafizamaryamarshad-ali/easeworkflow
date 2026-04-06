@@ -3,17 +3,19 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FaStethoscope,
-  FaPills,
-  FaHeart,
-  FaSyringe,
   FaUserMd,
+  FaHeart,
+  FaStar,
+  FaPhoneAlt,
+  FaVideo,
+  FaCommentDots,
+  FaShieldAlt,
   FaCloud,
   FaCalendarAlt,
-  FaShieldAlt,
 } from "react-icons/fa";
 import Link from "next/link";
 import { useTheme } from "./theme/ThemeProvider";
+import Chatbot from "./Chatbot";
 
 function ComplianceModal({ onClose }: { onClose: () => void }) {
   const { theme } = useTheme();
@@ -425,37 +427,13 @@ function WorkflowDashboard() {
 }
 
 export default function Hero() {
-  const [particles, setParticles] = useState<{ x: number; y: number; size: number; opacity: number }[]>([]);
   const [showCompliance, setShowCompliance] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const { theme } = useTheme();
 
-  // Generate floating particles
-  useEffect(() => {
-    const temp: typeof particles = [];
-    for (let i = 0; i < 40; i++) {
-      temp.push({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 2 + Math.random() * 3,
-        opacity: 0.05 + Math.random() * 0.25,
-      });
-    }
-    setParticles(temp);
-  }, []);
-
-  const floatingIcons = [
-    { Icon: FaStethoscope, size: 68, top: "8%",  left: "6%",  speed: 11, opacity: 0.18 },
-    { Icon: FaPills,       size: 46, top: "22%", left: "92%", speed: 8,  opacity: 0.13 },
-    { Icon: FaHeart,       size: 75, top: "78%", left: "4%",  speed: 13, opacity: 0.16 },
-    { Icon: FaSyringe,     size: 54, top: "85%", left: "88%", speed: 9,  opacity: 0.14 },
-    { Icon: FaStethoscope, size: 42, top: "45%", left: "2%",  speed: 10, opacity: 0.11 },
-    { Icon: FaPills,       size: 38, top: "60%", left: "94%", speed: 12, opacity: 0.12 },
-    { Icon: FaHeart,       size: 50, top: "15%", left: "88%", speed: 14, opacity: 0.15 },
-  ];
-
   const bgColors = {
-    dark: "var(--bg-gradient-dark)",
-    light: "#f5f7fa",
+    dark: "#020617",
+    light: "#f3f7fb",
   };
   const textColors = {
     dark: "#f8fafc",
@@ -477,63 +455,31 @@ export default function Hero() {
   return (
     <>
       <AnimatePresence>
-        {showCompliance && (
-          <ComplianceModal onClose={() => setShowCompliance(false)} />
-        )}
+        {showCompliance && <ComplianceModal onClose={() => setShowCompliance(false)} />}
       </AnimatePresence>
 
       <section
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "95vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "0 20px",
-        backgroundColor: theme === "dark" ? "#0f172a" : bgColors.light,
-        backgroundImage: theme === "dark" ? bgColors.dark : "none",
-        backgroundSize: "600% 600%",
-        color: textColors[theme],
-        transition: "all 0.5s ease",
-      }}
-    >
-      <div className="hero-bg-radial" />
-      <div className="hero-bg-grid" />
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          padding: "40px 20px 0",
+          background:
+            theme === "dark"
+              ? "radial-gradient(circle at top, #020617 0, #020617 40%, #0f172a 100%)"
+              : "linear-gradient(135deg,#f9fbff,#e0f2ff)",
+          color: textColors[theme],
+          transition: "all 0.4s ease-out",
+        }}
+      >
+        <div className="hero-bg-radial" />
+        <div className="hero-bg-grid" />
 
-      {/* Tech particles */}
-      {particles.map((p, i) => (
-        <motion.div
-          key={i}
-          initial={{ y: 0, x: 0 }}
-          animate={{ y: ["0%", "-15%", "0%"], x: ["0%", "8%", "0%"] }}
-          transition={{
-            duration: 10 + Math.random() * 10,
-            repeat: Infinity,
-            repeatType: "mirror",
-            ease: "easeInOut",
-          }}
-          style={{
-            position: "absolute",
-            top: `${p.y}%`,
-            left: `${p.x}%`,
-            width: p.size,
-            height: p.size,
-            borderRadius: "50%",
-            background: theme === "dark" ? "#0ea5e9" : "#3b82f6",
-            boxShadow:
-              theme === "dark"
-                ? "0 0 4px #0ea5e9, 0 0 12px #3b82f6"
-                : "0 0 3px rgba(37,99,235,0.7)",
-            opacity: p.opacity,
-            pointerEvents: "none",
-          }}
-        />
-      ))}
-
-      <div className="hero-layout">
-        <div className="hero-left">
+        <div className="hero-layout">
+          <div className="hero-left">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -577,36 +523,44 @@ export default function Hero() {
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.1 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}
               style={{
-                fontSize: "clamp(2.4rem, 6vw, 4rem)",
-                fontWeight: 900,
-                lineHeight: "1.2",
-                maxWidth: "900px",
+                margin: 0,
+                fontSize: "clamp(2.4rem, 5.4vw, 3.4rem)",
+                fontWeight: 800,
+                lineHeight: 1.15,
+                letterSpacing: "-0.03em",
+                maxWidth: "28ch",
                 zIndex: 2,
               }}
             >
-              Automate Your Clinic. Maximize Efficiency.
+              Smart Clinic Automation for
+              <span
+                style={{
+                  color: theme === "dark" ? "#38bdf8" : "#0f766e",
+                  marginLeft: 6,
+                }}
+              >
+                Better Patient Care
+              </span>
             </motion.h1>
 
             {/* Subheading */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.25 }}
+              transition={{ duration: 0.9, delay: 0.22, ease: "easeOut" }}
               style={{
-                fontSize: "clamp(1.05rem, 3.2vw, 1.25rem)",
-                marginTop: "18px",
-                maxWidth: "700px",
-                lineHeight: "1.6",
+                fontSize: "clamp(1.02rem, 2.4vw, 1.18rem)",
+                marginTop: "16px",
+                maxWidth: "34ch",
+                lineHeight: 1.6,
                 color: subTextColors[theme],
                 zIndex: 2,
-                textShadow: theme === "dark" ? "0 0 6px rgba(0,198,255,0.18)" : "none",
               }}
             >
-              EaseWorkflow orchestrates intake, triage, documentation and follow-up in one
-              unified automation layer—so your team spends more time with patients, not
-              paperwork.
+              EaseWorkflow streamlines scheduling, intake, and follow-ups so your team
+              spends more time with patients instead of paperwork.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -624,7 +578,7 @@ export default function Hero() {
               }}
             >
               <a
-                href="/contact"
+                href="/booking"
                 style={{
                   padding: "14px 32px",
                   fontWeight: 700,
@@ -633,36 +587,46 @@ export default function Hero() {
                   background: btnGradient[theme],
                   color: textColors[theme],
                   textDecoration: "none",
-                  boxShadow: theme === "dark" ? "0 14px 32px rgba(0,198,255,0.4)" : "0 14px 32px rgba(59,130,246,0.35)",
-                  transition: "all 0.25s ease",
+                  boxShadow:
+                    theme === "dark"
+                      ? "0 16px 36px rgba(15,23,42,0.9)"
+                      : "0 14px 32px rgba(148,163,184,0.55)",
+                  transition: "all 0.2s ease-out",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.boxShadow = theme === "dark"
-                    ? "0 0 22px #0ea5e9, 0 0 44px #3b82f6"
-                    : "0 0 22px #3b82f6, 0 0 44px #60a5fa")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.boxShadow = theme === "dark"
-                    ? "0 14px 32px rgba(0,198,255,0.4)"
-                    : "0 14px 32px rgba(59,130,246,0.35)")
-                }
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    theme === "dark"
+                      ? "0 20px 48px rgba(15,23,42,1)"
+                      : "0 18px 40px rgba(148,163,184,0.75)";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    theme === "dark"
+                      ? "0 16px 36px rgba(15,23,42,0.9)"
+                      : "0 14px 32px rgba(148,163,184,0.55)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
               >
-                Book Free Consultation
+                Book Appointment
               </a>
 
               <Link
-	            href="#services"
+                href="#services"
                 style={{
-                  padding: "14px 28px",
+                  padding: "14px 22px",
                   fontWeight: 600,
                   fontSize: "0.95rem",
                   borderRadius: "999px",
                   border: `1.5px solid ${btnOutlineColor[theme]}`,
-                  background: theme === "dark" ? "rgba(15,23,42,0.6)" : "rgba(248,250,252,0.85)",
-                  color: theme === "dark" ? "#0ea5e9" : "#1d4ed8",
+                  background: theme === "dark" ? "rgba(15,23,42,0.7)" : "rgba(248,250,252,0.95)",
+                  color: theme === "dark" ? "#e5f6ff" : "#1d4ed8",
                   textDecoration: "none",
-                  transition: "all 0.25s ease",
+                  transition: "all 0.2s ease-out",
                   backdropFilter: "blur(14px)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
                 }}
                 onClick={(e) => {
                   e.preventDefault();
@@ -672,15 +636,17 @@ export default function Hero() {
                   }
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = theme === "dark" ? "rgba(8,47,73,0.95)" : "#3b82f6";
-                  e.currentTarget.style.color = theme === "dark" ? "#f9fafb" : "#f9fafb";
+                  e.currentTarget.style.background =
+                    theme === "dark" ? "rgba(15,23,42,0.9)" : "#e0edff";
+                  e.currentTarget.style.color = theme === "dark" ? "#f9fafb" : "#1e3a8a";
                   e.currentTarget.style.boxShadow = theme === "dark"
-                    ? "0 0 18px #0ea5e9, 0 0 34px #3b82f6"
-                    : "0 0 18px #3b82f6, 0 0 34px #60a5fa";
+                    ? "0 14px 32px rgba(15,23,42,1)"
+                    : "0 14px 28px rgba(148,163,184,0.7)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = theme === "dark" ? "rgba(15,23,42,0.6)" : "rgba(248,250,252,0.85)";
-                  e.currentTarget.style.color = theme === "dark" ? "#0ea5e9" : "#1d4ed8";
+                  e.currentTarget.style.background =
+                    theme === "dark" ? "rgba(15,23,42,0.7)" : "rgba(248,250,252,0.95)";
+                  e.currentTarget.style.color = theme === "dark" ? "#e5f6ff" : "#1d4ed8";
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
@@ -690,55 +656,187 @@ export default function Hero() {
 
             <motion.div
               className="hero-trust-row"
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.55 }}
+              transition={{ duration: 0.9, delay: 0.45, ease: "easeOut" }}
             >
-              <span className="hero-trust-label">Trusted by digital-first clinics worldwide</span>
-              <span className="hero-trust-pill">Avg. 35% reduction in admin time</span>
+              <span className="hero-trust-label">Trusted by clinics and care teams worldwide</span>
+              <span className="hero-trust-pill">
+                <FaStar size={14} style={{ color: "#facc15", marginRight: 6 }} />
+                4.9 from 1,600+ verified patient reviews
+              </span>
             </motion.div>
           </motion.div>
+          </div>
+          {/* Right visual column - Minimalist Version (No Review Cards) */}
+          <motion.div
+            className="hero-right"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.35, ease: "easeOut" }}
+            style={{
+              zIndex: 2,
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "1rem",
+              position: "relative",
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                maxWidth: "600px",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* Soft Glowy Background Circles */}
+              <div
+                style={{
+                  position: "absolute",
+                  width: "120%",
+                  height: "100%",
+                  background:
+                    theme === "dark"
+                      ? "radial-gradient(circle, rgba(46,196,182,0.07) 0%, transparent 70%)"
+                      : "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)",
+                  zIndex: -1,
+                  top: "0%",
+                }}
+              />
+
+              {/* Main Doctor Image - Centered and Large */}
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  transform: "translateX(-10%)",
+                }}
+              >
+                <img
+                  src="/images/hero3.png"
+                  alt="Healthcare Professional"
+                  style={{
+                    height: "100%",
+                    width: "auto",
+                    objectFit: "contain",
+                    borderRadius: "24px",
+                    filter: "drop-shadow(0 20px 40px rgba(8, 26, 47, 0.15))",
+                    zIndex: 5,
+                  }}
+                />
+
+                {/* Phone Icon */}
+                <Link href="/contact">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    style={{
+                      position: "absolute",
+                      top: "20%",
+                      left: "-5%",
+                      width: 55,
+                      height: 55,
+                      borderRadius: "50%",
+                      background: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                      color: "#081A2F",
+                      zIndex: 10,
+                      border: "1px solid rgba(226, 232, 240, 0.8)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <FaPhoneAlt size={22} />
+                  </motion.div>
+                </Link>
+
+                {/* Video Icon */}
+                <Link href="/booking">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    animate={{ y: [0, 15, 0] }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 0.5,
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: "70%",
+                      left: "-5%",
+                      width: 55,
+                      height: 55,
+                      borderRadius: "50%",
+                      background: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 12px 30px rgba(0,0,0,0.1)",
+                      color: "#2EC4B6",
+                      zIndex: 10,
+                      border: "1px solid rgba(226, 232, 240, 0.8)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <FaVideo size={26} />
+                  </motion.div>
+                </Link>
+
+                {/* Message/Chat Icon - opens chatbot */}
+                <motion.button
+                  type="button"
+                  onClick={() => setIsChatOpen(true)}
+                  animate={{ x: [0, 8, 0] }}
+                  transition={{
+                    duration: 3.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.2,
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: "47%",
+                    left: "-5%",
+                    width: 50,
+                    height: 50,
+                    borderRadius: "50%",
+                    background: "white",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                    color: "#081A2F",
+                    zIndex: 12,
+                    border: "1px solid rgba(226, 232, 240, 0.8)",
+                    cursor: "pointer",
+                    borderWidth: 0,
+                  }}
+                >
+                  <FaCommentDots size={22} />
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+          
         </div>
-
-        {/* Right visual column */}
-        <motion.div
-          className="hero-right"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          style={{ zIndex: 2 }}
-        >
-          <WorkflowDashboard />
-        </motion.div>
-      </div>
-
-      {/* Floating tech icons */}
-      {floatingIcons.map((icon, i) => (
-        <motion.div
-          key={i}
-          initial={{ y: 0 }}
-          animate={{ y: ["0%", "-30%", "0%"] }}
-          transition={{
-            duration: icon.speed,
-            repeat: Infinity,
-            repeatType: "mirror",
-            ease: "easeInOut",
-          }}
-          style={{
-            position: "absolute",
-            top: icon.top,
-            left: icon.left,
-            fontSize: icon.size,
-            opacity: icon.opacity,
-            pointerEvents: "none",
-            color: theme === "dark" ? "#0ea5e9" : "#3b82f6",
-            textShadow: theme === "dark" ? "0 0 12px #0ea5e9, 0 0 24px #3b82f6" : "none",
-          }}
-        >
-          <icon.Icon />
-        </motion.div>
-      ))}
       </section>
+
+      <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </>
   );
 }
