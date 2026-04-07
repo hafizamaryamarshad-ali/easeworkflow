@@ -160,44 +160,52 @@ export default function ProjectsList() {
                   {project.shortDesc}
                 </p>
 
-                {/* Technologies as pill tags */}
-                {project.technologies && project.technologies.length > 0 && (
+                {/* Tags + Read More footer block pinned to bottom for consistent alignment */}
+                <div
+                  style={{
+                    marginTop: "auto",
+                    paddingTop: "16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px",
+                  }}
+                >
+                  {/* Technologies as pill tags (reserve space even if empty) */}
                   <div
                     style={{
-                      marginTop: "10px",
                       display: "flex",
                       flexWrap: "wrap",
                       gap: "8px",
+                      minHeight: "28px",
                     }}
                   >
-                    {project.technologies.slice(0, 4).map((tech) => (
-                      <span
-                        key={tech}
-                        style={{
-                          fontSize: "0.78rem",
-                          padding: "4px 10px",
-                          borderRadius: "999px",
-                          backgroundColor:
-                            theme === "dark"
-                              ? "rgba(15,23,42,0.9)"
-                              : "rgba(219,234,254,0.95)",
-                          color: theme === "dark" ? "#e5e7eb" : "#1e293b",
-                          border:
-                            theme === "dark"
-                              ? "1px solid rgba(148,163,184,0.7)"
-                              : "1px solid rgba(59,130,246,0.7)",
-                          lineHeight: 1.3,
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                    {project.technologies &&
+                      project.technologies.slice(0, 4).map((tech) => (
+                        <span
+                          key={tech}
+                          style={{
+                            fontSize: "0.78rem",
+                            padding: "4px 10px",
+                            borderRadius: "999px",
+                            backgroundColor:
+                              theme === "dark"
+                                ? "rgba(15,23,42,0.9)"
+                                : "rgba(219,234,254,0.95)",
+                            color: theme === "dark" ? "#e5e7eb" : "#1e293b",
+                            border:
+                              theme === "dark"
+                                ? "1px solid rgba(148,163,184,0.7)"
+                                : "1px solid rgba(59,130,246,0.7)",
+                            lineHeight: 1.3,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
                   </div>
-                )}
 
-                {/* READ MORE */}
-                <div style={{ marginTop: "18px" }}>
+                  {/* READ MORE */}
                   <motion.div
                     whileHover={{ x: 5 }}
                     style={{

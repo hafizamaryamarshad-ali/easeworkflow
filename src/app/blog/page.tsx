@@ -159,7 +159,15 @@ export default function BlogPage() {
       </div>
 
       {/* 3. GRID LAYOUT */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "30px", maxWidth: "1200px", margin: "0 auto" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: "30px",
+          maxWidth: "1200px",
+          margin: "0 auto",
+        }}
+      >
         {blogs.filter(b => b.title.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, visibleCount).map((blog) => (
           <motion.div key={blog._id} whileHover={{ y: -8 }} style={{ background: colors.cardBg, borderRadius: "24px", overflow: "hidden", border: `1px solid ${colors.cardBorder}`, display: "flex", flexDirection: "column" }}>
             <div style={{ position: 'relative', height: '180px' }}>
@@ -172,7 +180,18 @@ export default function BlogPage() {
                 <Link href={`/blog/${blog.slug}`} style={{ textDecoration: 'none' }}>
                   <div style={{ border: `1.5px solid ${colors.accent}`, color: colors.accent, padding: '6px 20px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 700 }}>Read more</div>
                 </Link>
-                <span style={{ fontSize: '0.8rem', opacity: 0.5 }}><FiClock /> 3 min read</span>
+                <span
+                  style={{
+                    fontSize: '0.8rem',
+                    opacity: 0.5,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <FiClock />
+                  3 min read
+                </span>
               </div>
             </div>
           </motion.div>

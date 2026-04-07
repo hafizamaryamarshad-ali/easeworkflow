@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaRobot, FaCalendarAlt, FaVideo } from "react-icons/fa";
 import { useRouter } from "next/navigation";
@@ -33,149 +32,182 @@ const services = [
 ];
 
 export default function Services() {
-  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    const handleResize = () => setViewportWidth(window.innerWidth);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const isMobile = viewportWidth !== null && viewportWidth < 768;
-  const isTablet =
-    viewportWidth !== null && viewportWidth >= 768 && viewportWidth < 1024;
 
   return (
     <section
       style={{
         scrollMarginTop: "80px",
-        
         padding: "110px 20px",
         background: "var(--color-bg)",
         color: "var(--color-text-primary)",
+        position: "relative",
+        overflow: "hidden",
       }}
       id="services"
     >
-      {/* HEADER */}
-      <div style={{ textAlign: "center", marginBottom: "70px" }}>
-        <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800 }}>
-          Our Services
-        </h2>
-        <p style={{ opacity: 0.6, marginTop: "10px" }}>
-          AI-powered healthcare solutions built for efficiency
-        </p>
-      </div>
-
-      {/* CARDS */}
+      {/* Soft background accents */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: isMobile
-            ? "1fr"
-            : isTablet
-            ? "repeat(2,1fr)"
-            : "repeat(3,1fr)",
-          gap: "30px",
-          maxWidth: "1100px",
-          margin: "0 auto 90px",
+          position: "absolute",
+          top: "-80px",
+          left: "-120px",
+          width: "260px",
+          height: "260px",
+          background:
+            "radial-gradient(circle at 30% 30%, rgba(56,189,248,0.25), transparent 70%)",
+          filter: "blur(8px)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-120px",
+          right: "-100px",
+          width: "320px",
+          height: "320px",
+          background:
+            "radial-gradient(circle at 70% 70%, rgba(59,130,246,0.3), transparent 70%)",
+          filter: "blur(14px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          maxWidth: "1200px",
+          margin: "0 auto",
         }}
       >
-        {services.map((item, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ y: -12, scale: 1.03 }}
-            transition={{ type: "spring", stiffness: 220, damping: 14 }}
+        {/* HEADER */}
+        <div style={{ textAlign: "center", marginBottom: "70px" }}>
+          <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800 }}>
+            Our Services
+          </h2>
+          <p
             style={{
-              position: "relative",
-              padding: "32px",
-              borderRadius: "26px",
-
-              /* 🔥 NEW LIGHT BLUE GLOW STYLE */
-              background:
-                "linear-gradient(145deg, rgba(14,165,233,0.18), rgba(14,165,233,0.05))",
-
-              border: "1px solid rgba(14,165,233,0.25)",
-
-              backdropFilter: "blur(18px)",
-
-              boxShadow:
-                "0 10px 40px rgba(14,165,233,0.15), 0 20px 60px rgba(0,0,0,0.25)",
-
-              overflow: "hidden",
-              cursor: "pointer",
-              textAlign: "left",
+              opacity: 0.7,
+              marginTop: "12px",
+              fontSize: "1.02rem",
             }}
           >
-            {/* glow */}
-            <div
-              style={{
-                position: "absolute",
-                top: "-60px",
-                right: "-60px",
-                width: "160px",
-                height: "160px",
-                background:
-                  "radial-gradient(circle, rgba(14,165,233,0.4), transparent 70%)",
-                filter: "blur(25px)",
-              }}
-            />
+            AI-powered healthcare solutions designed to streamline every step of care
+          </p>
+        </div>
 
-            {/* icon */}
-            <div
+        {/* CARDS */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "24px",
+            marginBottom: "80px",
+          }}
+        >
+          {services.map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{
+                y: -6,
+                scale: 1.02,
+                backgroundSize: "115%",
+                boxShadow: "var(--card-shadow-soft-hover)",
+              }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
               style={{
-                width: "52px",
-                height: "52px",
-                borderRadius: "14px",
+                position: "relative",
+                borderRadius: "20px",
+                overflow: "hidden",
+                minHeight: "260px",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "rgba(14,165,233,0.15)",
-                border: "1px solid rgba(14,165,233,0.4)",
-                color: "#0ea5e9",
-                fontSize: "22px",
-                marginBottom: "16px",
+                alignItems: "flex-end",
+                padding: "20px 18px",
+                color: "var(--text-light)",
+                boxShadow: "var(--card-shadow-soft)",
+                cursor: "pointer",
+                backgroundImage: `linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.4), rgba(15,23,42,0.05)), url(${item.image})`,
+                backgroundSize: "110%",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                border: "1px solid var(--card-border)",
+                transition:
+                  "box-shadow 0.22s ease, transform 0.22s ease, background-size 0.22s ease, border-color 0.22s ease",
               }}
             >
-              {item.icon}
-            </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                  maxWidth: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      borderRadius: "999px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "rgba(15,23,42,0.7)",
+                      color: "var(--card-icon-color)",
+                      fontSize: "18px",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.icon}
+                  </div>
 
-            {/* title */}
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 900 }}>
-              {item.title}
-            </h3>
+                  <h3
+                    style={{
+                      fontSize: "1.05rem",
+                      fontWeight: 700,
+                      margin: 0,
+                      textShadow: "0 1px 6px rgba(15,23,42,0.9)",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                </div>
 
-            {/* description */}
-            <p style={{ fontSize: "0.92rem", opacity: 0.7, lineHeight: "1.6" }}>
-              {item.description.slice(0, 110)}...
-            </p>
+                <p
+                  style={{
+                    fontSize: "0.88rem",
+                    lineHeight: 1.6,
+                    margin: 0,
+                    color: "rgba(241,245,249,0.9)",
+                    textShadow: "0 1px 4px rgba(15,23,42,0.85)",
+                  }}
+                >
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
-            {/* line */}
-            <div
-              style={{
-                marginTop: "18px",
-                width: "70px",
-                height: "4px",
-                borderRadius: "20px",
-                background: "linear-gradient(90deg, #0ea5e9, transparent)",
-              }}
-            />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* MAIN SECTION */}
-      <div
-        style={{
-          maxWidth: "1100px",
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-          gap: isTablet ? "40px" : "60px",
-          alignItems: "center",
-        }}
-      >
+        {/* MAIN SECTION */}
+        <div
+          style={{
+            maxWidth: "1100px",
+            margin: "0 auto",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "40px",
+            alignItems: "center",
+          }}
+        >
         {/* IMAGE */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <motion.img
@@ -258,6 +290,7 @@ export default function Services() {
             Discover More
           </motion.button>
         </div>
+      </div>
       </div>
     </section>
   );

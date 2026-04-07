@@ -20,7 +20,20 @@ import Chatbot from "./Chatbot";
 function ComplianceModal({ onClose }: { onClose: () => void }) {
   const { theme } = useTheme();
 
+  const [dontShowAgain, setDontShowAgain] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(10);
+
+  function closeCompliance() {
+    try {
+      if (dontShowAgain && typeof window !== "undefined") {
+        window.localStorage.setItem("hideComplianceModal", "true");
+      }
+    } catch {
+      // If localStorage is unavailable, silently ignore.
+    }
+
+    onClose();
+  }
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -28,7 +41,7 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
     const timeout = setTimeout(() => {
       setSecondsLeft((prev) => {
         if (prev <= 1) {
-          onClose();
+          closeCompliance();
           return 0;
         }
         return prev - 1;
@@ -36,7 +49,7 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [secondsLeft, onClose]);
+  }, [secondsLeft, closeCompliance]);
 
   const cardBackground =
     theme === "dark"
@@ -129,7 +142,7 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <button
-            onClick={onClose}
+            onClick={closeCompliance}
             aria-label="Skip data protection message"
             style={{
               borderRadius: 999,
@@ -167,6 +180,54 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
           >
             Skip
           </button>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 14,
+            marginTop: 8,
+          }}
+        >
+          <label
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              color: headingColor,
+              cursor: "pointer",
+              padding: "7px 12px",
+              borderRadius: 999,
+              background:
+                theme === "dark"
+                  ? "rgba(15,23,42,0.85)"
+                  : "rgba(219,234,254,0.9)",
+              border:
+                theme === "dark"
+                  ? "1px solid rgba(148,163,184,0.7)"
+                  : "1px solid rgba(148,163,184,0.5)",
+              boxShadow:
+                theme === "dark"
+                  ? "0 10px 25px rgba(15,23,42,0.9)"
+                  : "0 8px 18px rgba(148,163,184,0.4)",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={dontShowAgain}
+              onChange={(e) => setDontShowAgain(e.target.checked)}
+              style={{
+                width: 16,
+                height: 16,
+                cursor: "pointer",
+                accentColor: theme === "dark" ? "#38bdf8" : "#2563eb",
+              }}
+            />
+            <span>Don&apos;t show again</span>
+          </label>
         </div>
 
         <div style={{ paddingRight: 8 }}>
@@ -427,7 +488,7 @@ function WorkflowDashboard() {
 }
 
 export default function Hero() {
-  const [showCompliance, setShowCompliance] = useState(true);
+  const [showCompliance, setShowCompliance] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { theme } = useTheme();
 
@@ -451,6 +512,23 @@ export default function Hero() {
     dark: "#0ea5e9",
     light: "#3b82f6",
   };
+
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const stored = window.localStorage.getItem("hideComplianceModal");
+        if (stored === "true") {
+          setShowCompliance(false);
+        } else {
+          setShowCompliance(true);
+        }
+      } else {
+        setShowCompliance(true);
+      }
+    } catch {
+      setShowCompliance(true);
+    }
+  }, []);
 
   return (
     <>
@@ -485,40 +563,6 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: "easeOut" }}
           >
-            <motion.div
-              className="hero-eyebrow"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.05 }}
-            >
-              <span
-                className="hero-eyebrow-pill"
-                style={
-                  theme === "light"
-                    ? {
-                        background: "rgba(191,219,254,0.9)",
-                        color: "#0f172a",
-                        border: "1px solid rgba(148,163,184,0.7)",
-                      }
-                    : undefined
-                }
-              >
-                AI-powered workflow OS
-              </span>
-              <span
-                className="hero-eyebrow-text"
-                style={
-                  theme === "light"
-                    ? {
-                        color: "#475569",
-                      }
-                    : undefined
-                }
-              >
-                For modern clinics & care teams
-              </span>
-            </motion.div>
-
             {/* Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -612,7 +656,7 @@ export default function Hero() {
               </a>
 
               <Link
-                href="#services"
+                href="/projects"
                 style={{
                   padding: "14px 22px",
                   fontWeight: 600,
@@ -627,13 +671,6 @@ export default function Hero() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 10,
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const section = document.getElementById("services");
-                  if (section) {
-                    section.scrollIntoView({ behavior: "smooth" });
-                  }
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background =
@@ -650,7 +687,7 @@ export default function Hero() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                Explore Services
+                See Live Projects
               </Link>
             </motion.div>
 
@@ -661,7 +698,10 @@ export default function Hero() {
               transition={{ duration: 0.9, delay: 0.45, ease: "easeOut" }}
             >
               <span className="hero-trust-label">Trusted by clinics and care teams worldwide</span>
-              <span className="hero-trust-pill">
+              <span
+                className="hero-trust-pill"
+                style={{ display: "inline-flex", alignItems: "center" }}
+              >
                 <FaStar size={14} style={{ color: "#facc15", marginRight: 6 }} />
                 4.9 from 1,600+ verified patient reviews
               </span>
@@ -737,6 +777,7 @@ export default function Hero() {
                 {/* Phone Icon */}
                 <Link href="/contact">
                   <motion.div
+                    className="hero-signal-icon hero-signal-icon--call"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     animate={{ y: [0, -10, 0] }}
@@ -763,9 +804,10 @@ export default function Hero() {
                   </motion.div>
                 </Link>
 
-                {/* Video Icon */}
-                <Link href="/booking">
+                {/* Video Icon (now navigates to Contact) */}
+                <Link href="/contact">
                   <motion.div
+                    className="hero-signal-icon hero-signal-icon--video"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     animate={{ y: [0, 15, 0] }}
@@ -797,38 +839,40 @@ export default function Hero() {
                   </motion.div>
                 </Link>
 
-                {/* Message/Chat Icon - opens chatbot */}
-                <motion.button
-                  type="button"
-                  onClick={() => setIsChatOpen(true)}
-                  animate={{ x: [0, 8, 0] }}
-                  transition={{
-                    duration: 3.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.2,
-                  }}
-                  style={{
-                    position: "absolute",
-                    top: "47%",
-                    left: "-5%",
-                    width: 50,
-                    height: 50,
-                    borderRadius: "50%",
-                    background: "white",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-                    color: "#081A2F",
-                    zIndex: 12,
-                    border: "1px solid rgba(226, 232, 240, 0.8)",
-                    cursor: "pointer",
-                    borderWidth: 0,
-                  }}
-                >
-                  <FaCommentDots size={22} />
-                </motion.button>
+                {/* Message/Chat Icon (now navigates to Contact instead of opening chat) */}
+                <Link href="/contact">
+                  <motion.button
+                    className="hero-signal-icon hero-signal-icon--message"
+                    type="button"
+                    animate={{ x: [0, 8, 0] }}
+                    transition={{
+                      duration: 3.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 0.2,
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: "47%",
+                      left: "-5%",
+                      width: 50,
+                      height: 50,
+                      borderRadius: "50%",
+                      background: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                      color: "#081A2F",
+                      zIndex: 12,
+                      border: "1px solid rgba(226, 232, 240, 0.8)",
+                      cursor: "pointer",
+                      borderWidth: 0,
+                    }}
+                  >
+                    <FaCommentDots size={22} />
+                  </motion.button>
+                </Link>
               </div>
             </div>
           </motion.div>

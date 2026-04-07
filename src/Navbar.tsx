@@ -32,7 +32,7 @@ export default function Navbar() {
     const checkMobile = () => {
       const width = window.innerWidth;
       setViewportWidth(width);
-      setIsMobile(width < 768);
+      setIsMobile(width <= 768);
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -113,7 +113,7 @@ export default function Navbar() {
     : "0 10px 30px rgba(15,23,42,0.12)";
 
   const isTabletMid =
-    viewportWidth !== null && viewportWidth >= 769 && viewportWidth <= 999;
+    viewportWidth !== null && viewportWidth > 768 && viewportWidth <= 1024;
 
   return (
     <nav

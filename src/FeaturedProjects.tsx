@@ -61,6 +61,7 @@ export default function FeaturedProjects() {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
+          alignItems: "stretch",
           gap: "22px",
         }}
       >
@@ -150,6 +151,8 @@ function TiltCard({
         borderRadius: "22px",
         overflow: "hidden",
         cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
         background: isDark
           ? "linear-gradient(145deg, rgba(30,41,59,0.7), rgba(15,23,42,0.9))"
           : "linear-gradient(145deg, #ffffff, #f1f5f9)",
@@ -161,7 +164,13 @@ function TiltCard({
       }}
     >
       {/* IMAGE */}
-      <div style={{ position: "relative", height: "210px" }}>
+      <div
+        style={{
+          position: "relative",
+          height: "210px",
+          flexShrink: 0,
+        }}
+      >
         <Image
           src={project.thumbnailUrl || "/placeholder.png"}
           alt={project.title}
@@ -179,7 +188,15 @@ function TiltCard({
       </div>
 
       {/* CONTENT */}
-      <div style={{ padding: "18px", textAlign: "left" }}>
+      <div
+        style={{
+          padding: "18px",
+          textAlign: "left",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
         <span
           style={{
             fontSize: "11px",
@@ -214,9 +231,10 @@ function TiltCard({
 
         <div
           style={{
-            marginTop: "14px",
+            marginTop: "auto",
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <span style={{ fontSize: "0.75rem", color: "#22c55e" }}>

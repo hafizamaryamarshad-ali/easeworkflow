@@ -50,6 +50,47 @@ html {
 
   --glow-primary: 0 0 20px #0ea5e9, 0 0 40px #3b82f6;
   --glow-primary-light: 0 0 20px #3b82f6, 0 0 40px #60a5fa;
+
+  /* Theme-aware surface + card system */
+  --color-bg: #020617;
+  --color-text-primary: var(--text-light);
+  --color-text-secondary: var(--text-muted-dark);
+
+  --card-bg: rgba(15, 23, 42, 0.95);
+  --card-border: rgba(148, 163, 184, 0.25);
+  --card-border-strong: rgba(148, 163, 184, 0.4);
+  --card-shadow-soft: 0 18px 35px rgba(15, 23, 42, 0.85);
+  --card-shadow-soft-hover: 0 22px 45px rgba(15, 23, 42, 0.95);
+  --card-icon-bg: rgba(15, 23, 42, 0.9);
+  --card-icon-color: var(--primary);
+}
+
+[data-theme="dark"] {
+  --color-bg: #020617;
+  --color-text-primary: var(--text-light);
+  --color-text-secondary: var(--text-muted-dark);
+
+  --card-bg: rgba(15, 23, 42, 0.95);
+  --card-border: rgba(148, 163, 184, 0.25);
+  --card-border-strong: rgba(148, 163, 184, 0.4);
+  --card-shadow-soft: 0 18px 35px rgba(15, 23, 42, 0.85);
+  --card-shadow-soft-hover: 0 22px 45px rgba(15, 23, 42, 0.95);
+  --card-icon-bg: rgba(15, 23, 42, 0.9);
+  --card-icon-color: var(--primary);
+}
+
+[data-theme="light"] {
+  --color-bg: #f5f7ff;
+  --color-text-primary: var(--text-dark);
+  --color-text-secondary: var(--text-muted-light);
+
+  --card-bg: var(--surface-light);
+  --card-border: rgba(148, 163, 184, 0.35);
+  --card-border-strong: rgba(148, 163, 184, 0.5);
+  --card-shadow-soft: var(--shadow-light);
+  --card-shadow-soft-hover: var(--shadow-hover-light);
+  --card-icon-bg: rgba(59, 130, 246, 0.08);
+  --card-icon-color: #1d4ed8;
 }
 
 /* ================================
@@ -118,6 +159,105 @@ h2 {
 h3 {
   font-size: 1.4rem;
   font-weight: 700;
+}
+
+/* ================================
+   HERO ICON VIBRATION + SIGNAL WAVES
+================================= */
+
+.hero-signal-icon {
+  position: relative; /* keeps absolute layout from inline styles intact */
+  overflow: visible;
+}
+
+/* subtle vibration applied only to the icon content */
+.hero-signal-icon > svg,
+.hero-signal-icon > * svg {
+  animation: hero-icon-vibrate 2.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes hero-icon-vibrate {
+  0%, 60%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  65% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  70% {
+    transform: translate3d(1px, 0, 0);
+  }
+  75% {
+    transform: translate3d(-0.6px, 0, 0);
+  }
+  80% {
+    transform: translate3d(0.6px, 0, 0);
+  }
+}
+
+/* base side-wave shape (both sides use same keyframes, color per icon) */
+.hero-signal-icon::before,
+.hero-signal-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 34px;
+  height: 22px;
+  border-radius: 999px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-signal-icon::before {
+  left: -110%;
+  transform: translateY(-50%) scale(0.9) rotate(6deg);
+}
+
+.hero-signal-icon::after {
+  right: -110%;
+  transform: translateY(-50%) scale(0.9) rotate(-6deg);
+}
+
+/* 📞 Call icon waves */
+.hero-signal-icon--call::before,
+.hero-signal-icon--call::after {
+  border-color: rgba(59, 130, 246, 0.45);
+  animation: hero-wave-pulse 2.3s ease-out infinite;
+}
+
+/* 🎥 Video icon waves */
+.hero-signal-icon--video::before,
+.hero-signal-icon--video::after {
+  border-color: rgba(46, 196, 182, 0.5);
+  animation: hero-wave-pulse 2.6s ease-out infinite;
+}
+
+/* 💬 Message icon waves */
+.hero-signal-icon--message::before,
+.hero-signal-icon--message::after {
+  border-color: rgba(148, 163, 184, 0.55);
+  animation: hero-wave-pulse 2.8s ease-out infinite;
+}
+
+@keyframes hero-wave-pulse {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.7);
+  }
+  15% {
+    opacity: 0.35;
+  }
+  60% {
+    opacity: 0.05;
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) scale(1.15);
+  }
 }
 /* ================================
    SIDE BUTTON WRAPPER (EDGE FIXED)

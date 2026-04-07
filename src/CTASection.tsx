@@ -156,7 +156,7 @@ export default function CTA() {
         </a>
 
         <Link
-	      href="#services"
+          href="/projects"
           style={{
             padding: "16px 36px",
             fontWeight: 700,
@@ -168,13 +168,6 @@ export default function CTA() {
             textDecoration: "none",
             transition: "all 0.3s ease",
           }}
-          onClick={(e) => {
-            e.preventDefault();
-            const section = document.getElementById("services");
-            if (section) {
-              section.scrollIntoView({ behavior: "smooth" });
-            }
-          }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "#ffffff";
             e.currentTarget.style.color = "#0ea5e9";
@@ -184,7 +177,7 @@ export default function CTA() {
             e.currentTarget.style.color = "#ffffff";
           }}
         >
-          Explore Services
+          See Live Projects
         </Link>
       </motion.div>
 

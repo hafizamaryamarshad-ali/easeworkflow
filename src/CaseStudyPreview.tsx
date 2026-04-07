@@ -40,7 +40,7 @@ export default function CaseStudy() {
   return (
     <section
       style={{
-        padding: "120px 20px",
+        padding: "70px 20px 120px",
         background: isDark ? "#020617" : "#f8fafc",
         color: isDark ? "#fff" : "#0f172a",
       }}
