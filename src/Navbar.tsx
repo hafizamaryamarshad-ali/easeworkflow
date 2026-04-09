@@ -4,8 +4,19 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  FiHome, FiInfo, FiTool, FiHexagon, FiPenTool,
-  FiMail, FiPhone, FiSun, FiMoon, FiMenu, FiX, FiLock
+  FiHome,
+  FiInfo,
+  FiTool,
+  FiHexagon,
+  FiPenTool,
+  FiMail,
+  FiPhone,
+  FiSun,
+  FiMoon,
+  FiMenu,
+  FiX,
+  FiLock,
+  FiCalendar,
 } from "react-icons/fi";
 import { useTheme } from "./theme/ThemeProvider";
 import Image from "next/image";
@@ -42,6 +53,10 @@ export default function Navbar() {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  const openCalendly = () => {
+    window.open("https://calendly.com/iamumershaheen/30min", "_blank");
+  };
 
   const isLinkActive = (href: string) => {
     // Ignore pure hash links for active state
@@ -337,6 +352,38 @@ export default function Navbar() {
                 </Link>
               ))}
 
+              <button
+                type="button"
+                onClick={() => {
+                  openCalendly();
+                  setMenuOpen(false);
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  justifyContent: "center",
+                  color: navTextColor,
+                  fontWeight: 600,
+                  fontSize: "1rem",
+                  textDecoration: "none",
+                  padding: "10px 8px",
+                  borderRadius: "8px",
+                  width: "100%",
+                  textAlign: "center",
+                  borderBottom:
+                    theme === "dark"
+                      ? "1px solid rgba(255,255,255,0.07)"
+                      : "1px solid rgba(0,0,0,0.07)",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  marginTop: "2px",
+                }}
+              >
+                <FiCalendar size={14} /> Schedule Your Free Consultation
+              </button>
+
               <div
                 style={{
                   display: "flex",
@@ -396,7 +443,7 @@ export default function Navbar() {
                   justifyContent: "center",
                 }}
               >
-                <CalendlyButton mainColor={mainColor} />
+                {/* Calendly button is handled as a menu item on mobile */}
               </div>
             </div>
           )}

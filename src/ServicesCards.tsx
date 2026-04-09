@@ -14,14 +14,6 @@ const services = [
     icon: <FaRobot />,
   },
   {
-    title: "Smart Scheduling",
-    description:
-      "Automated scheduling and follow-ups to reduce manual effort and optimize patient flow.",
-    points: ["Auto reminders", "Smart booking", "Reduced no-shows"],
-    image: "/images/5.png",
-    icon: <FaCalendarAlt />,
-  },
-  {
     title: "Telemedicine",
     description:
       "Deliver seamless remote consultations with secure and reliable communication.",
@@ -29,6 +21,25 @@ const services = [
     image: "/images/6.png",
     icon: <FaVideo />,
   },
+  {
+    title: "Smart Scheduling",
+    description:
+      "Automated scheduling and follow-ups to reduce manual effort and optimize patient flow.",
+    points: ["Auto reminders", "Smart booking", "Reduced no-shows"],
+    image: "/images/5.png",
+    icon: <FaCalendarAlt />,
+  },
+];
+
+const leftImages = ["/images/schedulingg.png", "/images/our-services.png"];
+
+const leftDescription =
+  "Centralize patient data with secure, real-time EMR integration for better clinical decisions and efficiency.";
+
+const leftPoints = [
+  "Real-time patient records",
+  "Secure data sync",
+  "AI-assisted insights",
 ];
 
 const cardVariants = {
@@ -252,7 +263,7 @@ export default function Services() {
         {/* IMAGE */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <motion.img
-            src={services[1].image}
+            src={leftImages[0]}
             whileHover={{ scale: 1.02 }}
             style={{
               width: "100%",
@@ -264,7 +275,7 @@ export default function Services() {
           />
 
           <motion.img
-            src={services[2].image}
+            src={leftImages[1]}
             whileHover={{ scale: 1.02 }}
             style={{
               width: "100%",
@@ -286,10 +297,10 @@ export default function Services() {
             We are passionate about Healthcare
           </h2>
 
-          <p style={{ opacity: 0.65 }}>{services[0].description}</p>
+          <p style={{ opacity: 0.65 }}>{leftDescription}</p>
 
           <div style={{ marginTop: "22px" }}>
-            {services[0].points.map((point, i) => (
+            {leftPoints.map((point, i) => (
               <div
                 key={i}
                 style={{
