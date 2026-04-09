@@ -29,7 +29,9 @@ type CaseStudyQueryResult = {
   solution: string | any[];
   explanation?: any[] | null;
   problemSections?: { title?: string; description?: any[] | string | null }[] | null;
-  problemCards?: { title?: string; content?: any[] | string | null }[] | null;
+  problemCards?: { title?: string; content?: any[] | string | null; type?: string | null }[] | null;
+  solutionCards?: { title?: string; content?: any[] | string | null; type?: string | null }[] | null;
+  keyFeatures?: { title?: string; content?: any[] | string | null }[] | null;
   tools: string[] | null;
   results: (string | any)[] | null;
   galleryImageUrls?: string[] | null;
@@ -51,7 +53,9 @@ export type CaseStudy = {
   solution: any[];
   explanation: any[];
   problemSections: { title: string; description: any[] }[];
-  problemCards: { title: string; content: any[] }[];
+  problemCards: { title: string; content: any[]; type: string }[];
+  solutionCards: { title: string; content: any[]; type: string }[];
+  keyFeatures: { title: string; content: any[] }[];
   tools: string[];
   results: any[];
   featuredImageUrl: string | null;
@@ -99,6 +103,8 @@ const caseStudiesQuery = groq`
     explanation,
     problemSections,
     problemCards,
+    solutionCards,
+    keyFeatures,
     tools,
     results
   }
@@ -181,6 +187,24 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
               .map((card) => ({
                 title: card.title ?? "",
                 content: toBlocks(card.content ?? []),
+                type: (card.type ?? "problem") as string,
+              }))
+          : [],
+        solutionCards: Array.isArray(study.solutionCards)
+          ? study.solutionCards
+              .filter((card) => card && (card.title || card.content))
+              .map((card) => ({
+                title: card.title ?? "",
+                content: toBlocks(card.content ?? []),
+                type: (card.type ?? "solution") as string,
+              }))
+          : [],
+        keyFeatures: Array.isArray(study.keyFeatures)
+          ? study.keyFeatures
+              .filter((feature) => feature && (feature.title || feature.content))
+              .map((feature) => ({
+                title: feature.title ?? "",
+                content: toBlocks(feature.content ?? []),
               }))
           : [],
         tools: Array.isArray(study.tools) ? study.tools : [],

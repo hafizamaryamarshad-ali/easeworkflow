@@ -254,6 +254,58 @@ export default {
       ],
     },
 
+    {
+      name: "solutionCards",
+      title: "Solution Cards",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "solutionCard",
+          title: "Solution Card",
+          fields: [
+            { name: "title", title: "Title", type: "string" },
+            {
+              name: "content",
+              title: "Content",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      name: "keyFeatures",
+      title: "Key Features",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "keyFeature",
+          title: "Key Feature",
+          fields: [
+            { name: "title", title: "Title", type: "string" },
+            {
+              name: "content",
+              title: "Content",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
     { name: "tools", title: "Tools", type: "array", of: [{ type: "string" }] },
     {
       name: "results",

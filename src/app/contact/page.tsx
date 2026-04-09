@@ -2,9 +2,8 @@
 
 import type { CSSProperties, FormEvent } from "react";
 import { useState, useRef } from "react";
-import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
-import { FiMail, FiPhone, FiMapPin, FiTwitter, FiLinkedin } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin, FiTwitter, FiLinkedin, FiCheckCircle } from "react-icons/fi";
 import { useTheme } from "../../theme/ThemeProvider";
 
 export default function ContactPage() {
@@ -18,6 +17,8 @@ export default function ContactPage() {
   const [contactOpen, setContactOpen] = useState(false);
   const [contactLabel, setContactLabel] = useState("Preferred contact method");
   const contactSelectRef = useRef<HTMLSelectElement | null>(null);
+
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const inputStyle: CSSProperties = {
     width: "100%",
@@ -63,7 +64,7 @@ export default function ContactPage() {
     { Icon: FiLinkedin, top: "40%", left: "4%", size: 36, duration: 30, opacity: 0.09 },
   ];
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
 
@@ -72,25 +73,132 @@ export default function ContactPage() {
       return;
     }
 
-    // At this stage all required fields are valid. Send via EmailJS.
-    emailjs
-      .sendForm("service_x1nbyuf", "template_zs0puip", form, "mrGHg0-L-cfJJZz6x")
-      .then(() => {
-        alert("Message sent successfully! We'll be in touch soon.");
-        form.reset();
+    const formData = new FormData(form);
+
+    const estimatedBudgetRaw = String(formData.get("estimatedBudget") ?? "");
+    const preferredContactRaw = String(formData.get("preferredContactMethod") ?? "");
+
+    const name = String(formData.get("yourName") ?? "").trim();
+    const email = String(formData.get("workEmail") ?? "").trim();
+    const phone = String(formData.get("phoneNumber") ?? "").trim();
+    const shortMessage = String(formData.get("introMessage") ?? "").trim();
+    const company = String(formData.get("companyName") ?? "").trim();
+    const timeline = String(formData.get("timeline") ?? "").trim();
+    const projectDescription = String(formData.get("projectDescription") ?? "").trim();
+
+    const estimatedBudgetForApi = (() => {
+      switch (estimatedBudgetRaw) {
+        case "1k-5k":
+          return "$1k-$5k";
+        case "5k-10k":
+          return "$5k-$10k";
+        case "10k-15k":
+          return "$10k-$15k";
+        case "15k-20k":
+          return "$15k-$20k";
+        default:
+          return estimatedBudgetRaw;
+      }
+    })();
+
+    const preferredContactForApi = (() => {
+      switch (preferredContactRaw) {
+        case "email":
+          return "Email";
+        case "whatsapp":
+          return "WhatsApp";
+        default:
+          return preferredContactRaw;
+      }
+    })();
+
+    const basePayload: Record<string, string> = {
+      name,
+      email,
+      short_message: shortMessage,
+      estimated_budget: estimatedBudgetForApi,
+      project_description: projectDescription,
+      preferred_contact_method: preferredContactForApi,
+      phone,
+      company,
+      timeline,
+    };
+
+    const payload = Object.fromEntries(
+      Object.entries(basePayload).filter(([key, value]) => {
+        if (["phone", "company", "timeline"].includes(key)) {
+          return value !== "";
+        }
+        return true;
       })
-      .catch((error) => {
-        console.error("EmailJS error", error);
-        alert("Something went wrong while sending your message. Please try again.");
+    );
+
+    console.log("Contact form payload:", payload);
+
+    const apiUrl = "https://api.easeworkflow.com/api/contact";
+    console.log("Submitting contact form to:", apiUrl);
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
+
+      const rawText = await response.text();
+      let responseBody: unknown = null;
+
+      try {
+        responseBody = rawText ? JSON.parse(rawText) : null;
+      } catch {
+        responseBody = rawText;
+      }
+
+      console.log("Contact form API response:", response.status, responseBody);
+
+      if (!response.ok) {
+        const apiErrorMessage =
+          (responseBody &&
+            typeof responseBody === "object" &&
+            responseBody !== null &&
+            // @ts-expect-error - runtime shape from API
+            (responseBody.message || responseBody.error || responseBody.details)) ||
+          (typeof responseBody === "string" && responseBody) ||
+          `Request failed with status ${response.status}`;
+
+        console.warn("Contact form API error:", apiErrorMessage);
+        alert(String(apiErrorMessage));
+        return;
+      }
+
+      setShowSuccess(true);
+      window.setTimeout(() => setShowSuccess(false), 3500);
+      form.reset();
+      setBudgetLabel("Estimated budget");
+      setContactLabel("Preferred contact method");
+      setBudgetOpen(false);
+      setContactOpen(false);
+    } catch (error) {
+      console.error("Contact form submission error", error);
+      const isNetworkError = error instanceof TypeError && error.message === "Failed to fetch";
+
+      const message = isNetworkError
+        ? "Unable to reach the contact service. Please check your connection and try again."
+        : (error instanceof Error && error.message) ||
+          "Something went wrong while sending your message. Please try again.";
+
+      alert(String(message));
+    }
   };
 
   const budgetOptions = [
     { label: "Estimated budget", value: "", disabled: true },
-    { label: "Under $5,000", value: "under-5k" },
-    { label: "$5,000 – $15,000", value: "5k-15k" },
-    { label: "$15,000 – $50,000", value: "15k-50k" },
-    { label: "$50,000+", value: "50k-plus" },
+    { label: "$1,000 – $5,000", value: "1k-5k" },
+    { label: "$5,000 – $10,000", value: "5k-10k" },
+    { label: "$10,000 – $15,000", value: "10k-15k" },
+    { label: "$15,000 – $20,000", value: "15k-20k" },
   ];
 
   const contactOptions = [
@@ -865,6 +973,126 @@ export default function ContactPage() {
           </motion.div>
         </div>
       </div>
+
+      {showSuccess && (
+        <div
+          onClick={() => setShowSuccess(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(15,23,42,0.65)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+        >
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.9, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 8 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{
+              width: "100%",
+              maxWidth: 420,
+              borderRadius: 24,
+              padding: "24px 22px 20px",
+              background:
+                theme === "dark"
+                  ? "linear-gradient(145deg, rgba(15,23,42,0.98), rgba(15,23,42,0.94))"
+                  : "linear-gradient(145deg,#f9fafb,#e2e8f0)",
+              boxShadow:
+                theme === "dark"
+                  ? "0 24px 60px rgba(15,23,42,0.95)"
+                  : "0 22px 50px rgba(15,23,42,0.3)",
+              border:
+                theme === "dark"
+                  ? "1px solid rgba(34,197,94,0.5)"
+                  : "1px solid rgba(34,197,94,0.4)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 999,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background:
+                  theme === "dark"
+                    ? "rgba(22,163,74,0.16)"
+                    : "rgba(22,163,74,0.12)",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 0 0 1px rgba(22,163,74,0.45)"
+                    : "0 0 0 1px rgba(22,163,74,0.35)",
+                marginBottom: 4,
+              }}
+            >
+              <FiCheckCircle
+                size={30}
+                color="#22c55e"
+                style={{ strokeWidth: 2.4 }}
+              />
+            </div>
+
+            <h3
+              style={{
+                margin: 0,
+                fontSize: "1.3rem",
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                color: theme === "dark" ? "#e5f4ff" : "#064e3b",
+                textAlign: "center",
+              }}
+            >
+              Message Sent Successfully
+            </h3>
+            <p
+              style={{
+                margin: "6px 0 14px",
+                fontSize: "0.95rem",
+                lineHeight: 1.6,
+                textAlign: "center",
+                color: theme === "dark" ? "#9ca3af" : "#4b5563",
+              }}
+            >
+              Thank you! We will get back to you soon.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setShowSuccess(false)}
+              style={{
+                marginTop: 4,
+                padding: "9px 22px",
+                borderRadius: 999,
+                border: "none",
+                background:
+                  theme === "dark"
+                    ? "linear-gradient(90deg,#22c55e,#16a34a)"
+                    : "linear-gradient(90deg,#22c55e,#16a34a)",
+                color: "#f9fafb",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                cursor: "pointer",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 14px 32px rgba(22,163,74,0.5)"
+                    : "0 14px 30px rgba(22,163,74,0.4)",
+              }}
+            >
+              Close
+            </button>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }

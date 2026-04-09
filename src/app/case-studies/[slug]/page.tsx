@@ -4,10 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { PortableText } from "@portabletext/react";
-import { 
-  FiCheck, FiUsers, FiShoppingBag, FiTag, 
-  FiArrowUpRight, FiLock, FiLayers, FiMessageCircle, 
-  FiTrendingUp, FiCpu, FiTarget 
+import {
+  FiCheck,
+  FiUsers,
+  FiShoppingBag,
+  FiTag,
+  FiArrowUpRight,
+  FiLock,
+  FiLayers,
+  FiMessageCircle,
+  FiTrendingUp,
+  FiCpu,
+  FiTarget,
 } from "react-icons/fi";
 import { fetchCaseStudies, type CaseStudy } from "../../../lib/fetchCaseStudies";
 import { useTheme } from "../../../theme/ThemeProvider";
@@ -18,7 +26,10 @@ export default function CaseStudyDetail() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const slug = useMemo(() => (Array.isArray(params?.slug) ? params.slug[0] : params?.slug), [params?.slug]);
+  const slug = useMemo(
+    () => (Array.isArray(params?.slug) ? params.slug[0] : params?.slug),
+    [params?.slug]
+  );
   const [study, setStudy] = useState<CaseStudy | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -38,7 +49,7 @@ export default function CaseStudyDetail() {
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % images.length);
-    }, 3500); 
+    }, 3500);
     return () => clearInterval(interval);
   }, [study]);
 
@@ -53,6 +64,9 @@ export default function CaseStudyDetail() {
   const hasSolutionContent = hasExplanation || hasSolution;
   const hasTools = Array.isArray(study.tools) && study.tools.length > 0;
   const hasResults = Array.isArray(study.results) && study.results.length > 0;
+  const hasProblemCards = Array.isArray(study.problemCards) && study.problemCards.length > 0;
+  const hasSolutionCards = Array.isArray(study.solutionCards) && study.solutionCards.length > 0;
+  const hasKeyFeatures = Array.isArray(study.keyFeatures) && study.keyFeatures.length > 0;
 
   const colors = {
     bg: isDark ? "#0a0c10" : "#fbfdfd",
@@ -62,45 +76,117 @@ export default function CaseStudyDetail() {
     border: isDark ? "rgba(255, 255, 255, 0.08)" : "#f1f5f9",
     accent: "#4f46e5",
     secondary: "#00d1ff",
-    line: isDark ? "rgba(79, 70, 229, 0.3)" : "rgba(79, 70, 229, 0.15)"
+    line: isDark ? "rgba(79, 70, 229, 0.3)" : "rgba(79, 70, 229, 0.15)",
   };
 
   return (
-    <div style={{ backgroundColor: colors.bg, color: colors.text, minHeight: "100vh", transition: "0.4s ease" }}>
-      
+    <div
+      style={{
+        backgroundColor: colors.bg,
+        color: colors.text,
+        minHeight: "100vh",
+        transition: "0.4s ease",
+      }}
+    >
       {/* 1. HERO SECTION (With Slider) */}
-      <section style={{ width: "100%", padding: "80px 20px 0", background: isDark ? `radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), ${colors.bg}` : "linear-gradient(135deg, #e0f2e9 0%, #ffffff 100%)", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        
-        <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ color: colors.accent, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginBottom: '15px' }}>
-            {study.industry ? `${study.industry} Case Study` : "Case Study"}
+      <section
+        style={{
+          width: "100%",
+          padding: "80px 20px 0",
+          background: isDark
+            ? `radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), ${colors.bg}`
+            : "linear-gradient(135deg, #e0f2e9 0%, #ffffff 100%)",
+          textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            color: colors.accent,
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: "2px",
+            fontSize: "0.8rem",
+            marginBottom: "15px",
+          }}
+        >
+          {study.industry ? `${study.industry} Case Study` : "Case Study"}
         </motion.p>
-        
-        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, maxWidth: "800px", margin: "0 auto 50px" }}>
-            {study.title}
+
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          style={{
+            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontWeight: 900,
+            maxWidth: "800px",
+            margin: "0 auto 50px",
+          }}
+        >
+          {study.title}
         </motion.h1>
-        
+
         {/* Auto-Slider */}
         {hasSliderImages && (
-          <div style={{ position: "relative", width: "100%", maxWidth: "850px", height: "480px", margin: "0 auto", display: "flex", justifyContent: "center", alignItems: "flex-end" }}>
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              maxWidth: "850px",
+              height: "480px",
+              margin: "0 auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
+            }}
+          >
             <AnimatePresence mode="wait">
-              <motion.img 
+              <motion.img
                 key={currentSlide}
-                src={sliderImages[currentSlide] as string} 
+                src={sliderImages[currentSlide] as string}
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.02 }}
                 transition={{ duration: 0.8 }}
-                style={{ 
-                  width: "100%", height: "100%", objectFit: "cover", borderRadius: "40px", 
-                  zIndex: 2, marginBottom: "-40px", boxShadow: "0 30px 70px rgba(0,0,0,0.3)", 
-                  border: `8px solid ${colors.card}` 
-                }} 
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "40px",
+                  zIndex: 2,
+                  marginBottom: "-40px",
+                  boxShadow: "0 30px 70px rgba(0,0,0,0.3)",
+                  border: `8px solid ${colors.card}`,
+                }}
               />
             </AnimatePresence>
-            
-            <div style={{ position: 'absolute', bottom: '0', display: 'flex', gap: '10px', zIndex: 10 }}>
+
+            <div
+              style={{
+                position: "absolute",
+                bottom: "0",
+                display: "flex",
+                gap: "10px",
+                zIndex: 10,
+              }}
+            >
               {sliderImages.map((_, i) => (
-                <div key={i} style={{ width: currentSlide === i ? '30px' : '10px', height: '10px', borderRadius: '10px', background: currentSlide === i ? colors.accent : colors.subText, transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)' }} />
+                <div
+                  key={i}
+                  style={{
+                    width: currentSlide === i ? "30px" : "10px",
+                    height: "10px",
+                    borderRadius: "10px",
+                    background:
+                      currentSlide === i ? colors.accent : colors.subText,
+                    transition:
+                      "0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -108,7 +194,7 @@ export default function CaseStudyDetail() {
       </section>
 
       {/* 2. PROBLEM SECTION (Rocket Replaced with Teddy Bear 🐻) */}
-      {hasProblem && (
+      {hasProblemCards && (
         <section style={{ padding: "140px 20px 100px", position: "relative" }}>
           <div style={{ textAlign: 'center', position: 'relative', zIndex: 2, marginBottom: '80px' }}>
             {/* Rocky Remove Kiya, Teddy Bear Lagaya 🐻 */}
@@ -129,22 +215,36 @@ export default function CaseStudyDetail() {
           </svg>
 
           <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "25px", position: 'relative', zIndex: 2 }}>
-            {[
-              {t:"Integration Issues", i:<FiLock/>}, {t:"User Friction", i:<FiUsers/>}, 
-              {t:"Inconsistency", i:<FiTag/>}, {t:"Performance", i:<FiShoppingBag/>}
-            ].map((item, i) => (
-                <motion.div key={i} whileHover={{ y: -10 }} style={{ background: colors.card, padding: '45px 35px', borderRadius: '35px', border: `1px solid ${colors.border}`, textAlign: 'center', backdropFilter: 'blur(10px)' }}>
-                    <div style={{ fontSize: '1.8rem', color: colors.accent, marginBottom: '20px' }}>{item.i}</div>
-                    <h4 style={{ fontWeight: 800, marginBottom: '12px', fontSize: '1.2rem' }}>{item.t}</h4>
-                    <p style={{ fontSize: '0.95rem', color: colors.subText }}>Strategic resolution of {item.t.toLowerCase()} for the {study.title} ecosystem.</p>
+            {study.problemCards!.map((card, i) => {
+              const icon = card.type === "solution" ? <FiTarget /> : <FiLock />;
+
+              return (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -10 }}
+                  style={{
+                    background: colors.card,
+                    padding: '45px 35px',
+                    borderRadius: '35px',
+                    border: `1px solid ${colors.border}`,
+                    textAlign: 'center',
+                    backdropFilter: 'blur(10px)',
+                  }}
+                >
+                  <div style={{ fontSize: '1.8rem', color: colors.accent, marginBottom: '20px' }}>{icon}</div>
+                  <h4 style={{ fontWeight: 800, marginBottom: '12px', fontSize: '1.2rem' }}>{card.title}</h4>
+                  <div style={{ fontSize: '0.95rem', color: colors.subText }}>
+                    <PortableText value={card.content} />
+                  </div>
                 </motion.div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}
 
       {/* 3. SOLUTION SECTION */}
-      {hasSolutionContent && (
+      {(hasSolutionContent || hasSolutionCards) && (
         <section style={{ padding: "100px 20px", background: isDark ? "rgba(255,255,255,0.02)" : "#f8fafc" }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             <div style={{ textAlign: 'center', marginBottom: '70px' }}>
@@ -157,20 +257,98 @@ export default function CaseStudyDetail() {
                   )}
                 </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
-                {[{t: "Scalability", i: <FiTarget />, c: "#4f46e5"}, {t: "Visual Design", i: <FiLayers />, c: "#00d1ff"}, {t: "Seamless Experience", i: <FiTrendingUp />, c: "#22c55e"}].map((sol, i) => (
-                    <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 20 }} style={{ background: colors.card, padding: '50px 40px', borderRadius: '40px', border: `1px solid ${colors.border}` }}>
-                        <div style={{ width: '65px', height: '65px', background: sol.c, color: '#fff', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', marginBottom: '30px', boxShadow: `0 15px 30px ${sol.c}33` }}>{sol.i}</div>
-                        <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '15px' }}>{sol.t}</h3>
-                        <p style={{ color: colors.subText, lineHeight: 1.6 }}>Our approach focused on {sol.t.toLowerCase()}, ensuring high-impact results and long-term viability.</p>
+            {hasSolutionCards && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
+                {study.solutionCards!.map((card, i) => {
+                  const isProblem = card.type === "problem";
+                  const icon = isProblem ? <FiLock /> : <FiTarget />;
+                  const bgColor = isProblem ? "#4b5563" : "#22c55e";
+
+                  return (
+                    <motion.div
+                      key={i}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      style={{ background: colors.card, padding: '50px 40px', borderRadius: '40px', border: `1px solid ${colors.border}` }}
+                    >
+                      <div style={{ width: '65px', height: '65px', background: bgColor, color: '#fff', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', marginBottom: '30px', boxShadow: `0 15px 30px ${bgColor}33` }}>
+                        {icon}
+                      </div>
+                      <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '15px' }}>{card.title}</h3>
+                      <div style={{ color: colors.subText, lineHeight: 1.6 }}>
+                        <PortableText value={card.content} />
+                      </div>
                     </motion.div>
-                ))}
-            </div>
+                  );
+                })}
+              </div>
+            )}
             </div>
           </section>
           )}
 
-      {/* 4. TECH & RESULTS */}
+      {/* 4. KEY FEATURES SECTION */}
+      {hasKeyFeatures && (
+        <section style={{ padding: "100px 20px", background: isDark ? "rgba(10,12,16,0.9)" : "#ffffff" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={{ textAlign: 'center', marginBottom: '70px' }}>
+              <h2 style={{ fontSize: '3rem', fontWeight: 900 }}>Key Features</h2>
+              <p style={{ maxWidth: '700px', margin: '20px auto 0', color: colors.subText, fontSize: '1.05rem', lineHeight: 1.7 }}>
+                These were the standout elements that made this solution effective.
+              </p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', maxWidth: '820px', margin: '0 auto' }}>
+              {study.keyFeatures!.map((feature, i) => (
+                <motion.div
+                  key={i}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileHover={{ y: -3, scale: 1.01 }}
+                  transition={{ duration: 0.2 }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '16px',
+                    padding: '20px 22px',
+                    borderRadius: '24px',
+                    border: `1px solid ${colors.border}`,
+                    background: isDark
+                      ? 'linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.85))'
+                      : 'linear-gradient(135deg, #f8fafc, #ffffff)',
+                    boxShadow: isDark
+                      ? '0 18px 40px rgba(0,0,0,0.45)'
+                      : '0 14px 30px rgba(148,163,184,0.25)',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      borderRadius: '999px',
+                      background: 'rgba(34,197,94,0.15)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: '3px',
+                    }}
+                  >
+                    <FiCheck color="#22c55e" strokeWidth={3} />
+                  </div>
+                  <div style={{ color: colors.subText, fontSize: '0.98rem', lineHeight: 1.7 }}>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: colors.text, marginBottom: '4px' }}>
+                      {feature.title}
+                    </div>
+                    <PortableText value={feature.content} />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 5. TECH & RESULTS */}
       <section style={{ padding: "120px 20px", maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px' }}>
             {hasTools && (
