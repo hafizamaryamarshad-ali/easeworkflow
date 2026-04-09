@@ -116,6 +116,38 @@ export default {
       ],
     },
     {
+      name: "problemSections",
+      title: "Problem Sections",
+      type: "array",
+      validation: (Rule) => Rule.required().min(4).max(4),
+      of: [
+        {
+          type: "object",
+          name: "problemSection",
+          title: "Problem Section",
+          fields: [
+            {
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "description",
+              title: "Description",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                },
+              ],
+              validation: (Rule) => Rule.required().min(1),
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "solution",
       title: "Solution",
       type: "array",
@@ -193,6 +225,31 @@ export default {
               },
             ],
           },
+        },
+      ],
+    },
+    {
+      name: "problemCards",
+      title: "Problem Cards",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "problemCard",
+          title: "Problem Card",
+          fields: [
+            { name: "title", title: "Title", type: "string" },
+            {
+              name: "content",
+              title: "Content",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                },
+              ],
+            },
+          ],
         },
       ],
     },

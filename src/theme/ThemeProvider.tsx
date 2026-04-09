@@ -22,7 +22,8 @@ const THEME_STORAGE_KEY = "theme";
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  // Default to light theme; localStorage can still override after hydration.
+  const [theme, setTheme] = useState<Theme>("light");
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {

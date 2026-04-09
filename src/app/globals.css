@@ -51,18 +51,18 @@ html {
   --glow-primary: 0 0 20px #0ea5e9, 0 0 40px #3b82f6;
   --glow-primary-light: 0 0 20px #3b82f6, 0 0 40px #60a5fa;
 
-  /* Theme-aware surface + card system */
-  --color-bg: #020617;
-  --color-text-primary: var(--text-light);
-  --color-text-secondary: var(--text-muted-dark);
+  /* Theme-aware surface + card system (LIGHT as default) */
+  --color-bg: #f5f7ff;
+  --color-text-primary: var(--text-dark);
+  --color-text-secondary: var(--text-muted-light);
 
-  --card-bg: rgba(15, 23, 42, 0.95);
-  --card-border: rgba(148, 163, 184, 0.25);
-  --card-border-strong: rgba(148, 163, 184, 0.4);
-  --card-shadow-soft: 0 18px 35px rgba(15, 23, 42, 0.85);
-  --card-shadow-soft-hover: 0 22px 45px rgba(15, 23, 42, 0.95);
-  --card-icon-bg: rgba(15, 23, 42, 0.9);
-  --card-icon-color: var(--primary);
+  --card-bg: var(--surface-light);
+  --card-border: rgba(148, 163, 184, 0.35);
+  --card-border-strong: rgba(148, 163, 184, 0.5);
+  --card-shadow-soft: var(--shadow-light);
+  --card-shadow-soft-hover: var(--shadow-hover-light);
+  --card-icon-bg: rgba(59, 130, 246, 0.08);
+  --card-icon-color: #1d4ed8;
 }
 
 [data-theme="dark"] {
@@ -79,20 +79,6 @@ html {
   --card-icon-color: var(--primary);
 }
 
-[data-theme="light"] {
-  --color-bg: #f5f7ff;
-  --color-text-primary: var(--text-dark);
-  --color-text-secondary: var(--text-muted-light);
-
-  --card-bg: var(--surface-light);
-  --card-border: rgba(148, 163, 184, 0.35);
-  --card-border-strong: rgba(148, 163, 184, 0.5);
-  --card-shadow-soft: var(--shadow-light);
-  --card-shadow-soft-hover: var(--shadow-hover-light);
-  --card-icon-bg: rgba(59, 130, 246, 0.08);
-  --card-icon-color: #1d4ed8;
-}
-
 /* ================================
    BASE STYLES
 ================================= */
@@ -107,12 +93,12 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  color: var(--text-light);
+  color: var(--text-dark);
   overflow-x: hidden;
   min-height: 100vh;
 
-  /* ✅ FIX: match Hero EXACTLY */
-  background: var(--bg-gradient-dark);
+  /* Default to light-theme background; ThemeProvider will override per theme on hydration */
+  background: #f5faff;
   background-size: 600% 600%;
 }
 
@@ -519,6 +505,83 @@ h3 {
     display: none !important;
   }
 
+  /* Process section: stack content vertically and center on tablet/mobile */
+  .process-section {
+    padding: 60px 20px;
+  }
+
+  .process-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 30px !important;
+    transform: none !important;
+  }
+
+  .process-grid > div {
+    width: 100% !important;
+    max-width: 520px;
+  }
+
+  .process-orbit-wrapper {
+    height: auto !important;
+  }
+
+  .process-orbit {
+    width: 320px !important;
+    height: 320px !important;
+  }
+
+  /* Hero mobile: stack text over image, icons as row under image */
+  .hero-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .hero-left {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-cta-row {
+    justify-content: center;
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-image-shell {
+    flex-direction: column !important;
+    align-items: center !important;
+    transform: translateX(0) !important;
+  }
+
+  .hero-right img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 360px;
+  }
+
+  .hero-icon-row {
+    position: static;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 14px;
+  }
+
+  .hero-icon-row .hero-signal-icon {
+    position: static !important;
+    transform: scale(0.8);
+  }
+
   .testimonials-grid {
     grid-template-columns: 1fr !important;
   }
@@ -536,6 +599,84 @@ h3 {
 
   .testimonials-grid {
     gap: 56px !important;
+  }
+
+  /* About page: founder cinematic section responsive layout */
+  .about-founder-section {
+    margin: 140px auto 90px !important;
+    padding: 0 20px !important;
+    overflow: hidden;
+  }
+
+  .about-founder-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .about-founder-image-col {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .about-founder-image-shell {
+    max-width: 450px !important;
+    margin: 0 auto;
+  }
+
+  .about-founder-ambient {
+    width: 520px !important;
+    height: 520px !important;
+    top: -140px !important;
+    left: -160px !important;
+    filter: blur(100px) !important;
+  }
+
+  .about-founder-text-col {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .about-founder-text-col p {
+    max-width: 100%;
+  }
+
+  .about-founder-meta-stats {
+    justify-content: center;
+  }
+
+  /* About page: vision bento strip stacks vertically on smaller screens */
+  .about-vision-grid {
+    margin-top: 90px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .about-vision-grid > * {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* About page: core values grid stacks vertically */
+  .about-values-section {
+    padding: 0 20px !important;
+  }
+
+  .about-values-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .about-values-grid > * {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
   }
 }
 

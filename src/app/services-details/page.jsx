@@ -170,7 +170,7 @@ export default function ServicesDetails() {
                   "linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03))",
                 border: "1px solid rgba(255,255,255,0.15)",
                 backdropFilter: "blur(22px)",
-                cursor: "pointer",
+                cursor: "default",
                 overflow: "hidden",
               }}
             >

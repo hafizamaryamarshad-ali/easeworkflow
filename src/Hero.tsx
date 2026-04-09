@@ -542,9 +542,10 @@ export default function Hero() {
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
+          justifyContent: "center",
           alignItems: "center",
-          padding: "40px 20px 0",
+          padding: "40px 20px 40px",
+          minHeight: "100vh",
           background:
             theme === "dark"
               ? "radial-gradient(circle at top, #020617 0, #020617 40%, #0f172a 100%)"
@@ -564,31 +565,32 @@ export default function Hero() {
             transition={{ duration: 0.9, ease: "easeOut" }}
           >
             {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}
-              style={{
-                margin: 0,
-                fontSize: "clamp(2.4rem, 5.4vw, 3.4rem)",
-                fontWeight: 800,
-                lineHeight: 1.15,
-                letterSpacing: "-0.03em",
-                maxWidth: "28ch",
-                zIndex: 2,
-              }}
-            >
-              Smart Clinic Automation for
-              <span
-                style={{
-                  color: theme === "dark" ? "#38bdf8" : "#0f766e",
-                  marginLeft: 6,
-                }}
-              >
-                Better Patient Care
-              </span>
-            </motion.h1>
-
+<motion.h1
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}
+  style={{
+    margin: 0,
+    fontSize: "clamp(2.4rem, 5.4vw, 3.4rem)",
+    fontWeight: 800,
+    lineHeight: 1.15,
+    letterSpacing: "-0.03em",
+    maxWidth: "28ch",
+    zIndex: 2,
+    display: "inline-block", // Isse spacing control behtar hoti hai
+  }}
+>
+  Smart Clinic Automation for{" "}
+  <span
+    style={{
+      color: theme === "dark" ? "#38bdf8" : "#38bdf8",
+      display: "inline-block", // Padding/Margin apply karne ke liye
+      marginLeft: "-2px", // Proper unit add kiya
+    }}
+  >
+    Better Patient Care
+  </span>
+</motion.h1>
             {/* Subheading */}
             <motion.p
               initial={{ opacity: 0, y: 18 }}
@@ -652,7 +654,7 @@ export default function Hero() {
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                Book Appointment
+                Book Free Workflow Audit
               </a>
 
               <Link
@@ -751,6 +753,7 @@ export default function Hero() {
 
               {/* Main Doctor Image - Centered and Large */}
               <div
+                className="hero-image-shell"
                 style={{
                   position: "relative",
                   width: "100%",
@@ -762,7 +765,7 @@ export default function Hero() {
                 }}
               >
                 <img
-                  src="/images/hero3.png"
+                  src="/images/new hero.png"
                   alt="Healthcare Professional"
                   style={{
                     height: "100%",
@@ -774,105 +777,108 @@ export default function Hero() {
                   }}
                 />
 
-                {/* Phone Icon */}
-                <Link href="/contact">
-                  <motion.div
-                    className="hero-signal-icon hero-signal-icon--call"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    style={{
-                      position: "absolute",
-                      top: "20%",
-                      left: "-5%",
-                      width: 55,
-                      height: 55,
-                      borderRadius: "50%",
-                      background: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-                      color: "#081A2F",
-                      zIndex: 10,
-                      border: "1px solid rgba(226, 232, 240, 0.8)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <FaPhoneAlt size={22} />
-                  </motion.div>
-                </Link>
+                {/* Floating icons: desktop = absolute on image edge, mobile = row below via CSS */}
+                <div className="hero-icon-row">
+                  {/* Phone Icon */}
+                  <Link href="/contact">
+                    <motion.div
+                      className="hero-signal-icon hero-signal-icon--call"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      animate={{ y: [0, -10, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      style={{
+                        position: "absolute",
+                        top: "20%",
+                        left: "-5%",
+                        width: 55,
+                        height: 55,
+                        borderRadius: "50%",
+                        background: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                        color: "#081A2F",
+                        zIndex: 10,
+                        border: "1px solid rgba(226, 232, 240, 0.8)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <FaPhoneAlt size={22} />
+                    </motion.div>
+                  </Link>
 
-                {/* Video Icon (now navigates to Contact) */}
-                <Link href="/contact">
-                  <motion.div
-                    className="hero-signal-icon hero-signal-icon--video"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    animate={{ y: [0, 15, 0] }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.5,
-                    }}
-                    style={{
-                      position: "absolute",
-                      top: "70%",
-                      left: "-5%",
-                      width: 55,
-                      height: 55,
-                      borderRadius: "50%",
-                      background: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 12px 30px rgba(0,0,0,0.1)",
-                      color: "#2EC4B6",
-                      zIndex: 10,
-                      border: "1px solid rgba(226, 232, 240, 0.8)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <FaVideo size={26} />
-                  </motion.div>
-                </Link>
+                  {/* Video Icon (now navigates to Contact) */}
+                  <Link href="/contact">
+                    <motion.div
+                      className="hero-signal-icon hero-signal-icon--video"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      animate={{ y: [0, 15, 0] }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.5,
+                      }}
+                      style={{
+                        position: "absolute",
+                        top: "70%",
+                        left: "-5%",
+                        width: 55,
+                        height: 55,
+                        borderRadius: "50%",
+                        background: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 12px 30px rgba(0,0,0,0.1)",
+                        color: "#2EC4B6",
+                        zIndex: 10,
+                        border: "1px solid rgba(226, 232, 240, 0.8)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <FaVideo size={26} />
+                    </motion.div>
+                  </Link>
 
-                {/* Message/Chat Icon (now navigates to Contact instead of opening chat) */}
-                <Link href="/contact">
-                  <motion.button
-                    className="hero-signal-icon hero-signal-icon--message"
-                    type="button"
-                    animate={{ x: [0, 8, 0] }}
-                    transition={{
-                      duration: 3.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.2,
-                    }}
-                    style={{
-                      position: "absolute",
-                      top: "47%",
-                      left: "-5%",
-                      width: 50,
-                      height: 50,
-                      borderRadius: "50%",
-                      background: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-                      color: "#081A2F",
-                      zIndex: 12,
-                      border: "1px solid rgba(226, 232, 240, 0.8)",
-                      cursor: "pointer",
-                      borderWidth: 0,
-                    }}
-                  >
-                    <FaCommentDots size={22} />
-                  </motion.button>
-                </Link>
+                  {/* Message/Chat Icon (now navigates to Contact instead of opening chat) */}
+                  <Link href="/contact">
+                    <motion.button
+                      className="hero-signal-icon hero-signal-icon--message"
+                      type="button"
+                      animate={{ x: [0, 8, 0] }}
+                      transition={{
+                        duration: 3.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.2,
+                      }}
+                      style={{
+                        position: "absolute",
+                        top: "47%",
+                        left: "-5%",
+                        width: 50,
+                        height: 50,
+                        borderRadius: "50%",
+                        background: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                        color: "#081A2F",
+                        zIndex: 12,
+                        border: "1px solid rgba(226, 232, 240, 0.8)",
+                        cursor: "pointer",
+                        borderWidth: 0,
+                      }}
+                    >
+                      <FaCommentDots size={22} />
+                    </motion.button>
+                  </Link>
+                </div>
               </div>
             </div>
           </motion.div>

@@ -10,11 +10,7 @@ export default function BackButton() {
   const router = useRouter();
   const pathname = usePathname();
   const { theme } = useTheme();
-
-  // Hide on the root landing page where a back button is less useful
-  if (pathname === "/") {
-    return null;
-  }
+  const isRoot = pathname === "/";
 
   const handleClick = useCallback(() => {
     if (typeof window !== "undefined" && window.history.length > 1) {
@@ -23,6 +19,11 @@ export default function BackButton() {
       router.push("/");
     }
   }, [router]);
+
+  // Hide on the root landing page where a back button is less useful
+  if (isRoot) {
+    return null;
+  }
 
   return (
     <BackButtonWrapper>

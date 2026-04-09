@@ -28,7 +28,7 @@ export default function Footer() {
     },
     { 
       icon: <FaYoutube size={18} />, 
-      href: "https://www.youtube.com/@easeworkflow", // Link ki jagah chorr di hai yahan aap add kar sakti hain
+      href: "https://www.youtube.com/@easeworkflow", 
       label: "YouTube" 
     },
     // { 
@@ -183,7 +183,7 @@ export default function Footer() {
                 Turn your idea into a powerful product with modern tech.
               </p>
               <button
-                onClick={() => setOpen(true)}
+                onClick={() => router.push("/contact")}
                 style={{
                   marginTop: "15px",
                   padding: "12px 22px",
@@ -198,6 +198,7 @@ export default function Footer() {
                 Start Project →
               </button>
             </div>
+
           </div>
 
           <div

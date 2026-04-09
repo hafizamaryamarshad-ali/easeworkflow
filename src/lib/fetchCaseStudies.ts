@@ -28,6 +28,8 @@ type CaseStudyQueryResult = {
   problem: string | any[];
   solution: string | any[];
   explanation?: any[] | null;
+  problemSections?: { title?: string; description?: any[] | string | null }[] | null;
+  problemCards?: { title?: string; content?: any[] | string | null }[] | null;
   tools: string[] | null;
   results: (string | any)[] | null;
   galleryImageUrls?: string[] | null;
@@ -48,6 +50,8 @@ export type CaseStudy = {
   problem: any[];
   solution: any[];
   explanation: any[];
+  problemSections: { title: string; description: any[] }[];
+  problemCards: { title: string; content: any[] }[];
   tools: string[];
   results: any[];
   featuredImageUrl: string | null;
@@ -93,6 +97,8 @@ const caseStudiesQuery = groq`
     problem,
     solution,
     explanation,
+    problemSections,
+    problemCards,
     tools,
     results
   }
@@ -161,6 +167,22 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
         problem: toBlocks(study.problem),
         solution: toBlocks(study.solution),
         explanation: Array.isArray(study.explanation) ? study.explanation : [],
+        problemSections: Array.isArray(study.problemSections)
+          ? study.problemSections
+              .filter((section) => section && (section.title || section.description))
+              .map((section) => ({
+                title: section.title ?? "",
+                description: toBlocks(section.description ?? []),
+              }))
+          : [],
+        problemCards: Array.isArray(study.problemCards)
+          ? study.problemCards
+              .filter((card) => card && (card.title || card.content))
+              .map((card) => ({
+                title: card.title ?? "",
+                content: toBlocks(card.content ?? []),
+              }))
+          : [],
         tools: Array.isArray(study.tools) ? study.tools : [],
         results: Array.isArray(study.results)
           ? study.results.flatMap((item) => toBlocks(item))

@@ -10,7 +10,7 @@ const services = [
     description:
       "Centralize patient data with secure, real-time EMR integration for better clinical decisions and efficiency.",
     points: ["Real-time patient records", "Secure data sync", "AI-assisted insights"],
-    image: "/images/our-services.png",
+    image: "/images/4.png",
     icon: <FaRobot />,
   },
   {
@@ -18,7 +18,7 @@ const services = [
     description:
       "Automated scheduling and follow-ups to reduce manual effort and optimize patient flow.",
     points: ["Auto reminders", "Smart booking", "Reduced no-shows"],
-    image: "/images/schedulingg.png",
+    image: "/images/5.png",
     icon: <FaCalendarAlt />,
   },
   {
@@ -26,10 +26,35 @@ const services = [
     description:
       "Deliver seamless remote consultations with secure and reliable communication.",
     points: ["Video consultations", "Secure calls", "Instant access"],
-    image: "/images/our-services.png",
+    image: "/images/6.png",
     icon: <FaVideo />,
   },
 ];
+
+const cardVariants = {
+  rest: {
+    y: 0,
+    scale: 1,
+    boxShadow: "var(--card-shadow-soft)",
+  },
+  hover: {
+    y: -6,
+    scale: 1.02,
+    boxShadow: "var(--card-shadow-soft-hover)",
+  },
+};
+
+const imageVariants = {
+  rest: {
+    scale: 1,
+    filter: "brightness(0.9) contrast(1.1)",
+  },
+  hover: {
+    scale: 1.1,
+    filter: "brightness(1.1) contrast(1.1)",
+    transition: { duration: 0.35 },
+  },
+};
 
 export default function Services() {
   const router = useRouter();
@@ -110,39 +135,55 @@ export default function Services() {
           {services.map((item, i) => (
             <motion.div
               key={i}
-              whileHover={{
-                y: -6,
-                scale: 1.02,
-                backgroundSize: "115%",
-                boxShadow: "var(--card-shadow-soft-hover)",
-              }}
+              initial="rest"
+              animate="rest"
+              whileHover="hover"
+              variants={cardVariants}
               transition={{ duration: 0.22, ease: "easeOut" }}
               style={{
                 position: "relative",
                 borderRadius: "20px",
                 overflow: "hidden",
-                minHeight: "260px",
-                display: "flex",
-                alignItems: "flex-end",
-                padding: "20px 18px",
-                color: "var(--text-light)",
-                boxShadow: "var(--card-shadow-soft)",
-                cursor: "pointer",
-                backgroundImage: `linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.4), rgba(15,23,42,0.05)), url(${item.image})`,
-                backgroundSize: "110%",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
+                cursor: "default",
                 border: "1px solid var(--card-border)",
-                transition:
-                  "box-shadow 0.22s ease, transform 0.22s ease, background-size 0.22s ease, border-color 0.22s ease",
+                background: "rgba(15,23,42,0.96)",
               }}
             >
+              <motion.img
+                src={item.image}
+                variants={imageVariants}
+                style={{
+                  width: "100%",
+                  height: "250px",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  filter: "brightness(0.9) contrast(1.1)",
+                  transition: "transform 0.35s ease, filter 0.35s ease",
+                  display: "block",
+                }}
+              />
+
               <div
                 style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(to top, rgba(15,23,42,0.94) 0%, rgba(15,23,42,0.78) 35%, rgba(15,23,42,0.45) 65%, transparent 100%)",
+                  pointerEvents: "none",
+                }}
+              />
+
+              <div
+                style={{
+                  position: "absolute",
+                  inset: "auto 0 0 0",
+                  padding: "20px 18px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "8px",
                   maxWidth: "100%",
+                  color: "var(--text-light)",
+                  zIndex: 1,
                 }}
               >
                 <div

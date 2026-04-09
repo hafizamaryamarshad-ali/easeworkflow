@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../theme/ThemeProvider";
 import {
@@ -92,7 +92,28 @@ export default function AboutPage() {
       "transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease",
   };
 
-  const aboutSplitRowHeight = 360;
+  // Motion variants and parallax for the founder + vision block
+  const containerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { staggerChildren: 0.2, delayChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 25 },
+    show: { opacity: 1, y: 0 },
+  };
+
+  const founderRef = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: founderRef,
+    offset: ["start 80%", "end 20%"],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], [20, -20]);
+  const textY = useTransform(scrollYProgress, [0, 1], [10, -30]);
 
   return (
     <div style={{ 
@@ -131,363 +152,315 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* --- PERSONAL & VISION SECTION (SPLIT CASE-STUDY LAYOUT) --- */}
+      {/* --- ULTRA-PREMIUM CINEMATIC EXPERIENCE --- */}
       <section
+        className="about-founder-section"
         style={{
-          maxWidth: "1200px",
-          margin: "0 auto 150px",
-          padding: "0 20px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 60,
+          maxWidth: "1400px",
+          margin: "180px auto",
+          padding: "0 40px",
+          position: "relative",
         }}
       >
-        {/* SECTION 1: FOUNDER - IMAGE LEFT / TEXT RIGHT */}
+        {/* 1. FOUNDER: THE CINEMATIC SILHOUETTE */}
         <motion.div
-          whileHover={{ y: -6 }}
-          transition={{ type: "spring", stiffness: 220, damping: 24 }}
+          ref={founderRef}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: false, amount: 0.3 }}
+          className="about-founder-layout"
           style={{
             display: "flex",
+            alignItems: "center",
+            gap: "60px",
             flexWrap: "wrap",
-            gap: 28,
-            alignItems: "stretch",
-            height: aboutSplitRowHeight,
+            position: "relative",
           }}
         >
-          {/* Image side */}
+          {/* Floating Ambient Glows */}
           <motion.div
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            style={{
-              flex: "1 1 0",
-              height: "100%",
-              borderRadius: 24,
-              overflow: "hidden",
-              boxShadow: isDark
-                ? "0 26px 60px rgba(15,23,42,0.9)"
-                : "0 24px 55px rgba(15,23,42,0.35)",
-              border: `1px solid ${colors.cardBorder}`,
-              position: "relative",
+            className="about-founder-ambient"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.3, 0.1],
+              rotate: [0, 90, 0],
             }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage: "url(/images/profile.jpeg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: "45% 0 0 0",
-                background:
-                  "linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.4) 40%, rgba(15,23,42,0.75) 100%)",
-              }}
-            />
-          </motion.div>
+            transition={{ duration: 10, repeat: Infinity }}
+            style={{
+              position: "absolute",
+              width: "800px",
+              height: "800px",
+              background: `radial-gradient(circle, ${accentColor} 0%, transparent 60%)`,
+              top: "-200px",
+              left: "-200px",
+              filter: "blur(120px)",
+              zIndex: 0,
+            }}
+          />
 
-          {/* Content side */}
-          <div
+          <motion.div
+            variants={itemVariants}
+            className="about-founder-image-col"
             style={{
-              flex: "1 1 0",
-              display: "flex",
-              alignItems: "stretch",
-              height: "100%",
+              position: "relative",
+              flex: "1 1 500px",
+              zIndex: 2,
+              y: imageY,
             }}
           >
-            <div
+            {/* Ambient Neon Halos behind the image */}
+            <motion.div
+              className="about-founder-halo about-founder-halo--primary"
+              animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.2, 0.5, 0.2] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                position: "absolute",
+                inset: "-15% -10%",
+                background: `radial-gradient(circle at 30% 20%, ${accentColor}55 0%, transparent 60%)`,
+                filter: "blur(100px)",
+                zIndex: 0,
+              }}
+            />
+            <motion.div
+              className="about-founder-halo about-founder-halo--secondary"
+              animate={{ scale: [1.1, 0.95, 1.1], opacity: [0.25, 0.6, 0.25] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                position: "absolute",
+                inset: "0 -20% 10% -20%",
+                background: `radial-gradient(circle at 70% 80%, ${accentColor}66 0%, transparent 65%)`,
+                filter: "blur(60px)",
+                zIndex: 0,
+              }}
+            />
+
+            {/* The "Masked" Founder Image */}
+            <motion.div
+              whileHover={{ scale: 1.02, rotate: 1 }}
+              className="about-founder-image-shell"
               style={{
                 width: "100%",
-                height: "100%",
-                borderRadius: 24,
-                padding: "22px 22px 20px",
-                background: isDark
-                  ? "linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.94))"
-                  : "linear-gradient(135deg, rgba(255,255,255,0.98), rgba(226,232,240,0.96))",
-                border: `1px solid ${colors.cardBorder}`,
-                boxShadow: colors.glow,
+                maxWidth: "550px",
+                height: "650px",
+                borderRadius:
+                  "60% 40% 70% 30% / 40% 50% 60% 70%",
+                backgroundImage: "url(/images/profile12.png)",
+                backgroundSize: "cover",
+                backgroundPosition: "top",
+                border: `1px solid ${accentColor}33`,
+                boxShadow: `inset 0 0 50px ${accentColor}22, 0 40px 100px -20px rgba(0,0,0,0.8)` ,
+                position: "relative",
                 overflow: "hidden",
+                zIndex: 1,
               }}
             >
-              <span
+              {/* Image fade into background at the bottom */}
+              <div
                 style={{
-                  fontSize: "0.72rem",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.22em",
-                  color: colors.subText,
+                  position: "absolute",
+                  inset: 0,
+                  background: `linear-gradient(to bottom, transparent 45%, ${colors.bgColor} 100%)`,
                 }}
-              >
-                Founder Profile
-              </span>
-              <h2
+              />
+            </motion.div>
+
+            {/* Floating Meta Info */}
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              style={{
+                position: "absolute",
+                bottom: "10%",
+                right: "-30px",
+                background: "rgba(255,255,255,0.03)",
+                backdropFilter: "blur(20px)",
+                padding: "20px 30px",
+                borderRadius: "24px",
+                border: `1px solid ${accentColor}44`,
+                boxShadow: `0 20px 40px rgba(0,0,0,0.4)`,
+                zIndex: 3,
+              }}
+            >
+              <div
                 style={{
-                  fontSize: "1.9rem",
-                  fontWeight: 900,
-                  letterSpacing: "-0.05em",
-                  margin: "6px 0 4px",
-                }}
-              >
-                Muhammad Umer
-              </h2>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.18em",
+                  fontSize: "0.7rem",
                   color: accentColor,
-                  margin: 0,
+                  fontWeight: 800,
+                  letterSpacing: "2px",
                 }}
               >
-                Lead Developer · Founder
-              </p>
-              <p
-                style={{
-                  margin: "12px 0 0",
-                  fontSize: "0.95rem",
-                  lineHeight: 1.7,
-                  color: colors.subText,
-                  maxWidth: 420,
-                }}
-              >
-                Designing calm, predictable automation so clinicians can focus on people, not portals.
-              </p>
-
-              <div
-                style={{
-                  marginTop: 14,
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                {["MedTech", "AI Systems", "EMR Integrations"].map((tag) => (
-                  <motion.div
-                    key={tag}
-                    whileHover={{ y: -2, scale: 1.03 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    style={{
-                      padding: "4px 11px",
-                      borderRadius: 999,
-                      fontSize: "0.72rem",
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      background: isDark
-                        ? "rgba(15,23,42,0.98)"
-                        : "rgba(241,245,249,0.98)",
-                      border: `1px solid ${accentColor}66`,
-                      boxShadow: "0 10px 26px rgba(15,23,42,0.35)",
-                    }}
-                  >
-                    {tag}
-                  </motion.div>
-                ))}
+                ENGINEERED BY
               </div>
-            </div>
-          </div>
-        </motion.div>
+              <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>
+                Innovation Hub
+              </div>
+            </motion.div>
+          </motion.div>
 
-        {/* SECTION 2: VISION - TEXT LEFT / IMAGE RIGHT */}
-        <motion.div
-          whileHover={{ y: -6 }}
-          transition={{ type: "spring", stiffness: 220, damping: 24 }}
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 28,
-            alignItems: "stretch",
-            height: aboutSplitRowHeight,
-          }}
-        >
-          {/* Text side */}
-          <div
-            style={{
-              flex: "1 1 0",
-              display: "flex",
-              alignItems: "stretch",
-              height: "100%",
-            }}
+          {/* Typography & Content */}
+          <motion.div
+            variants={itemVariants}
+            className="about-founder-text-col"
+            style={{ flex: "1 1 500px", zIndex: 3, y: textY }}
           >
-            <div
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: 24,
-                padding: "22px 22px 20px",
-                background: isDark
-                  ? "linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.94))"
-                  : "linear-gradient(135deg, rgba(255,255,255,0.98), rgba(226,232,240,0.96))",
-                border: `1px solid ${colors.cardBorder}`,
-                boxShadow: colors.glow,
-                overflow: "hidden",
+                fontSize: "clamp(4.6rem, 8vw, 6.8rem)",
+                fontWeight: 950,
+                lineHeight: 0.85,
+                letterSpacing: "-4px",
+                margin: 0,
+                color: colors.text,
               }}
             >
+              The
+              {" "}
               <span
                 style={{
-                  fontSize: "0.72rem",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.2em",
-                  color: colors.subText,
+                  color: "transparent",
+                  WebkitTextStroke: `1px ${accentColor}88`,
                 }}
               >
-                Product Vision
+                Vision
               </span>
-              <h2
-                style={{
-                  fontSize: "1.9rem",
-                  fontWeight: 900,
-                  letterSpacing: "-0.05em",
-                  margin: "6px 0 8px",
-                }}
-              >
-                Our Vision for Care
-              </h2>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "0.95rem",
-                  lineHeight: 1.7,
-                  color: colors.subText,
-                  maxWidth: 460,
-                }}
-              >
-                Building connected, safe automation that quietly keeps every workflow in sync across the clinic.
-              </p>
+              <br />
+              Behind <span style={{ color: accentColor }}>Ease</span>
+            </motion.h2>
 
-              <div
-                style={{
-                  marginTop: 16,
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                  gap: 12,
-                }}
-              >
-                {[
-                  {
-                    icon: <FaNetworkWired size={18} />,
-                    title: "Connected Workflows",
-                    line: "Scheduling, EMR, and messaging stay in sync.",
-                  },
-                  {
-                    icon: <FaShieldAlt size={18} />,
-                    title: "Safe Automation",
-                    line: "Automation that protects clinicians and patients.",
-                  },
-                  {
-                    icon: <FaClinicMedical size={18} />,
-                    title: "Scalable Clinics",
-                    line: "Built to grow from single sites to networks.",
-                  },
-                ].map((feature) => (
-                  <motion.div
-                    key={feature.title}
-                    whileHover={{ y: -3, boxShadow: isDark ? "0 16px 40px rgba(15,23,42,0.9)" : "0 14px 34px rgba(15,23,42,0.3)" }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
+            <p
+              style={{
+                fontSize: "1.5rem",
+                color: colors.subText,
+                lineHeight: 1.6,
+                marginTop: "40px",
+                maxWidth: "500px",
+                fontWeight: 300,
+                letterSpacing: "-0.5px",
+              }}
+            >
+              Muhammad Umer is building the
+              {" "}
+              <b style={{ color: colors.text }}>next generation</b>
+              {" "}
+              of healthcare automation—where technology feels invisible and
+              care feels human.
+            </p>
+
+            <div
+              className="about-founder-meta-stats"
+              style={{ marginTop: "50px", display: "flex", gap: "40px" }}
+            >
+              {[
+                { val: "10+", lab: "Patents" },
+                { val: "50+", lab: "Systems" },
+              ].map((stat, i) => (
+                <div key={i}>
+                  <div
                     style={{
-                      padding: "10px 12px",
-                      borderRadius: 18,
-                      background: isDark
-                        ? "rgba(15,23,42,0.96)"
-                        : "rgba(241,245,249,0.96)",
-                      border: `1px solid ${accentColor}33`,
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 10,
+                      fontSize: "2rem",
+                      fontWeight: 900,
+                      color: accentColor,
                     }}
                   >
-                    <motion.div
-                      whileHover={{ scale: 1.08 }}
-                      transition={{ duration: 0.25, ease: "easeOut" }}
-                      style={{
-                        width: 30,
-                        height: 30,
-                        borderRadius: 999,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: isDark
-                          ? "rgba(15,23,42,0.98)"
-                          : "rgba(219,234,254,0.98)",
-                        color: accentColor,
-                      }}
-                    >
-                      {feature.icon}
-                    </motion.div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 2,
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "0.86rem",
-                          fontWeight: 700,
-                          color: colors.text,
-                        }}
-                      >
-                        {feature.title}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "0.85rem",
-                          color: colors.subText,
-                        }}
-                      >
-                        {feature.line}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                    {stat.val}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.8rem",
+                      color: colors.subText,
+                      textTransform: "uppercase",
+                      letterSpacing: "1px",
+                    }}
+                  >
+                    {stat.lab}
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-
-          {/* Illustration side */}
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            style={{
-              flex: "1 1 0",
-              height: "100%",
-              borderRadius: 24,
-              overflow: "hidden",
-              boxShadow: isDark
-                ? "0 26px 60px rgba(15,23,42,0.9)"
-                : "0 24px 55px rgba(15,23,42,0.35)",
-              border: `1px solid ${colors.cardBorder}`,
-              position: "relative",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage: "url(/images/dashboard.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "radial-gradient(circle at 0% 0%, rgba(15,23,42,0.25), transparent 60%)",
-              }}
-            />
           </motion.div>
         </motion.div>
+
+        {/* 2. VISION: THE MINIMALIST BENTO STRIP */}
+        <div
+          className="about-vision-grid"
+          style={{
+            marginTop: "150px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "26px",
+            padding: "2px",
+          }}
+        >
+          {[
+            {
+              t: "Connected",
+              d: "Seamless API integrations",
+              i: <FaNetworkWired />,
+            },
+            {
+              t: "Predictable",
+              d: "Zero-error workflows",
+              i: <FaShieldAlt />,
+            },
+            {
+              t: "Scalable",
+              d: "Multi-clinic synchronization",
+              i: <FaHospital />,
+            },
+          ].map((v, idx) => (
+            <motion.div
+              key={idx}
+              whileHover={{
+                y: -6,
+                background: `${accentColor}18`,
+                boxShadow: `0 0 40px ${accentColor}33`,
+              }}
+              style={{
+                padding: "42px 34px",
+                textAlign: "center",
+                transition: "0.45s ease",
+                background: isDark
+                  ? "rgba(255,255,255,0.03)"
+                  : "rgba(15,23,42,0.03)",
+                borderRadius: "32px",
+                border: `1px solid ${accentColor}22`,
+              }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.15, rotate: 4 }}
+                style={{
+                  fontSize: "2.5rem",
+                  color: accentColor,
+                  marginBottom: "20px",
+                  filter: `drop-shadow(0 0 20px ${accentColor}66)`,
+                }}
+              >
+                {v.i}
+              </motion.div>
+              <h3
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 800,
+                  marginBottom: "10px",
+                }}
+              >
+                {v.t}
+              </h3>
+              <p
+                style={{ color: colors.subText, fontSize: "1rem" }}
+              >
+                {v.d}
+              </p>
+            </motion.div>
+          ))}
+        </div>
       </section>
 
       {/* --- CORE VALUES --- */}
-      <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
+      <section className="about-values-section" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
         <h2
           style={{
             fontSize: "clamp(2.2rem, 5vw, 3rem)",
@@ -498,7 +471,7 @@ export default function AboutPage() {
         >
           Core Values
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "25px" }}>
+        <div className="about-values-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "25px" }}>
           {coreValues.map((v, i) => (
             <motion.div key={i} whileHover={{ y: -10, borderColor: accentColor, boxShadow: colors.glow }} style={{ 
               padding: "40px", borderRadius: "32px", background: colors.cardBg, border: `1px solid ${colors.cardBorder}`, 

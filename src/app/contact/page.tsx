@@ -96,7 +96,6 @@ export default function ContactPage() {
   const contactOptions = [
     { label: "Preferred contact method", value: "", disabled: true },
     { label: "Email", value: "email" },
-    { label: "Phone", value: "phone" },
     { label: "WhatsApp", value: "whatsapp" },
   ];
 
@@ -238,16 +237,28 @@ export default function ContactPage() {
               }}
             >
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {["Your Name", "Work Email"].map((placeholder, i) => (
-                  <input
-                    key={placeholder}
-                    type={i === 1 ? "email" : "text"}
-                    name={i === 1 ? "workEmail" : "yourName"}
-                    placeholder={placeholder}
-                    required
-                    style={inputStyle}
-                  />
-                ))}
+                <input
+                  type="text"
+                  name="yourName"
+                  placeholder="Your Name"
+                  required
+                  style={inputStyle}
+                />
+
+                <input
+                  type="email"
+                  name="workEmail"
+                  placeholder="Work Email"
+                  required
+                  style={inputStyle}
+                />
+
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  placeholder="Phone Number (optional)"
+                  style={inputStyle}
+                />
 
                 <textarea
                   name="introMessage"
@@ -810,6 +821,46 @@ export default function ContactPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Booking CTA Button */}
+              <a
+                href="/booking"
+                style={{
+                  marginTop: 16,
+                  alignSelf: "flex-start",
+                  padding: "14px 30px",
+                  borderRadius: 999,
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                  textDecoration: "none",
+                  background:
+                    theme === "dark"
+                      ? "linear-gradient(90deg,#0ea5e9,#3b82f6)"
+                      : "linear-gradient(90deg,#3b82f6,#60a5fa)",
+                  color: "#f9fafb",
+                  boxShadow:
+                    theme === "dark"
+                      ? "0 16px 36px rgba(15,23,42,0.9)"
+                      : "0 16px 34px rgba(59,130,246,0.35)",
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow =
+                    theme === "dark"
+                      ? "0 20px 48px rgba(15,23,42,1)"
+                      : "0 20px 40px rgba(59,130,246,0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow =
+                    theme === "dark"
+                      ? "0 16px 36px rgba(15,23,42,0.9)"
+                      : "0 16px 34px rgba(59,130,246,0.35)";
+                }}
+              >
+                Book Free Workflow Audit
+              </a>
             </div>
           </motion.div>
         </div>
