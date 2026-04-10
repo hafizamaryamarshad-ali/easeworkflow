@@ -78,9 +78,8 @@ export default function PrivacySection() {
       id="privacy"  
       style={{
         position: "relative",
-        minHeight: "100vh",
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         overflow: "hidden",
         background: bg[theme],
       }}
@@ -111,7 +110,8 @@ export default function PrivacySection() {
           display: "grid",
           gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr",
           gap: isMobile ? "40px" : "60px",
-          padding: isMobile ? "40px 20px" : "80px 40px",
+          // Tighter bottom padding so the next section sits closer
+          padding: isMobile ? "28px 20px 20px" : "56px 40px 36px",
           alignItems: "center",
         }}
       >

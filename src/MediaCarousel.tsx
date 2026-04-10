@@ -69,8 +69,9 @@ export default function MediaCarousel({ items, aspectRatio = "16 / 9" }: MediaCa
         margin: "0 auto 30px",
         borderRadius: "20px",
         overflow: "hidden",
-        boxShadow: "0 18px 40px rgba(15,23,42,0.5)",
-        background: "rgba(15,23,42,0.95)",
+        // Keep the frame clean on detail pages: no heavy drop shadow
+        boxShadow: "none",
+        background: "transparent",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

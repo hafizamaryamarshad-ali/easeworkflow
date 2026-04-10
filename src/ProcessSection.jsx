@@ -33,14 +33,17 @@ export default function ProcessSection() {
     <section
       className="process-section"
       style={{
-        padding: "80px 40px",
+        // Slightly tighter padding so it sits closer to adjacent sections
+        padding: "72px 40px",
         background: colors.bg,
         color: colors.text,
         fontFamily: "'Inter', sans-serif",
-        minHeight: "100vh",
+        // Let content define height to avoid large empty gaps
+        minHeight: "auto",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        // Align content to the top for more natural flow between sections
+        justifyContent: "flex-start",
         overflow: "hidden",
         transition: "all 0.5s ease"
       }}

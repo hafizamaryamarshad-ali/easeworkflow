@@ -436,10 +436,7 @@ h3 {
   animation-direction: reverse; /* left → right */
 }
 
-.featured-projects-row:hover .featured-projects-track,
-.featured-projects-track:hover {
-  animation-play-state: paused;
-}
+/* Marquee keeps running even on hover for a dynamic feel */
 
 @keyframes featured-projects-marquee {
   0% {
@@ -492,7 +489,8 @@ h3 {
     transform: scale(0.9) !important;
   }
 
-  .process-orbit-wrapper {
+  .featured-projects-row:hover .featured-projects-track,
+  .featured-projects-track:hover {
     height: 520px !important;
   }
 

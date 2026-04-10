@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { PortableText } from "@portabletext/react";
@@ -10,15 +11,155 @@ import {
   FiShoppingBag,
   FiTag,
   FiArrowUpRight,
-  FiLock,
   FiLayers,
   FiMessageCircle,
   FiTrendingUp,
   FiCpu,
-  FiTarget,
 } from "react-icons/fi";
 import { fetchCaseStudies, type CaseStudy } from "../../../lib/fetchCaseStudies";
 import { useTheme } from "../../../theme/ThemeProvider";
+
+// Inline SVG icons for Problem & Solution cards
+const ProblemIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+  width={54}
+  height={54}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M12 4.5l8.1 14a1 1 0 01-.87 1.5H4.77a1 1 0 01-.87-1.5L12 4.5z" />
+    <path d="M12 10.5v4" />
+    <path d="M12 16.5h.01" />
+  </svg>
+);
+
+const SolutionIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+  width={54}
+  height={54}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="M9.2 12.6l1.9 2 3.7-4.4" />
+  </svg>
+);
+
+// Doctor illustration for Problem section hero icon
+const ProblemDoctorIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    width={200}
+    height={200}
+    viewBox="0 0 80 80"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    {/* Soft circular background */}
+    <circle cx="40" cy="40" r="32" fill="#DBEAFE" />
+
+    {/* Body / coat */}
+    <rect
+      x="26"
+      y="40"
+      width="28"
+      height="20"
+      rx="6"
+      fill="#FFFFFF"
+    />
+    <path
+      d="M40 40c-4 6-5.5 9.5-6.4 13.5"
+      stroke="#BFDBFE"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+    <path
+      d="M40 40c4 6 5.5 9.5 6.4 13.5"
+      stroke="#BFDBFE"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+
+    {/* Head */}
+    <circle cx="40" cy="30" r="9.5" fill="#FBBF9E" />
+
+    {/* Hair */}
+    <path
+      d="M32.5 29c0-4.3 3.2-7.5 7.8-7.5 3.6 0 6.4 1.9 7.4 4.9-.9-.4-1.9-.6-3-.6-3.5 0-5.6 1.8-6.7 3.7-1-.5-2.1-.7-3.5-.5z"
+      fill="#1F2937"
+    />
+
+    {/* Eyes */}
+    <circle cx="37" cy="30" r="0.9" fill="#111827" />
+    <circle cx="43" cy="30" r="0.9" fill="#111827" />
+
+    {/* Concerned eyebrows */}
+    <path
+      d="M35.3 28.2c.9-.7 1.9-1 3-1"
+      stroke="#111827"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+    />
+    <path
+      d="M41.7 27.2c1.1.1 2 .4 2.8.9"
+      stroke="#111827"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+    />
+
+    {/* Mouth - subtle thinking expression */}
+    <path
+      d="M37.3 33.5c.7.6 1.5.9 2.7.9 1 0 1.8-.3 2.4-.8"
+      stroke="#EA580C"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+    />
+
+    {/* Stethoscope */}
+    <path
+      d="M32.5 39.5v2.8c0 2.6 1.7 4.7 3.9 4.7 2.1 0 3.9-2.1 3.9-4.7V39"
+      stroke="#0EA5E9"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+    />
+    <circle cx="32.5" cy="38.6" r="1.2" fill="#0EA5E9" />
+    <circle cx="40.3" cy="39" r="1.3" fill="#0EA5E9" />
+
+    {/* Clipboard in hand for "analysis" feel */}
+    <rect
+      x="46"
+      y="41"
+      width="8.2"
+      height="10.5"
+      rx="1.5"
+      fill="#EFF6FF"
+      stroke="#93C5FD"
+      strokeWidth="1.2"
+    />
+    <path
+      d="M47.6 44.5h5.1"
+      stroke="#60A5FA"
+      strokeWidth="1.1"
+      strokeLinecap="round"
+    />
+    <path
+      d="M47.6 47h4.1"
+      stroke="#60A5FA"
+      strokeWidth="1.1"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
 export default function CaseStudyDetail() {
   const params = useParams();
@@ -197,8 +338,10 @@ export default function CaseStudyDetail() {
       {hasProblemCards && (
         <section style={{ padding: "140px 20px 100px", position: "relative" }}>
           <div style={{ textAlign: 'center', position: 'relative', zIndex: 2, marginBottom: '80px' }}>
-            {/* Rocky Remove Kiya, Teddy Bear Lagaya 🐻 */}
-            <div style={{ fontSize: '3.5rem', marginBottom: '15px' }}>🐻</div>
+            {/* Problem doctor illustration icon */}
+            <div style={{ fontSize: '3.5rem', marginBottom: '15px' }}>
+              <ProblemDoctorIcon style={{ display: 'block', margin: '0 auto' }} />
+            </div>
             <div style={{ background: colors.card, padding: '15px 50px', borderRadius: '20px', display: 'inline-block', border: `1px solid ${colors.border}`, boxShadow: '0 15px 35px rgba(0,0,0,0.05)' }}>
                 <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: colors.accent, margin: 0 }}>The Problem</h2>
             </div>
@@ -216,7 +359,7 @@ export default function CaseStudyDetail() {
 
           <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "25px", position: 'relative', zIndex: 2 }}>
             {study.problemCards!.map((card, i) => {
-              const icon = card.type === "solution" ? <FiTarget /> : <FiLock />;
+              const icon = card.type === "solution" ? <SolutionIcon /> : <ProblemIcon />;
 
               return (
                 <motion.div
@@ -266,7 +409,7 @@ export default function CaseStudyDetail() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
                 {study.solutionCards!.map((card, i) => {
                   const isProblem = card.type === "problem";
-                  const icon = isProblem ? <FiLock /> : <FiTarget />;
+                  const icon = isProblem ? <ProblemIcon /> : <SolutionIcon />;
                   const bgColor = isProblem ? "#4b5563" : "#22c55e";
 
                   return (
@@ -364,7 +507,7 @@ export default function CaseStudyDetail() {
       )}
 
       {/* 5. TECH & RESULTS */}
-      <section style={{ padding: "90px 20px 80px", maxWidth: "1200px", margin: "0 auto" }}>
+      <section style={{ padding: "24px 20px 16px", maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px' }}>
             {hasTools && (
               <div>
@@ -429,7 +572,7 @@ export default function CaseStudyDetail() {
       </section>
 
       {/* 5. FOOTER CTA */}
-      <section style={{ padding: "120px 20px", textAlign: 'center' }}>
+      <section style={{ padding: "32px 20px 72px", textAlign: 'center' }}>
         <motion.div whileInView={{ opacity: 1, scale: 1 }} initial={{ opacity: 0, scale: 0.95 }} style={{ background: isDark ? 'rgba(255,255,255,0.03)' : '#f1f5f9', padding: '80px 40px', borderRadius: '60px', border: `1px solid ${colors.border}` }}>
             <h2 style={{ fontSize: '3.5rem', fontWeight: 950, marginBottom: '25px', letterSpacing: '-0.02em' }}>Let’s Build Your Idea!</h2>
             <p style={{ color: colors.subText, marginBottom: '45px', fontSize: '1.2rem' }}>Inspired by the success of {study.title}? Let's talk.</p>

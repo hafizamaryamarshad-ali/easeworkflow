@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function SideButtons() {
   const pathname = usePathname();
   const router = useRouter();
+  const [hideOnHero, setHideOnHero] = useState(false);
 
   const handlePrivacyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -20,8 +22,44 @@ export default function SideButtons() {
     }
   };
 
+  // Hide side buttons while the home hero section is in view
+  useEffect(() => {
+    if (pathname !== "/") {
+      setHideOnHero(false);
+      return;
+    }
+
+    const heroEl = document.getElementById("hero");
+    if (!heroEl) {
+      setHideOnHero(false);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHideOnHero(entry.isIntersecting);
+      },
+      {
+        threshold: 0.4,
+      }
+    );
+
+    observer.observe(heroEl);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [pathname]);
+
   return (
-    <div className="side-tabs-container">
+    <div
+      className="side-tabs-container"
+      style={{
+        opacity: hideOnHero ? 0 : 1,
+        pointerEvents: hideOnHero ? "none" : "auto",
+        transition: "opacity 0.3s ease",
+      }}
+    >
       <a href="/#privacy" onClick={handlePrivacyClick} className="side-tab">
         PRIVACY
       </a>

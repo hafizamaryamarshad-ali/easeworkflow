@@ -185,11 +185,13 @@ export default function TestimonialChat() {
     <section
       className="testimonials-section"
       style={{
-        padding: "100px 20px",
+        // Tighter top padding so it connects more closely to Privacy section
+        padding: "52px 20px 72px",
         background: colors.sectionBg,
         color: colors.mainText,
         fontFamily: "'Inter', sans-serif",
-        minHeight: "100vh",
+        // Let content define height so we don't force large empty space
+        minHeight: "auto",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

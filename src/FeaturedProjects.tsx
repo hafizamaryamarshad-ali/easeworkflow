@@ -125,12 +125,20 @@ export default function FeaturedProjects() {
 
 /* ================= PREMIUM CARD ================= */
 
+// Light theme uses soft but colorful SaaS-style gradients
+// inspired by Tailwind shades (blue-50, indigo-50, purple-50, etc.).
+// Goal: colorful yet gentle on a light background.
 const lightGradients = [
-  "linear-gradient(135deg, #0ea5e9, #6366f1)",
-  "linear-gradient(135deg, #22c55e, #16a34a)",
-  "linear-gradient(135deg, #f97316, #ec4899)",
-  "linear-gradient(135deg, #a855f7, #3b82f6)",
-  "linear-gradient(135deg, #facc15, #f97316)",
+  // from-blue-50 via-white to-purple-50
+  "linear-gradient(135deg, #eff6ff 0%, #ffffff 48%, #faf5ff 100%)",
+  // from-indigo-50 to-blue-100
+  "linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%)",
+  // from-pink-50 to-purple-100
+  "linear-gradient(135deg, #fdf2f8 0%, #e9d5ff 100%)",
+  // soft teal / cyan accent
+  "linear-gradient(135deg, #ecfeff 0%, #e0f2fe 100%)",
+  // warm subtle amber / rose
+  "linear-gradient(135deg, #fff7ed 0%, #fef2f2 100%)",
 ];
 
 const darkGradients = [
@@ -159,14 +167,23 @@ function TiltCard({
     <motion.div
       className="featured-project-card"
       onClick={onClick}
+      animate={{ y: [0, -6, 0] }}
       whileHover={{
         scale: 1.03,
         boxShadow: isDark
           ? "0 30px 80px rgba(0,0,0,0.65)"
-          : "0 24px 55px rgba(15,23,42,0.22)",
+          : "0 20px 50px rgba(15,23,42,0.2)",
       }}
       whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 260, damping: 22 }}
+      transition={{
+        y: {
+          duration: 6,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut",
+        },
+        scale: { type: "spring", stiffness: 260, damping: 22 },
+      }}
       style={{
         width: "380px",
         minWidth: "300px",
@@ -179,11 +196,11 @@ function TiltCard({
         background,
         border: isDark
           ? "1px solid rgba(56,189,248,0.25)"
-          : "1px solid rgba(0,0,0,0.08)",
+          : "1px solid rgba(191,219,254,0.9)",
         transition: "box-shadow 0.25s ease, transform 0.25s ease",
         boxShadow: isDark
           ? "0 24px 60px rgba(0,0,0,0.55)"
-          : "0 18px 40px rgba(15,23,42,0.18)",
+          : "0 10px 30px rgba(148,163,184,0.25)",
         transformOrigin: "center",
         willChange: "transform, box-shadow",
       }}
@@ -240,14 +257,21 @@ function TiltCard({
           ✦ {project.industry || "Featured"}
         </span>
 
-        <h3 style={{ marginTop: "10px", fontSize: "1.3rem", fontWeight: 800 }}>
+        <h3
+          style={{
+            marginTop: "10px",
+            fontSize: "1.3rem",
+            fontWeight: 800,
+            color: isDark ? "#e5e7eb" : "#111827",
+          }}
+        >
           {project.title}
         </h3>
 
         <p
           style={{
             fontSize: "0.9rem",
-            opacity: isDark ? 0.75 : 0.65,
+            color: isDark ? "rgba(226,232,240,0.8)" : "#4b5563",
             marginTop: "6px",
           }}
         >

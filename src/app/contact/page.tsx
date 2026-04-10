@@ -642,8 +642,8 @@ export default function ContactPage() {
               {[
                 {
                   icon: <FiMail size={18} />,
-                  title: "Email",
-                  lines: ["support@easeworkflow.com"],
+                  title: "Primary Email",
+                  lines: ["hi@easeworkflow.com"],
                 },
                 {
                   icon: <FiPhone size={18} />,
@@ -670,9 +670,9 @@ export default function ContactPage() {
                   onClick={
                     item.title === "Phone"
                       ? () => window.open("https://wa.me/923000335194", "_blank")
-                      : item.title === "Email"
+                      : item.title === "Primary Email"
                       ? () => {
-                          window.location.href = "mailto:support@easeworkflow.com";
+                          window.location.href = "mailto:hi@easeworkflow.com";
                         }
                       : undefined
                   }
@@ -701,7 +701,9 @@ export default function ContactPage() {
                     <p
                       key={idx}
                       style={{
-                        fontSize: "0.8rem",
+                        fontSize: item.title === "Primary Email" ? "0.95rem" : "0.8rem",
+                        fontWeight: item.title === "Primary Email" ? 700 : 400,
+                        color: item.title === "Primary Email" ? "#e0f2fe" : "inherit",
                         opacity: 0.96,
                         margin: idx === 0 ? "4px 0 0" : "2px 0 0",
                       }}

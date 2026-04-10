@@ -212,14 +212,89 @@ export default function Footer() {
             style={{
               marginTop: "20px",
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
               flexWrap: "wrap",
               fontSize: "0.85rem",
               opacity: 0.7,
+              width: "100%",
             }}
           >
-            <p>© {new Date().getFullYear()} EaseWorkflow</p>
-            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }} />
+            {/* Email block: stacked above copyright, aligned to the left */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "8px",
+                textAlign: "left",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "6px",
+                  alignItems: "flex-start",
+                }}
+              >
+                {[
+                  { label: "General Inquiries", email: "hi@easeworkflow.com" },
+                  { label: "Support", email: "support@easeworkflow.com" },
+                  { label: "Business / Founder", email: "umer@easeworkflow.com" },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "0.78rem",
+                        color: theme === "dark" ? "#9ca3af" : "#6b7280",
+                        minWidth: "130px",
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                    <a
+                      href={`mailto:${item.email}`}
+                      style={{
+                        fontSize: "0.86rem",
+                        color: theme === "dark" ? "#e5e7eb" : "#111827",
+                        textDecoration: "none",
+                        fontWeight: 600,
+                        transition: "color 0.2s ease, text-decoration-color 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = "#0ea5e9";
+                        e.currentTarget.style.textDecoration = "underline";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme === "dark" ? "#e5e7eb" : "#111827";
+                        e.currentTarget.style.textDecoration = "none";
+                      }}
+                    >
+                      {item.email}
+                    </a>
+                  </div>
+                ))}
+              </div>
+
+              {/* Copyright below emails with subtle styling */}
+              <p
+                style={{
+                  marginTop: "6px",
+                  fontSize: "0.8rem",
+                  color: theme === "dark" ? "#9ca3af" : "#6b7280",
+                }}
+              >
+                © {new Date().getFullYear()} EaseWorkflow
+              </p>
+            </div>
           </div>
         </div>
       </footer>

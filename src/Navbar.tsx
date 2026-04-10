@@ -430,7 +430,7 @@ export default function Navbar() {
                     textAlign: "center",
                   }}
                 >
-                  Book Consultation
+                  Start a Project
                 </Link>
               </div>
 

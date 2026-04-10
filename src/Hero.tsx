@@ -537,6 +537,7 @@ export default function Hero() {
       </AnimatePresence>
 
       <section
+        id="hero"
         style={{
           position: "relative",
           overflow: "hidden",

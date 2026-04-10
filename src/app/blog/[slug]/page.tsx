@@ -44,7 +44,8 @@ function BlogMediaSection({ blog }: { blog: BlogPost }) {
 
   return (
     <div style={{ marginBottom: "24px" }}>
-      <MediaCarousel items={items} aspectRatio="16 / 9" />
+      {/* Slightly shorter aspect ratio so the hero image doesn't feel too tall */}
+      <MediaCarousel items={items} aspectRatio="16 / 7" />
     </div>
   );
 }
