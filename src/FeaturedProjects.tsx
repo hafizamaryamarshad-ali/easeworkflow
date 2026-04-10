@@ -159,13 +159,18 @@ function TiltCard({
     <motion.div
       className="featured-project-card"
       onClick={onClick}
-      whileHover={{ scale: 1.05 }}
+      whileHover={{
+        scale: 1.03,
+        boxShadow: isDark
+          ? "0 30px 80px rgba(0,0,0,0.65)"
+          : "0 24px 55px rgba(15,23,42,0.22)",
+      }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 260, damping: 22 }}
       style={{
-        width: "320px",
-        minWidth: "260px",
-        maxWidth: "320px",
+        width: "380px",
+        minWidth: "300px",
+        maxWidth: "380px",
         borderRadius: "22px",
         overflow: "hidden",
         cursor: "pointer",
@@ -180,13 +185,14 @@ function TiltCard({
           ? "0 24px 60px rgba(0,0,0,0.55)"
           : "0 18px 40px rgba(15,23,42,0.18)",
         transformOrigin: "center",
+        willChange: "transform, box-shadow",
       }}
     >
       {/* IMAGE */}
       <div
         style={{
           position: "relative",
-          height: "210px",
+          height: "180px",
           flexShrink: 0,
         }}
       >
