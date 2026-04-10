@@ -54,7 +54,7 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
   const cardBackground =
     theme === "dark"
       ? "linear-gradient(135deg, rgba(15,23,42,0.98), rgba(8,47,73,0.96))"
-      : "linear-gradient(135deg,#ffffff,#eef2ff)";
+      : "linear-gradient(135deg,#f9fafb,#eef2ff)";
   const cardBorder =
     theme === "dark"
       ? "1px solid rgba(148,163,184,0.55)"
@@ -303,7 +303,7 @@ function WorkflowDashboard() {
   const cardBackground =
     theme === "dark"
       ? "radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96))"
-      : "linear-gradient(135deg, #ffffff, #f1f5f9)";
+      : "linear-gradient(135deg, #f9fafb, #f1f5f9)";
 
   const cardShadow =
     theme === "dark"

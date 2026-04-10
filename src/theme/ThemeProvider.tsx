@@ -48,7 +48,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
       document.body.style.background = "var(--bg-gradient-dark)";
       document.body.style.color = "var(--text-light)";
     } else {
-      document.body.style.background = "#f5faff";
+      document.body.style.background = "linear-gradient(135deg, #f5faff, #eef2ff)";
       document.body.style.color = "#0f172a";
     }
 

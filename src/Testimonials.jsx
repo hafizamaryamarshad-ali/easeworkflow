@@ -143,13 +143,13 @@ export default function TestimonialChat() {
     sectionBg: isDark ? "#08081A" : "#f1f5f9",
     mainText: isDark ? "#FFF" : "#0f172a",
     subText: isDark ? "rgba(255,255,255,0.6)" : "rgba(15,23,42,0.7)",
-    phoneFrame: isDark ? "#0D0D21" : "#ffffff",
+    phoneFrame: isDark ? "#0D0D21" : "#f9fafb",
     phoneBorder: isDark ? "#1E1E3F" : "#e2e8f0",
     messageBg: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)",
     activeMessageBg: "rgba(14,165,233,0.15)",
     cardBg: isDark 
       ? "linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))" 
-      : "linear-gradient(135deg, #ffffff, #f8fafc)",
+      : "linear-gradient(135deg, #f9fafb, #f8fafc)",
     cardBorder: isDark ? "rgba(14,165,233,0.15)" : "rgba(14,165,233,0.2)",
     pillBg: isDark ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.04)"
   };

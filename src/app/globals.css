@@ -34,7 +34,7 @@ html {
   --text-muted-light: #475569;
 
   --surface-dark: rgba(248, 250, 252, 0.08);
-  --surface-light: #ffffff;
+  --surface-light: #f9fafb;
 
   --border-dark: rgba(14, 165, 233, 0.25);
   --border-light: rgba(59, 130, 246, 0.18);
@@ -98,7 +98,7 @@ body {
   min-height: 100vh;
 
   /* Default to light-theme background; ThemeProvider will override per theme on hydration */
-  background: #f5faff;
+  background: linear-gradient(135deg, #f5faff, #eef2ff);
   background-size: 600% 600%;
 }
 
@@ -415,6 +415,39 @@ h3 {
 ================================= */
 .side-tab:active {
   transform: translateX(-8px) scale(0.97);
+}
+
+/* ================================
+   FEATURED PROJECTS MARQUEE
+================================= */
+.featured-projects-row {
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-projects-track {
+  display: flex;
+  gap: 22px;
+  will-change: transform;
+  animation: featured-projects-marquee 35s linear infinite;
+}
+
+.featured-projects-row--top .featured-projects-track {
+  animation-direction: reverse; /* left → right */
+}
+
+.featured-projects-row:hover .featured-projects-track,
+.featured-projects-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes featured-projects-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* ================================

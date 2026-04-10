@@ -643,7 +643,7 @@ export default function ContactPage() {
                 {
                   icon: <FiMail size={18} />,
                   title: "Email",
-                  lines: ["contact@easeworkflow.com"],
+                  lines: ["support@easeworkflow.com"],
                 },
                 {
                   icon: <FiPhone size={18} />,
@@ -672,7 +672,7 @@ export default function ContactPage() {
                       ? () => window.open("https://wa.me/923000335194", "_blank")
                       : item.title === "Email"
                       ? () => {
-                          window.location.href = "mailto:contact@easeworkflow.com";
+                          window.location.href = "mailto:support@easeworkflow.com";
                         }
                       : undefined
                   }

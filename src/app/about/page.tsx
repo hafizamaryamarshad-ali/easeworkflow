@@ -54,7 +54,7 @@ export default function AboutPage() {
     bgColor: isDark ? "#0f172a" : "#f5f7fa", 
     text: isDark ? "#f8fafc" : "#0f172a",
     subText: isDark ? "#cbd5e1" : "#1e293b",
-    cardBg: isDark ? "rgba(255,255,255,0.03)" : "#ffffff",
+    cardBg: isDark ? "rgba(255,255,255,0.03)" : "#f9fafb",
     cardBorder: isDark ? "rgba(14, 165, 233, 0.2)" : "rgba(59, 130, 246, 0.1)",
     glow: isDark ? "0 12px 28px rgba(0,198,255,0.25)" : "0 12px 28px rgba(59,130,246,0.15)"
   };
@@ -80,7 +80,7 @@ export default function AboutPage() {
     borderRadius: "30px",
     background: isDark
       ? "linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.85))"
-      : "linear-gradient(135deg, rgba(255,255,255,0.96), rgba(226,232,240,0.9))",
+      : "linear-gradient(135deg, rgba(249,250,251,0.96), rgba(226,232,240,0.9))",
     border: `1px solid ${colors.cardBorder}`,
     boxShadow: colors.glow,
     display: "flex",

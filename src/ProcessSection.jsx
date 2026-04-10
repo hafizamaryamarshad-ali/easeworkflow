@@ -25,7 +25,7 @@ export default function ProcessSection() {
     subText: isDark ? "#CCC" : "#475569",
     border: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)",
     orbitBorder: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.15)",
-    cardBg: isDark ? "#08081A" : "#ffffff",
+    cardBg: isDark ? "#08081A" : "#f9fafb",
     labelInactive: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)",
   };
 

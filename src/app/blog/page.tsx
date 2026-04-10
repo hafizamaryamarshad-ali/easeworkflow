@@ -23,7 +23,7 @@ export default function BlogPage() {
     bg: isDark ? "#0f172a" : "#fbfdfd",
     text: isDark ? "#f8fafc" : "#1e293b",
     accent: "#00d1ff", 
-    cardBg: isDark ? "rgba(30, 41, 59, 0.5)" : "#ffffff",
+    cardBg: isDark ? "rgba(30, 41, 59, 0.5)" : "#f9fafb",
     cardBorder: isDark ? "rgba(0, 209, 255, 0.2)" : "rgba(0, 209, 255, 0.1)",
     inputBg: isDark ? "rgba(255, 255, 255, 0.05)" : "#f1f5f9",
     dropdownBg: "#050b1a",

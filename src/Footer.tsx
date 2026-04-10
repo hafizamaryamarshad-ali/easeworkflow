@@ -53,7 +53,7 @@ export default function Footer() {
           background:
             theme === "dark"
               ? "linear-gradient(180deg, #020617, #020617)"
-              : "linear-gradient(180deg, #ffffff, #e2e8f0)",
+              : "linear-gradient(180deg, #f9fafb, #e2e8f0)",
           color: theme === "dark" ? "#e2e8f0" : "#0f172a",
           overflow: "hidden",
         }}
@@ -245,7 +245,7 @@ export default function Footer() {
               width: "100%",
               maxWidth: "520px",
               maxHeight: "85vh",
-              background: theme === "dark" ? "#0f172a" : "#ffffff",
+              background: theme === "dark" ? "#0f172a" : "#f9fafb",
               borderRadius: "18px",
               padding: "26px",
               boxShadow: "0 30px 90px rgba(0,0,0,0.6)",

@@ -73,7 +73,7 @@ export default function ProjectsList() {
   const subText = { dark: "var(--color-text-muted)", light: "var(--color-text-muted-light)" };
   const cardBg = { 
     dark: "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(14,165,233,0.08))", 
-    light: "linear-gradient(145deg, #ffffff, #e0f2fe)" 
+    light: "linear-gradient(145deg, #f9fafb, #e0f2fe)" 
   };
   const cardBorder = { dark: "1px solid rgba(255,255,255,0.15)", light: "1px solid rgba(14,165,233,0.25)" };
   const cardShadow = { dark: "0 8px 25px rgba(0,0,0,0.25)", light: "0 6px 20px rgba(0,0,0,0.12)" };

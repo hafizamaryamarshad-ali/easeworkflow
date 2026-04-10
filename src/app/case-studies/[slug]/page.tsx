@@ -69,8 +69,8 @@ export default function CaseStudyDetail() {
   const hasKeyFeatures = Array.isArray(study.keyFeatures) && study.keyFeatures.length > 0;
 
   const colors = {
-    bg: isDark ? "#0a0c10" : "#fbfdfd",
-    card: isDark ? "rgba(255, 255, 255, 0.03)" : "#ffffff",
+    bg: isDark ? "#0a0c10" : "#f5f7fb",
+    card: isDark ? "rgba(255, 255, 255, 0.03)" : "#f9fafb",
     text: isDark ? "#f8fafc" : "#1e293b",
     subText: isDark ? "#94a3b8" : "#64748b",
     border: isDark ? "rgba(255, 255, 255, 0.08)" : "#f1f5f9",
@@ -95,7 +95,7 @@ export default function CaseStudyDetail() {
           padding: "80px 20px 0",
           background: isDark
             ? `radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), ${colors.bg}`
-            : "linear-gradient(135deg, #e0f2e9 0%, #ffffff 100%)",
+            : "linear-gradient(135deg, #e0f2e9 0%, #f6fbff 100%)",
           textAlign: "center",
           position: "relative",
           overflow: "hidden",
@@ -289,7 +289,7 @@ export default function CaseStudyDetail() {
 
       {/* 4. KEY FEATURES SECTION */}
       {hasKeyFeatures && (
-        <section style={{ padding: "100px 20px", background: isDark ? "rgba(10,12,16,0.9)" : "#ffffff" }}>
+        <section style={{ padding: "100px 20px", background: isDark ? "rgba(10,12,16,0.9)" : "#f9fafb" }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             <div style={{ textAlign: 'center', marginBottom: '70px' }}>
               <h2 style={{ fontSize: '3rem', fontWeight: 900 }}>Key Features</h2>
@@ -314,7 +314,7 @@ export default function CaseStudyDetail() {
                     border: `1px solid ${colors.border}`,
                     background: isDark
                       ? 'linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.85))'
-                      : 'linear-gradient(135deg, #f8fafc, #ffffff)',
+                      : 'linear-gradient(135deg, #f8fafc, #f1f5f9)',
                     boxShadow: isDark
                       ? '0 18px 40px rgba(0,0,0,0.45)'
                       : '0 14px 30px rgba(148,163,184,0.25)',

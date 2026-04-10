@@ -34,7 +34,7 @@ export default function PrivacySection() {
 
   const cardBg = {
     dark: "linear-gradient(145deg, rgba(15,23,42,0.95), rgba(15,23,42,0.85))",
-    light: "linear-gradient(145deg, #ffffff, #eef5ff)",
+    light: "linear-gradient(145deg, #f9fafb, #eef5ff)",
   };
 
   const cardBorder = {
@@ -44,7 +44,7 @@ export default function PrivacySection() {
 
   const rightGradient = {
     dark: "linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.85))",
-    light: "linear-gradient(135deg, #ffffff, #eef5ff)",
+    light: "linear-gradient(135deg, #f9fafb, #eef5ff)",
   };
 
   const rightCardsTop = [

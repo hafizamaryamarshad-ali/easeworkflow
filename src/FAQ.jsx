@@ -92,7 +92,7 @@ export default function FAQSection() {
     subText: isDark ? "#94a3b8" : "#475569",
     faqItemBg: isDark ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
     faqInactiveText: isDark ? "#334155" : "#cbd5e1",
-    cardBg: isDark ? "rgba(10, 10, 30, 0.5)" : "#ffffff",
+    cardBg: isDark ? "rgba(10, 10, 30, 0.5)" : "#f9fafb",
     cardBorder: isDark ? "rgba(14,165,233,0.15)" : "rgba(14,165,233,0.2)",
     watermark: isDark ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)"
   };

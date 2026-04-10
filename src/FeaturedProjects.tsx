@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { fetchProjects, type Project } from "./lib/fetchProjects";
@@ -21,6 +21,10 @@ export default function FeaturedProjects() {
   }, []);
 
   const isDark = theme === "dark";
+
+  // Use the full project list in both rows so every project
+  // is visible in each marquee, then duplicate for seamless loops.
+  const allWithIndex = projects.map((project, index) => ({ project, index }));
 
   return (
     <section
@@ -52,28 +56,48 @@ export default function FeaturedProjects() {
         Real-world applications built with modern technologies
       </p>
 
-      {/* GRID */}
+      {/* MARQUEE ROWS */}
       <div
-        className="featured-projects-grid"
         style={{
           maxWidth: "1200px",
-          margin: "0 auto",
+          margin: "30px auto 0",
           display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignItems: "stretch",
-          gap: "22px",
+          flexDirection: "column",
+          gap: "26px",
+          overflow: "hidden",
         }}
       >
-        {projects.map((project) => (
-          <TiltCard
-            key={project._id}
-            project={project}
-            // Card click par detailed page par navigate karega
-            onClick={() => router.push(`/projects/${project.slug || project._id}`)}
-            isDark={isDark}
-          />
-        ))}
+        {allWithIndex.length > 0 && (
+          <div className="featured-projects-row featured-projects-row--top">
+            <div className="featured-projects-track">
+              {[...allWithIndex, ...allWithIndex].map(({ project, index }, i) => (
+                <TiltCard
+                  key={`${project._id}-top-${i}`}
+                  project={project}
+                  gradientIndex={index}
+                  onClick={() => router.push(`/projects/${project.slug || project._id}`)}
+                  isDark={isDark}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {allWithIndex.length > 0 && (
+          <div className="featured-projects-row featured-projects-row--bottom">
+            <div className="featured-projects-track">
+              {[...allWithIndex, ...allWithIndex].map(({ project, index }, i) => (
+                <TiltCard
+                  key={`${project._id}-bottom-${i}`}
+                  project={project}
+                  gradientIndex={index}
+                  onClick={() => router.push(`/projects/${project.slug || project._id}`)}
+                  isDark={isDark}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* BUTTON */}
@@ -101,66 +125,61 @@ export default function FeaturedProjects() {
 
 /* ================= PREMIUM CARD ================= */
 
+const lightGradients = [
+  "linear-gradient(135deg, #0ea5e9, #6366f1)",
+  "linear-gradient(135deg, #22c55e, #16a34a)",
+  "linear-gradient(135deg, #f97316, #ec4899)",
+  "linear-gradient(135deg, #a855f7, #3b82f6)",
+  "linear-gradient(135deg, #facc15, #f97316)",
+];
+
+const darkGradients = [
+  "linear-gradient(135deg, #1e293b, #0f172a)",
+  "linear-gradient(135deg, #0f766e, #022c22)",
+  "linear-gradient(135deg, #7e22ce, #312e81)",
+  "linear-gradient(135deg, #b91c1c, #7f1d1d)",
+  "linear-gradient(135deg, #0369a1, #020617)",
+];
+
 function TiltCard({
   project,
   onClick,
   isDark,
+  gradientIndex,
 }: {
   project: Project;
   onClick: () => void;
   isDark: boolean;
+  gradientIndex: number;
 }) {
-  const [style, setStyle] = useState({
-    transform: "perspective(1200px)",
-    boxShadow: isDark
-      ? "0 25px 60px rgba(0,0,0,0.5)"
-      : "0 10px 30px rgba(14,165,233,0.12), 0 2px 10px rgba(0,0,0,0.05)",
-  });
-
-  const handleMove = (e: MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-
-    const rotateX = (y - 0.5) * -10;
-    const rotateY = (x - 0.5) * 10;
-
-    setStyle({
-      transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`,
-      boxShadow: isDark
-        ? "0 25px 60px rgba(0,0,0,0.5)"
-        : "0 20px 50px rgba(14,165,233,0.18), 0 4px 15px rgba(0,0,0,0.06)",
-    });
-  };
+  const palette = isDark ? darkGradients : lightGradients;
+  const background = palette[gradientIndex % palette.length];
 
   return (
     <motion.div
       className="featured-project-card"
-      onMouseMove={handleMove}
-      onMouseLeave={() =>
-        setStyle({
-          transform: "perspective(1200px)",
-          boxShadow: isDark
-            ? "0 25px 60px rgba(0,0,0,0.5)"
-            : "0 10px 30px rgba(14,165,233,0.12), 0 2px 10px rgba(0,0,0,0.05)",
-        })
-      }
       onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 260, damping: 22 }}
       style={{
-        width: "340px",
+        width: "320px",
+        minWidth: "260px",
+        maxWidth: "320px",
         borderRadius: "22px",
         overflow: "hidden",
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
-        background: isDark
-          ? "linear-gradient(145deg, rgba(30,41,59,0.7), rgba(15,23,42,0.9))"
-          : "linear-gradient(145deg, #ffffff, #f1f5f9)",
+        background,
         border: isDark
           ? "1px solid rgba(56,189,248,0.25)"
           : "1px solid rgba(0,0,0,0.08)",
-        transition: "0.3s",
-        ...style,
+        transition: "box-shadow 0.25s ease, transform 0.25s ease",
+        boxShadow: isDark
+          ? "0 24px 60px rgba(0,0,0,0.55)"
+          : "0 18px 40px rgba(15,23,42,0.18)",
+        transformOrigin: "center",
       }}
     >
       {/* IMAGE */}
