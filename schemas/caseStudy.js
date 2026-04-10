@@ -115,38 +115,7 @@ export default {
         },
       ],
     },
-    {
-      name: "problemSections",
-      title: "Problem Sections",
-      type: "array",
-      validation: (Rule) => Rule.required().min(4).max(4),
-      of: [
-        {
-          type: "object",
-          name: "problemSection",
-          title: "Problem Section",
-          fields: [
-            {
-              name: "title",
-              title: "Title",
-              type: "string",
-              validation: (Rule) => Rule.required(),
-            },
-            {
-              name: "description",
-              title: "Description",
-              type: "array",
-              of: [
-                {
-                  type: "block",
-                },
-              ],
-              validation: (Rule) => Rule.required().min(1),
-            },
-          ],
-        },
-      ],
-    },
+    
     {
       name: "solution",
       title: "Solution",
