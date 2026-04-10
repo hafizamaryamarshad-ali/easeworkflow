@@ -54,6 +54,7 @@ type ProjectQueryResult = Omit<
   metaTitle?: string | null;
   metaDescription?: string | null;
   tags?: string[] | null;
+  thumbnailUrl?: string | null;
   extraVideoUrls?: string[] | null;
   galleryImageUrls?: string[] | null;
 };
@@ -98,6 +99,7 @@ const projectsQuery = groq`
       video
     ),
     thumbnail,
+    "thumbnailUrl": coalesce(thumbnailImage.asset->url, thumbnail.asset->url),
     "extraVideoUrls": videos[].asset->url,
     "galleryImageUrls": galleryImages[].asset->url,
     clientName,
@@ -127,6 +129,7 @@ const projectBySlugQuery = groq`
       video
     ),
     thumbnail,
+    "thumbnailUrl": coalesce(thumbnailImage.asset->url, thumbnail.asset->url),
     "extraVideoUrls": videos[].asset->url,
     "galleryImageUrls": galleryImages[].asset->url,
     clientName,
@@ -175,14 +178,16 @@ const mapProject = (project: ProjectQueryResult): Project => {
       typeof project.video === "string"
         ? project.video
         : project.video?.asset?.url ?? null,
-    thumbnailUrl: project.thumbnail?.asset
-      ? urlFor(project.thumbnail)
-          .width(1200)
-          .height(800)
-          .fit("crop")
-          .auto("format")
-          .url()
-      : null,
+    thumbnailUrl:
+      project.thumbnailUrl ??
+      (project.thumbnail?.asset
+        ? urlFor(project.thumbnail)
+            .width(1200)
+            .height(800)
+            .fit("crop")
+            .auto("format")
+            .url()
+        : null),
     extraVideoUrls: Array.isArray(project.extraVideoUrls)
       ? project.extraVideoUrls.filter(Boolean)
       : [],
