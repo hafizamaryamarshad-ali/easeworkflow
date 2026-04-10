@@ -223,17 +223,22 @@ export default function CaseStudyDetail() {
                   key={i}
                   whileHover={{ y: -10 }}
                   style={{
-                    background: colors.card,
-                    padding: '45px 35px',
-                    borderRadius: '35px',
-                    border: `1px solid ${colors.border}`,
-                    textAlign: 'center',
-                    backdropFilter: 'blur(10px)',
+                    background: isDark
+                      ? 'linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.88))'
+                      : 'linear-gradient(135deg, #ffffff, #e5edff)',
+                    padding: '48px 38px',
+                    borderRadius: '32px',
+                    border: `1px solid ${isDark ? 'rgba(148,163,184,0.35)' : 'rgba(148,163,184,0.35)'}`,
+                    textAlign: 'left',
+                    boxShadow: isDark
+                      ? '0 24px 60px rgba(15,23,42,0.85)'
+                      : '0 20px 45px rgba(148,163,184,0.35)',
+                    backdropFilter: 'blur(14px)',
                   }}
                 >
-                  <div style={{ fontSize: '1.8rem', color: colors.accent, marginBottom: '20px' }}>{icon}</div>
-                  <h4 style={{ fontWeight: 800, marginBottom: '12px', fontSize: '1.2rem' }}>{card.title}</h4>
-                  <div style={{ fontSize: '0.95rem', color: colors.subText }}>
+                  <div style={{ fontSize: '1.8rem', color: colors.accent, marginBottom: '18px' }}>{icon}</div>
+                  <h4 style={{ fontWeight: 800, marginBottom: '10px', fontSize: '1.15rem', color: colors.text }}>{card.title}</h4>
+                  <div style={{ fontSize: '0.96rem', color: colors.subText, lineHeight: 1.7 }}>
                     <PortableText value={card.content} />
                   </div>
                 </motion.div>
@@ -269,13 +274,23 @@ export default function CaseStudyDetail() {
                       key={i}
                       whileInView={{ opacity: 1, y: 0 }}
                       initial={{ opacity: 0, y: 20 }}
-                      style={{ background: colors.card, padding: '50px 40px', borderRadius: '40px', border: `1px solid ${colors.border}` }}
+                      style={{
+                        background: isDark
+                          ? 'linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.88))'
+                          : 'linear-gradient(135deg, #ffffff, #e0f2ff)',
+                        padding: '50px 40px',
+                        borderRadius: '34px',
+                        border: `1px solid ${isProblem ? 'rgba(239,68,68,0.45)' : 'rgba(34,197,94,0.4)'}`,
+                        boxShadow: isDark
+                          ? '0 24px 60px rgba(15,23,42,0.85)'
+                          : '0 20px 45px rgba(148,163,184,0.3)',
+                      }}
                     >
                       <div style={{ width: '65px', height: '65px', background: bgColor, color: '#fff', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', marginBottom: '30px', boxShadow: `0 15px 30px ${bgColor}33` }}>
                         {icon}
                       </div>
                       <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '15px' }}>{card.title}</h3>
-                      <div style={{ color: colors.subText, lineHeight: 1.6 }}>
+                      <div style={{ color: colors.subText, lineHeight: 1.7, fontSize: '0.98rem' }}>
                         <PortableText value={card.content} />
                       </div>
                     </motion.div>
@@ -349,14 +364,34 @@ export default function CaseStudyDetail() {
       )}
 
       {/* 5. TECH & RESULTS */}
-      <section style={{ padding: "120px 20px", maxWidth: "1200px", margin: "0 auto" }}>
+      <section style={{ padding: "90px 20px 80px", maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px' }}>
             {hasTools && (
               <div>
-                <h3 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '35px', display: 'flex', alignItems: 'center', gap: '15px' }}><FiCpu color={colors.accent}/> Tech Stack</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                <h3 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '28px', display: 'flex', alignItems: 'center', gap: '12px' }}><FiCpu color={colors.accent}/> Tech Stack</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 12px' }}>
                   {study.tools!.map((tool, i) => (
-                    <span key={i} style={{ background: colors.card, border: `1px solid ${colors.border}`, padding: '12px 25px', borderRadius: '100px', fontSize: '0.95rem', fontWeight: 700, color: colors.text }}>{tool}</span>
+                    <span
+                      key={i}
+                      style={{
+                        padding: '10px 20px',
+                        borderRadius: '999px',
+                        fontSize: '0.9rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.03em',
+                        textTransform: 'uppercase',
+                        background: isDark
+                          ? 'linear-gradient(135deg, rgba(15,23,42,0.95), rgba(37,99,235,0.35))'
+                          : 'linear-gradient(135deg, #e0f2fe, #eef2ff)',
+                        border: `1px solid ${isDark ? 'rgba(129,140,248,0.6)' : 'rgba(59,130,246,0.5)'}`,
+                        color: isDark ? '#e5e7eb' : '#0f172a',
+                        boxShadow: isDark
+                          ? '0 12px 30px rgba(15,23,42,0.85)'
+                          : '0 10px 26px rgba(148,163,184,0.35)',
+                      }}
+                    >
+                      {tool}
+                    </span>
                   ))}
                 </div>
               </div>
