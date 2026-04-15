@@ -76,8 +76,8 @@ export default function PrivacySection() {
 
   const handleDownloadAgreements = () => {
     const files = [
-      "/assets/documents/data-agreement-1.pdf",
-      "/assets/documents/data-agreement-2.pdf",
+      "/assets/documents/DATA PROCESSING AGREEMENT.pdf",
+      "/assets/documents/BUSINESS ASSOCIATE AGREEMENT.pdf",
       // Add more files here if needed, e.g. "/assets/documents/data-agreement-3.pdf",
     ];
 
