@@ -1,13 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiShield, FiLock, FiUserCheck, FiServer, FiEye, FiCheckCircle } from "react-icons/fi"; // FiCheckCircle add kiya
+import { FiShield, FiLock, FiUserCheck, FiServer, FiEye, FiCheckCircle, FiDownload } from "react-icons/fi"; // FiCheckCircle add kiya
 import { useTheme } from "./theme/ThemeProvider";
 import { useState, useEffect } from "react";
 
 export default function PrivacySection() {
   const { theme } = useTheme();
   const [isMobile, setIsMobile] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Detect mobile screen
   useEffect(() => {
@@ -72,6 +73,28 @@ export default function PrivacySection() {
       body: "Multi-factor authentication and audit logs for all activities.",
     },
   ];
+
+  const handleDownloadAgreements = () => {
+    const files = [
+      "/assets/documents/data-agreement-1.pdf",
+      "/assets/documents/data-agreement-2.pdf",
+      // Add more files here if needed, e.g. "/assets/documents/data-agreement-3.pdf",
+    ];
+
+    setIsDownloading(true);
+
+    files.forEach((file) => {
+      const link = document.createElement("a");
+      link.href = file;
+      link.download = file.split("/").pop() || "agreement.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Simple feedback reset; actual downloads continue in browser
+    setTimeout(() => setIsDownloading(false), 2000);
+  };
 
   return (
     <section
@@ -171,6 +194,42 @@ export default function PrivacySection() {
             <strong> We sign a formal Data Processing Agreement (DPA) </strong> 
             to guarantee that your sensitive medical data is handled with the highest legal and technical standards.
           </motion.p>
+
+          {/* Download Agreements Button */}
+          <motion.button
+            type="button"
+            onClick={handleDownloadAgreements}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.98 }}
+            style={{
+              marginTop: "20px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: isMobile ? "10px 16px" : "12px 20px",
+              borderRadius: "999px",
+              border: "none",
+              cursor: "pointer",
+              background:
+                theme === "dark"
+                  ? "linear-gradient(135deg, #0ea5e9, #22c55e)"
+                  : "linear-gradient(135deg, #0ea5e9, #22c55e)",
+              boxShadow:
+                theme === "dark"
+                  ? "0 14px 40px rgba(8,47,73,0.75)"
+                  : "0 10px 30px rgba(56,189,248,0.45)",
+              color: "#f9fafb",
+              fontSize: "14px",
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+              outline: "none",
+            }}
+          >
+            <FiDownload size={16} />
+            {isDownloading ? "Downloading..." : "Download the Data Agreements we do"}
+          </motion.button>
 
           {/* LEFT CARDS */}
           <div
