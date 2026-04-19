@@ -166,13 +166,13 @@ export default function Navbar() {
         }}
       >
         <Image
-          src="/logo19.png"
+          src="/logo199.svg"
           alt="EaseWorkflow logo"
           width={45}
           height={38}
           priority
           style={{
-            transform: "scale(1.8)",
+            transform: "scale(2.0)",
             objectFit: "contain",
           }}
         />
