@@ -261,7 +261,7 @@ export default function Navbar() {
             {theme === "dark" ? "Light" : "Dark"}
           </button>
 
-          {/* Consultation */}
+          {/* Consultationss */}
           <Link
             href="/contact"
             style={{
