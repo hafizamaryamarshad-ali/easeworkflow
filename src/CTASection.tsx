@@ -131,7 +131,7 @@ export default function CTA() {
         }}
       >
         <a
-          href="/contact"
+          href="/booking"
           style={{
             padding: "16px 36px",
             fontWeight: 700,

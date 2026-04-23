@@ -4,11 +4,74 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useTheme } from "./theme/ThemeProvider";
 
+const reviewMetrics = [
+  [
+    { value: "85%", label: "cost reduction" },
+    { value: "200%", label: "faster workflow" },
+    { value: "91%", label: "performance boost" },
+  ],
+  [
+    { value: "87%", label: "cost reduction" },
+    { value: "180%", label: "faster workflow" },
+    { value: "92%", label: "performance boost" },
+  ],
+  [
+    { value: "82%", label: "cost reduction" },
+    { value: "210%", label: "faster workflow" },
+    { value: "89%", label: "performance boost" },
+  ],
+  [
+    { value: "90%", label: "cost reduction" },
+    { value: "195%", label: "faster workflow" },
+    { value: "94%", label: "performance boost" },
+  ],
+  [
+    { value: "88%", label: "cost reduction" },
+    { value: "205%", label: "faster workflow" },
+    { value: "90%", label: "performance boost" },
+  ],
+  [
+    { value: "84%", label: "cost reduction" },
+    { value: "175%", label: "faster workflow" },
+    { value: "93%", label: "performance boost" },
+  ],
+  [
+    { value: "91%", label: "cost reduction" },
+    { value: "220%", label: "faster workflow" },
+    { value: "95%", label: "performance boost" },
+  ],
+  [
+    { value: "86%", label: "cost reduction" },
+    { value: "190%", label: "faster workflow" },
+    { value: "88%", label: "performance boost" },
+  ],
+  [
+    { value: "83%", label: "cost reduction" },
+    { value: "215%", label: "faster workflow" },
+    { value: "96%", label: "performance boost" },
+  ],
+  [
+    { value: "89%", label: "cost reduction" },
+    { value: "230%", label: "faster workflow" },
+    { value: "92%", label: "performance boost" },
+  ],
+  [
+    { value: "81%", label: "cost reduction" },
+    { value: "185%", label: "faster workflow" },
+    { value: "90%", label: "performance boost" },
+  ],
+  [
+    { value: "92%", label: "cost reduction" },
+    { value: "240%", label: "faster workflow" },
+    { value: "97%", label: "performance boost" },
+  ],
+];
+
 const chats = [
   {
     id: 1,
     name: "Dr. Sarah Williams",
-    role: "Clinic Director, UK",
+    role: "Clinic Director, United Kingdom",
     image: "https://randomuser.me/api/portraits/women/1.jpg",
     preview: "We reduced admin workload by nearly 60% in 3 months.",
     fullMessage:
@@ -38,7 +101,7 @@ const chats = [
   {
     id: 4,
     name: "Dr. James Patel",
-    role: "Medical Director, US",
+    role: "Medical Director, United Kingdom",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
     preview: "Nurses report that the new workflow feels natural, not technical.",
     fullMessage:
@@ -48,7 +111,7 @@ const chats = [
   {
     id: 5,
     name: "Dr. Amina Yusuf",
-    role: "Head of Outpatient Services, UAE",
+    role: "Head of Outpatient Services, Ireland",
     image: "https://randomuser.me/api/portraits/women/65.jpg",
     preview: "Missed follow‑ups dropped dramatically within the first quarter.",
     fullMessage:
@@ -98,7 +161,7 @@ const chats = [
   {
     id: 10,
     name: "Dr. Oliver Grant",
-    role: "Chief Medical Officer, US",
+    role: "Chief Medical Officer, United Kingdom",
     image: "https://randomuser.me/api/portraits/men/52.jpg",
     preview: "Our clinicians see the AI as a teammate, not a black box.",
     fullMessage:
@@ -127,10 +190,15 @@ const chats = [
   },
 ];
 
-const doubleChats = [...chats, ...chats, ...chats];
+const chatsWithMetrics = chats.map((chat, index) => ({
+  ...chat,
+  metrics: reviewMetrics[index] ?? reviewMetrics[0],
+}));
+
+const doubleChats = [...chatsWithMetrics, ...chatsWithMetrics, ...chatsWithMetrics];
 
 export default function TestimonialChat() {
-  const [activeChat, setActiveChat] = useState(chats[0]);
+  const [activeChat, setActiveChat] = useState(chatsWithMetrics[0]);
   const [isPaused, setIsPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMobilePaused, setIsMobilePaused] = useState(false);
@@ -333,18 +401,52 @@ export default function TestimonialChat() {
             >
               <div style={{
                 position: "absolute", top: "30px", right: "30px",
-                display: "flex", alignItems: "center", gap: "10px",
-                padding: "10px 20px",
-                background: "rgba(14,165,233,0.1)",
-                border: "1px solid rgba(14,165,233,0.3)",
-                borderRadius: "50px",
+                display: "flex", flexDirection: "column", gap: "10px",
+                padding: "16px 22px",
+                minWidth: "240px",
+                background: isDark
+                  ? "linear-gradient(180deg, rgba(12, 18, 41, 0.92), rgba(8, 12, 28, 0.86))"
+                  : "linear-gradient(180deg, rgba(255,255,255,0.92), rgba(241,245,249,0.88))",
+                border: `1px solid ${isDark ? "rgba(148, 163, 184, 0.18)" : "rgba(148, 163, 184, 0.28)"}`,
+                borderRadius: "999px",
                 color: "#0ea5e9",
-                fontSize: "1.1rem", fontWeight: 700
+                fontSize: "1.05rem", fontWeight: 700,
+                boxShadow: isDark
+                  ? "0 16px 40px rgba(2, 8, 23, 0.45), inset 0 1px 0 rgba(255,255,255,0.06)"
+                  : "0 14px 32px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255,255,255,0.7)",
+                backdropFilter: "blur(18px)",
+                overflow: "hidden"
               }}>
-                {"★".repeat(activeChat.rating)} 
-                <span style={{color: colors.mainText, opacity: 0.6}}>
-                  {activeChat.rating}.0 / 5
-                </span>
+                <div style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: isDark
+                    ? "radial-gradient(circle at top left, rgba(14,165,233,0.14), transparent 42%)"
+                    : "radial-gradient(circle at top left, rgba(14,165,233,0.12), transparent 44%)",
+                  pointerEvents: "none",
+                }} />
+                <div style={{ position: "relative", zIndex: 1, width: "100%" }}>
+                {activeChat.metrics.map((metric, index) => (
+                  <div
+                    key={metric.label}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      gap: "14px",
+                      padding: index === 1 ? "8px 0" : "0",
+                      borderTop: index === 1 ? `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}` : "none",
+                      borderBottom: index === 1 ? `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}` : "none",
+                    }}
+                  >
+                    <span style={{ letterSpacing: "-0.03em", fontSize: index === 1 ? "1.25rem" : "1.1rem" }}>{metric.value}</span>
+                    <span style={{ color: colors.mainText, opacity: 0.72, fontSize: "0.78rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                      {metric.label}
+                    </span>
+                  </div>
+                ))}
+                </div>
               </div>
 
               <h3

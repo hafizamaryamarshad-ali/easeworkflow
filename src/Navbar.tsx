@@ -275,7 +275,7 @@ export default function Navbar() {
               transition: "all 0.25s ease",
             }}
           >
-            Book Consultation
+            Start Your Project
           </Link>
 
          {/* Calendly Button */}
