@@ -244,7 +244,7 @@ export default function FeaturedProjects() {
   );
 }
 
-/* ================= PREMIUM CARDs ================= */
+/* ================= PREMIUM CARD ================= */
 
 // Light theme uses soft but colorful SaaS-style gradients
 // inspired by Tailwind shades (blue-50, indigo-50, purple-50, etc.).
