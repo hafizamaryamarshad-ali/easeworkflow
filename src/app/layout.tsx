@@ -5,6 +5,9 @@ import ThemeProvider from "../theme/ThemeProvider";
 import BackButton from "../BackButton";
 import SideButtons from "../../src/SideButtons"; // ✅ ADDED
 import Script from "next/script";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 export const metadata = {
   title: "EaseWorkflow - Healthcare Automation",

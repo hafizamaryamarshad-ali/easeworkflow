@@ -3,9 +3,50 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { fetchProjects, type Project } from "./lib/fetchProjects";
 import { useTheme } from "./theme/ThemeProvider";
-import { useRouter } from "next/navigation";
+
+const lightGradients = [
+  "linear-gradient(135deg, #eff6ff 0%, #ffffff 48%, #faf5ff 100%)",
+  "linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%)",
+  "linear-gradient(135deg, #fdf2f8 0%, #e9d5ff 100%)",
+  "linear-gradient(135deg, #ecfeff 0%, #e0f2fe 100%)",
+  "linear-gradient(135deg, #fff7ed 0%, #fef2f2 100%)",
+];
+
+const darkGradients = [
+  "linear-gradient(135deg, #1e293b, #0f172a)",
+  "linear-gradient(135deg, #0f766e, #022c22)",
+  "linear-gradient(135deg, #7e22ce, #312e81)",
+  "linear-gradient(135deg, #b91c1c, #7f1d1d)",
+  "linear-gradient(135deg, #0369a1, #020617)",
+];
+
+const swiperBreakpoints = {
+  0: {
+    slidesPerView: 1,
+    spaceBetween: 14,
+  },
+  640: {
+    slidesPerView: 1.15,
+    spaceBetween: 16,
+  },
+  768: {
+    slidesPerView: 2,
+    spaceBetween: 20,
+  },
+  1024: {
+    slidesPerView: 3,
+    spaceBetween: 24,
+  },
+  1280: {
+    slidesPerView: 3,
+    spaceBetween: 28,
+  },
+};
 
 export default function FeaturedProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -17,25 +58,23 @@ export default function FeaturedProjects() {
       const data = await fetchProjects();
       setProjects(data || []);
     };
+
     load();
   }, []);
 
   const isDark = theme === "dark";
-
-  // Use the full project list in both rows so every project
-  // is visible in each marquee, then duplicate for seamless loops.
-  const allWithIndex = projects.map((project, index) => ({ project, index }));
+  const canSlide = projects.length > 1;
 
   return (
     <section
       style={{
-        padding: "30px 15px 50px",
+        padding: "30px 15px 56px",
         background: isDark ? "#020617" : "#f1f5f9",
         color: isDark ? "#fff" : "#0f172a",
         textAlign: "center",
+        overflow: "hidden",
       }}
     >
-      {/* TITLE */}
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -43,7 +82,7 @@ export default function FeaturedProjects() {
           fontSize: "clamp(2.2rem, 4.5vw, 3rem)",
           fontWeight: 900,
           marginBottom: "4px",
-          marginTop: "0px",
+          marginTop: 0,
           background: "linear-gradient(90deg,#38bdf8,#a78bfa)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -56,51 +95,52 @@ export default function FeaturedProjects() {
         Real-world applications built with modern technologies
       </p>
 
-      {/* MARQUEE ROWS */}
       <div
         style={{
           maxWidth: "1200px",
-          margin: "30px auto 0",
-          display: "flex",
-          flexDirection: "column",
-          gap: "26px",
-          overflow: "hidden",
+          margin: "28px auto 0",
+          position: "relative",
+          paddingBottom: "56px",
         }}
       >
-        {allWithIndex.length > 0 && (
-          <div className="featured-projects-row featured-projects-row--top">
-            <div className="featured-projects-track">
-              {[...allWithIndex, ...allWithIndex].map(({ project, index }, i) => (
-                <TiltCard
-                  key={`${project._id}-top-${i}`}
+        {projects.length > 0 && (
+          <Swiper
+            className="featured-projects-swiper"
+            modules={[Autoplay, Navigation, Pagination]}
+            loop={canSlide}
+            watchOverflow
+            grabCursor={canSlide}
+            simulateTouch={canSlide}
+            allowTouchMove={canSlide}
+            centeredSlides={false}
+            speed={850}
+            autoplay={
+              canSlide
+                ? {
+                    delay: 2600,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                  }
+                : false
+            }
+            navigation={canSlide}
+            pagination={{ clickable: true }}
+            breakpoints={swiperBreakpoints}
+          >
+            {projects.map((project, index) => (
+              <SwiperSlide key={project._id}>
+                <ProjectCard
                   project={project}
                   gradientIndex={index}
                   onClick={() => router.push(`/projects/${project.slug || project._id}`)}
                   isDark={isDark}
                 />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {allWithIndex.length > 0 && (
-          <div className="featured-projects-row featured-projects-row--bottom">
-            <div className="featured-projects-track">
-              {[...allWithIndex, ...allWithIndex].map(({ project, index }, i) => (
-                <TiltCard
-                  key={`${project._id}-bottom-${i}`}
-                  project={project}
-                  gradientIndex={index}
-                  onClick={() => router.push(`/projects/${project.slug || project._id}`)}
-                  isDark={isDark}
-                />
-              ))}
-            </div>
-          </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         )}
       </div>
 
-      {/* BUTTON */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -119,37 +159,83 @@ export default function FeaturedProjects() {
       >
         See All Projects →
       </motion.button>
+
+      <style jsx global>{`
+        .featured-projects-swiper {
+          padding: 6px 56px 22px;
+          overflow: visible;
+        }
+
+        .featured-projects-swiper .swiper-wrapper {
+          align-items: stretch;
+        }
+
+        .featured-projects-swiper .swiper-slide {
+          height: auto;
+          display: flex;
+        }
+
+        .featured-projects-swiper .swiper-pagination {
+          bottom: 0 !important;
+        }
+
+        .featured-projects-swiper .swiper-pagination-bullet {
+          background: ${isDark ? "rgba(255,255,255,0.35)" : "rgba(15,23,42,0.25)"};
+          opacity: 1;
+          width: 9px;
+          height: 9px;
+          transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .featured-projects-swiper .swiper-pagination-bullet-active {
+          background: ${isDark ? "#38bdf8" : "#2563eb"};
+          transform: scale(1.15);
+        }
+
+        .featured-projects-swiper .swiper-button-next,
+        .featured-projects-swiper .swiper-button-prev {
+          width: 44px;
+          height: 44px;
+          border-radius: 999px;
+          background: ${isDark ? "rgba(2,6,23,0.92)" : "rgba(255,255,255,0.94)"};
+          border: ${isDark ? "1px solid rgba(56,189,248,0.28)" : "1px solid rgba(59,130,246,0.16)"};
+          color: ${isDark ? "#e2e8f0" : "#0f172a"};
+          box-shadow: ${isDark ? "0 18px 40px rgba(0,0,0,0.35)" : "0 14px 30px rgba(15,23,42,0.16)"};
+          backdrop-filter: blur(12px);
+          top: calc(50% - 18px);
+        }
+
+        .featured-projects-swiper .swiper-button-next::after,
+        .featured-projects-swiper .swiper-button-prev::after {
+          font-size: 16px;
+          font-weight: 800;
+        }
+
+        .featured-projects-swiper .swiper-button-prev {
+          left: 8px;
+        }
+
+        .featured-projects-swiper .swiper-button-next {
+          right: 8px;
+        }
+
+        @media (max-width: 767px) {
+          .featured-projects-swiper {
+            padding-inline: 42px;
+          }
+
+          .featured-projects-swiper .swiper-button-next,
+          .featured-projects-swiper .swiper-button-prev {
+            width: 38px;
+            height: 38px;
+          }
+        }
+      `}</style>
     </section>
   );
 }
 
-/* ================= PREMIUM CARD ================= */
-
-// Light theme uses soft but colorful SaaS-style gradients
-// inspired by Tailwind shades (blue-50, indigo-50, purple-50, etc.).
-// Goal: colorful yet gentle on a light background.
-const lightGradients = [
-  // from-blue-50 via-white to-purple-50
-  "linear-gradient(135deg, #eff6ff 0%, #ffffff 48%, #faf5ff 100%)",
-  // from-indigo-50 to-blue-100
-  "linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%)",
-  // from-pink-50 to-purple-100
-  "linear-gradient(135deg, #fdf2f8 0%, #e9d5ff 100%)",
-  // soft teal / cyan accent
-  "linear-gradient(135deg, #ecfeff 0%, #e0f2fe 100%)",
-  // warm subtle amber / rose
-  "linear-gradient(135deg, #fff7ed 0%, #fef2f2 100%)",
-];
-
-const darkGradients = [
-  "linear-gradient(135deg, #1e293b, #0f172a)",
-  "linear-gradient(135deg, #0f766e, #022c22)",
-  "linear-gradient(135deg, #7e22ce, #312e81)",
-  "linear-gradient(135deg, #b91c1c, #7f1d1d)",
-  "linear-gradient(135deg, #0369a1, #020617)",
-];
-
-function TiltCard({
+function ProjectCard({
   project,
   onClick,
   isDark,
@@ -167,7 +253,6 @@ function TiltCard({
     <motion.div
       className="featured-project-card"
       onClick={onClick}
-      animate={{ y: [0, -6, 0] }}
       whileHover={{
         scale: 1.03,
         boxShadow: isDark
@@ -176,18 +261,14 @@ function TiltCard({
       }}
       whileTap={{ scale: 0.98 }}
       transition={{
-        y: {
-          duration: 6,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "easeInOut",
-        },
         scale: { type: "spring", stiffness: 260, damping: 22 },
       }}
       style={{
-        width: "380px",
-        minWidth: "300px",
-        maxWidth: "380px",
+        width: "100%",
+        maxWidth: "390px",
+        minWidth: 0,
+        height: "100%",
+        margin: "0 auto",
         borderRadius: "22px",
         overflow: "hidden",
         cursor: "pointer",
@@ -205,11 +286,10 @@ function TiltCard({
         willChange: "transform, box-shadow",
       }}
     >
-      {/* IMAGE */}
       <div
         style={{
           position: "relative",
-          height: "180px",
+          height: "clamp(180px, 24vw, 220px)",
           flexShrink: 0,
         }}
       >
@@ -223,13 +303,11 @@ function TiltCard({
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.55), transparent)",
+            background: "linear-gradient(to top, rgba(0,0,0,0.55), transparent)",
           }}
         />
       </div>
 
-      {/* CONTENT */}
       <div
         style={{
           padding: "18px",
