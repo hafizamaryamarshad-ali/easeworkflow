@@ -205,6 +205,7 @@ export default function TestimonialChat() {
   const { theme } = useTheme();
 
   const isDark = theme === "dark";
+  const isSmallScreen = isMobile;
 
   // Dynamic Theme Colors
   const colors = {
@@ -240,9 +241,10 @@ export default function TestimonialChat() {
 
     const interval = setInterval(() => {
       setActiveChat((prev) => {
-        const currentIndex = chats.findIndex((c) => c.id === prev.id);
-        const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % chats.length;
-        return chats[nextIndex];
+        const currentIndex = chatsWithMetrics.findIndex((c) => c.id === prev.id);
+        const nextIndex =
+          currentIndex === -1 ? 0 : (currentIndex + 1) % chatsWithMetrics.length;
+        return chatsWithMetrics[nextIndex];
       });
     }, 4000); // 4 seconds between reviews
 
@@ -389,28 +391,37 @@ export default function TestimonialChat() {
               style={{
                 width: "100%",
                 background: colors.cardBg,
-                padding: "40px 36px",
-                borderRadius: "40px",
+                padding: isSmallScreen ? "22px 16px 20px" : "40px 36px",
+                borderRadius: isSmallScreen ? "28px" : "40px",
                 border: `1px solid ${colors.cardBorder}`,
                 backdropFilter: "blur(20px)",
                 position: "relative",
                 boxShadow: isDark ? "0 30px 60px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.05)",
                 overflow: "hidden",
-                transition: "border 0.3s ease"
+                transition: "border 0.3s ease",
+                minHeight: isSmallScreen ? "auto" : undefined,
               }}
             >
               <div style={{
-                position: "absolute", top: "30px", right: "30px",
-                display: "flex", flexDirection: "column", gap: "10px",
-                padding: "16px 22px",
-                minWidth: "240px",
+                position: isSmallScreen ? "relative" : "absolute",
+                top: isSmallScreen ? "auto" : "30px",
+                right: isSmallScreen ? "auto" : "30px",
+                display: "flex",
+                flexDirection: "column",
+                gap: isSmallScreen ? "8px" : "10px",
+                padding: isSmallScreen ? "14px 16px" : "16px 22px",
+                width: isSmallScreen ? "100%" : "auto",
+                minWidth: isSmallScreen ? 0 : "240px",
+                maxWidth: isSmallScreen ? "100%" : "none",
+                marginBottom: isSmallScreen ? "18px" : 0,
                 background: isDark
                   ? "linear-gradient(180deg, rgba(12, 18, 41, 0.92), rgba(8, 12, 28, 0.86))"
                   : "linear-gradient(180deg, rgba(255,255,255,0.92), rgba(241,245,249,0.88))",
                 border: `1px solid ${isDark ? "rgba(148, 163, 184, 0.18)" : "rgba(148, 163, 184, 0.28)"}`,
-                borderRadius: "999px",
+                borderRadius: isSmallScreen ? "24px" : "999px",
                 color: "#0ea5e9",
-                fontSize: "1.05rem", fontWeight: 700,
+                fontSize: isSmallScreen ? "0.95rem" : "1.05rem",
+                fontWeight: 700,
                 boxShadow: isDark
                   ? "0 16px 40px rgba(2, 8, 23, 0.45), inset 0 1px 0 rgba(255,255,255,0.06)"
                   : "0 14px 32px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255,255,255,0.7)",
@@ -430,18 +441,21 @@ export default function TestimonialChat() {
                   <div
                     key={metric.label}
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
+                      display: isSmallScreen ? "grid" : "flex",
+                      gridTemplateColumns: isSmallScreen ? "auto 1fr" : undefined,
+                      alignItems: isSmallScreen ? "start" : "center",
+                      justifyContent: isSmallScreen ? "start" : "space-between",
                       width: "100%",
-                      gap: "14px",
-                      padding: index === 1 ? "8px 0" : "0",
+                      gap: isSmallScreen ? "6px 12px" : "14px",
+                      padding: index === 1 ? (isSmallScreen ? "10px 0" : "8px 0") : "0",
                       borderTop: index === 1 ? `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}` : "none",
                       borderBottom: index === 1 ? `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}` : "none",
                     }}
                   >
-                    <span style={{ letterSpacing: "-0.03em", fontSize: index === 1 ? "1.25rem" : "1.1rem" }}>{metric.value}</span>
-                    <span style={{ color: colors.mainText, opacity: 0.72, fontSize: "0.78rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    <span style={{ letterSpacing: "-0.03em", fontSize: isSmallScreen ? (index === 1 ? "1.1rem" : "1rem") : (index === 1 ? "1.25rem" : "1.1rem"), lineHeight: 1.1 }}>
+                      {metric.value}
+                    </span>
+                    <span style={{ color: colors.mainText, opacity: 0.72, fontSize: isSmallScreen ? "0.7rem" : "0.78rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", lineHeight: 1.2 }}>
                       {metric.label}
                     </span>
                   </div>
@@ -451,20 +465,20 @@ export default function TestimonialChat() {
 
               <h3
                 style={{
-                  fontSize: "clamp(2.1rem, 4.5vw, 2.8rem)",
+                  fontSize: isSmallScreen ? "clamp(1.6rem, 7vw, 2.2rem)" : "clamp(2.1rem, 4.5vw, 2.8rem)",
                   fontWeight: 900,
-                  marginBottom: "40px",
+                  marginBottom: isSmallScreen ? "24px" : "40px",
                   color: colors.mainText,
                 }}
               >
                 {activeChat.name}
               </h3>
               
-              <div style={{ position: "relative", marginBottom: "50px" }}>
-                <span style={{ position: "absolute", top: "-50px", left: "-30px", fontSize: "7rem", opacity: 0.15, color: "#0ea5e9" }}>“</span>
+              <div style={{ position: "relative", marginBottom: isSmallScreen ? "30px" : "50px" }}>
+                <span style={{ position: "absolute", top: isSmallScreen ? "-28px" : "-50px", left: isSmallScreen ? "-8px" : "-30px", fontSize: isSmallScreen ? "4.5rem" : "7rem", opacity: 0.15, color: "#0ea5e9" }}>“</span>
                 <p
                   style={{
-                    fontSize: "clamp(1.2rem, 3.2vw, 1.6rem)",
+                    fontSize: isSmallScreen ? "1rem" : "clamp(1.2rem, 3.2vw, 1.6rem)",
                     lineHeight: "1.8",
                     color: isDark ? "#E2E8F0" : "#334155",
                   }}
@@ -473,15 +487,15 @@ export default function TestimonialChat() {
                 </p>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "15px", padding: "15px 25px",
+              <div style={{ display: "flex", alignItems: "center", gap: "15px", padding: isSmallScreen ? "12px 16px" : "15px 25px",
                 background: colors.pillBg,
-                borderRadius: "50px", width: "fit-content",
+                borderRadius: "50px", width: isSmallScreen ? "100%" : "fit-content",
                 border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`
               }}>
                  <img src={activeChat.image} alt="" style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid #0ea5e9" }} />
                 <div>
-                   <p style={{ fontWeight: 800, fontSize: "1.1rem", color: colors.mainText, margin: 0 }}>{activeChat.name}</p>
-                   <p style={{ fontSize: "0.85rem", color: "#0ea5e9", fontWeight: 700, margin: 0 }}>{activeChat.role}</p>
+                   <p style={{ fontWeight: 800, fontSize: isSmallScreen ? "1rem" : "1.1rem", color: colors.mainText, margin: 0 }}>{activeChat.name}</p>
+                   <p style={{ fontSize: isSmallScreen ? "0.78rem" : "0.85rem", color: "#0ea5e9", fontWeight: 700, margin: 0 }}>{activeChat.role}</p>
                 </div>
               </div>
 
