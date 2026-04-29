@@ -13,7 +13,7 @@ export default function CalendlyButton({ mainColor }) {
   };
 
   return (
-    <div style={{ position: "relative", display: "inline-flex" }}>
+    <div style={{ position: "relative", display: "inline-flex", overflow: "visible", zIndex: 30 }}>
       <div
         onClick={openCalendly}
         onMouseEnter={() => setIsHovered(true)}
@@ -39,8 +39,9 @@ export default function CalendlyButton({ mainColor }) {
         style={{
           position: "absolute",
           top: "calc(100% + 10px)",
-          left: "50%",
-          transform: isHovered ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(-4px)",
+          right: 0,
+          transform: isHovered ? "translateY(0)" : "translateY(-4px)",
+          transformOrigin: "top right",
           opacity: isHovered ? 1 : 0,
           pointerEvents: "none",
           whiteSpace: "nowrap",
@@ -53,7 +54,7 @@ export default function CalendlyButton({ mainColor }) {
           letterSpacing: "0.02em",
           boxShadow: "0 10px 24px rgba(15, 23, 42, 0.22)",
           transition: "opacity 0.18s ease, transform 0.18s ease",
-          zIndex: 20,
+          zIndex: 9999,
         }}
       >
         Book Free Consultation
