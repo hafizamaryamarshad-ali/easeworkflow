@@ -27,6 +27,7 @@ export default function ProjectsList() {
   const [projects, setProjects] = useState<ProjectCard[]>([]);
   const { theme } = useTheme();
   const [windowWidth, setWindowWidth] = useState(0);
+  const [flashlightPos, setFlashlightPos] = useState<{ [key: string]: { x: number; y: number; active: boolean } }>({});
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -85,6 +86,30 @@ export default function ProjectsList() {
     { Icon: FaHeart, top: "42%", left: "88%", duration: 26 },
   ];
 
+  const handleFlashlightMove = (projectId: string, event: React.MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    setFlashlightPos(prev => ({
+      ...prev,
+      [projectId]: { x, y, active: true }
+    }));
+  };
+
+  const handleFlashlightEnter = (projectId: string) => {
+    setFlashlightPos(prev => ({
+      ...prev,
+      [projectId]: { ...prev[projectId], active: true }
+    }));
+  };
+
+  const handleFlashlightLeave = (projectId: string) => {
+    setFlashlightPos(prev => ({
+      ...prev,
+      [projectId]: { x: 0, y: 0, active: false }
+    }));
+  };
+
   return (
     <section
       style={{
@@ -125,13 +150,15 @@ export default function ProjectsList() {
         </h1>
 
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "30px" }}>
-          {projects.map((project, i) => (
+          {projects.map((project, i) => {
+            const pos = flashlightPos[project.id] || { x: 0, y: 0, active: false };
+            return (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.03, y: -6, boxShadow: cardShadow[theme] }}
+              whileHover={{ boxShadow: cardShadow[theme] }}
               style={{
                 width: windowWidth < 640 ? "100%" : "320px",
                 borderRadius: "20px",
@@ -145,18 +172,57 @@ export default function ProjectsList() {
                 cursor: "pointer",
                 display: "flex",
                 flexDirection: "column",
+                position: "relative",
               }}
+              onMouseMove={(e) => handleFlashlightMove(project.id, e)}
+              onMouseEnter={() => handleFlashlightEnter(project.id)}
+              onMouseLeave={() => handleFlashlightLeave(project.id)}
               onClick={() => router.push(`/projects/${project.slug || project.id}`)}
             >
+              <div
+                className="flashlight-spotlight"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  pointerEvents: "none",
+                  zIndex: 0,
+                  opacity: pos.active ? 1 : 0,
+                  background: `radial-gradient(circle 80px at ${pos.x}px ${pos.y}px, rgba(56, 189, 248, 0.25) 0%, rgba(14, 165, 233, 0.12) 40%, rgba(14, 165, 233, 0) 70%)`,
+                  transition: pos.active ? 'none' : 'opacity 300ms ease-out',
+                }}
+                aria-hidden="true"
+              />
               {project.thumbnail && (
-                <img src={project.thumbnail} alt={project.title} style={{ width: "100%", height: "180px", objectFit: "cover" }} />
+                <img src={project.thumbnail} alt={project.title} style={{ width: "100%", height: "145px", objectFit: "cover", position: "relative", zIndex: 1 }} />
               )}
 
-              <div style={{ padding: "22px 22px 20px", flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
-                <h3 style={{ fontSize: "1.4rem", fontWeight: 800, lineHeight: 1.3, margin: 0 }}>
+              <div style={{ padding: "16px 18px 14px", flex: 1, display: "flex", flexDirection: "column", gap: "8px", position: "relative", zIndex: 1 }}>
+                <h3
+                  style={{
+                    fontSize: "1.2rem",
+                    fontWeight: 800,
+                    lineHeight: 1.25,
+                    margin: 0,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
                   {project.title}
                 </h3>
-                <p style={{ color: subText[theme], lineHeight: 1.6, fontSize: "0.96rem", margin: 0 }}>
+                <p
+                  style={{
+                    color: subText[theme],
+                    lineHeight: 1.5,
+                    fontSize: "0.92rem",
+                    margin: 0,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
                   {project.shortDesc}
                 </p>
 
@@ -164,10 +230,10 @@ export default function ProjectsList() {
                 <div
                   style={{
                     marginTop: "auto",
-                    paddingTop: "16px",
+                    paddingTop: "10px",
                     display: "flex",
                     flexDirection: "column",
-                    gap: "12px",
+                    gap: "8px",
                   }}
                 >
                   {/* Technologies as pill tags (reserve space even if empty) */}
@@ -175,17 +241,17 @@ export default function ProjectsList() {
                     style={{
                       display: "flex",
                       flexWrap: "wrap",
-                      gap: "8px",
-                      minHeight: "28px",
+                      gap: "6px",
+                      minHeight: "24px",
                     }}
                   >
                     {project.technologies &&
-                      project.technologies.slice(0, 4).map((tech) => (
+                      project.technologies.slice(0, 2).map((tech) => (
                         <span
                           key={tech}
                           style={{
-                            fontSize: "0.78rem",
-                            padding: "4px 10px",
+                            fontSize: "0.74rem",
+                            padding: "3px 8px",
                             borderRadius: "999px",
                             backgroundColor:
                               theme === "dark"
@@ -222,7 +288,8 @@ export default function ProjectsList() {
                 </div>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
