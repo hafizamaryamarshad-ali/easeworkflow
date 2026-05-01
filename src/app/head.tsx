@@ -19,6 +19,12 @@ export default function Head() {
       <link
         rel="icon"
         type="image/png"
+        sizes="48x48"
+        href={`/favicon-48x48.png?v=${cacheBuster}`}
+      />
+      <link
+        rel="icon"
+        type="image/png"
         sizes="512x512"
         href={`/favicon-512.png?v=${cacheBuster}`}
       />
