@@ -5,13 +5,7 @@ const DEFAULT_SITE_URL = "https://easeworkflow.com";
 const DEFAULT_OG_IMAGE_PATH = "/images/telemedicine.jpg";
 
 export const siteUrl = (() => {
-  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-
-  if (!configuredUrl) {
-    return DEFAULT_SITE_URL;
-  }
-
-  return configuredUrl.replace(/\/$/, "");
+  return DEFAULT_SITE_URL;
 })();
 
 export const absoluteUrl = (path: string): string => {
