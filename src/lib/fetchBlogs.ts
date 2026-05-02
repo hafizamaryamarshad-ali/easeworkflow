@@ -20,7 +20,7 @@ type BlogQueryResult = {
   slug: SanitySlug;
   excerpt: string;
   // Portable Text content (array of blocks in Sanity schema)
-  content: any[];
+  content: unknown[];
   thumbnail: SanityImage | string | null;
   category: string;
   tags: string[] | string | null;
@@ -45,7 +45,7 @@ export type BlogPost = {
   slug: string;
   excerpt: string;
   // Portable Text content (array of blocks in Sanity schema)
-  content: any[];
+  content: unknown[];
    thumbnail: SanityImage | string | null;
    thumbnailUrl: string | null;
   category: string;
@@ -151,10 +151,10 @@ const mapBlog = (blog: BlogQueryResult): BlogPost => ({
   authorName: blog.authorName,
   authorBio: blog.authorBio,
   publishDate: blog.publishDate,
-  metaTitle: blog.metaTitle,
-  metaDescription: blog.metaDescription,
+  metaTitle: blog.metaTitle || blog.title,
+  metaDescription: blog.metaDescription || blog.excerpt || blog.title,
   focusKeyword: blog.focusKeyword,
-  canonicalUrl: blog.canonicalUrl,
+  canonicalUrl: blog.canonicalUrl || "",
   featured: Boolean(blog.featured),
   published: Boolean(blog.published),
   allowComments: Boolean(blog.allowComments),
