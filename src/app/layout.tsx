@@ -12,12 +12,26 @@ import "swiper/css/pagination";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://easeworkflow.com"),
+
+  // ✅ FIX: Canonical (Google confusion solve)
+  alternates: {
+    canonical: "https://easeworkflow.com",
+  },
+
+  // ✅ FIX: Strong favicon signals for Google
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+
   title: {
     default: "EaseWorkflow",
     template: "%s | EaseWorkflow",
   },
   description:
     "EaseWorkflow helps healthcare teams automate clinic workflows with practical, production-ready software.",
+
   openGraph: {
     type: "website",
     siteName: "EaseWorkflow",
@@ -34,6 +48,7 @@ export const metadata: Metadata = {
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
     title: "EaseWorkflow",
@@ -68,7 +83,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
         </ThemeProvider>
-         {/* ✅ ADD THIS (VERY IMPORTANT) */}
+
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="lazyOnload"
