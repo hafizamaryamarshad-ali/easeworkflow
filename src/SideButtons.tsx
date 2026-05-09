@@ -61,7 +61,7 @@ export default function SideButtons() {
       }}
     >
       <a href="/#privacy" onClick={handlePrivacyClick} className="side-tab">
-        PRIVACY
+        DATA PROTECTION
       </a>
 
       <Link href="/contact" className="side-tab">

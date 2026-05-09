@@ -530,6 +530,24 @@ h3 {
     border-radius: 0 0 12px 12px;
   }
 
+  .site-navbar {
+    flex-wrap: nowrap !important;
+  }
+
+  .navbar-desktop-links,
+  .navbar-desktop-actions {
+    display: none !important;
+  }
+
+  .navbar-mobile-toggle {
+    display: flex !important;
+  }
+
+  .navbar-mobile-menu {
+    left: 0 !important;
+    right: 0 !important;
+  }
+
    /* Hide fixed edge UI on tablet for more space */
   .side-buttons,
   .side-tabs-container {
@@ -1146,6 +1164,15 @@ h3 {
 @media (min-width: 769px) and (max-width: 1024px) {
   section {
     padding: 90px 32px;
+  }
+
+  .site-navbar {
+    max-width: 100% !important;
+  }
+
+  .navbar-mobile-toggle,
+  .navbar-mobile-menu {
+    display: none !important;
   }
 
   .process-section {

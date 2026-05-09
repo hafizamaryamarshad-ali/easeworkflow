@@ -25,8 +25,6 @@ import CalendlyButton from "./components/CalendlyButton";
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -36,18 +34,6 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Detect mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      const width = window.innerWidth;
-      setViewportWidth(width);
-      setIsMobile(width <= 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
@@ -127,11 +113,9 @@ export default function Navbar() {
     ? "0 18px 45px rgba(15,23,42,0.9)"
     : "0 10px 30px rgba(15,23,42,0.12)";
 
-  const isTabletMid =
-    viewportWidth !== null && viewportWidth > 768 && viewportWidth <= 1024;
-
   return (
     <nav
+      className="site-navbar"
       style={{
         position: "sticky",
         top: 0,
@@ -139,7 +123,7 @@ export default function Navbar() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: isMobile ? "8px 16px" : isTabletMid ? "8px 24px" : "10px 40px",
+        padding: "10px 40px",
         background: navBg,
         backdropFilter: "blur(16px)",
         border: navBorder,
@@ -150,12 +134,13 @@ export default function Navbar() {
         margin: "0 auto",
         boxSizing: "border-box",
         transition: "all 0.4s ease",
-        flexWrap: isTabletMid ? "nowrap" : "wrap",
+        flexWrap: "nowrap",
       }}
     >
       {/* Logo */}
       <Link
         href="/"
+        className="navbar-logo"
         style={{
           display: "flex",
           alignItems: "center",
@@ -179,183 +164,152 @@ export default function Navbar() {
       </Link>
 
       {/* Desktop Nav Links */}
-      {!isMobile && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: isTabletMid ? "12px" : "16px",
-            flex: isTabletMid ? 1 : undefined,
-            justifyContent: isTabletMid ? "center" : undefined,
-            minWidth: 0,
-          }}
-        >
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                position: "relative",
-                color: isLinkActive(link.href) ? mainColor : navTextColor,
-                fontWeight: 600,
-                fontSize: isTabletMid ? "0.82rem" : "0.9rem",
-                textDecoration: "none",
-                padding: isTabletMid ? "2px 4px" : "4px 6px",
-                borderRadius: "6px",
-                transition: "all 0.25s ease",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = mainColor; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = isLinkActive(link.href) ? mainColor : navTextColor; }}
-            >
-              {link.icon} {link.name}
-              <span
-                style={{
-                  position: "absolute",
-                  bottom: -2,
-                  left: 0,
-                  width: isLinkActive(link.href) ? "100%" : "0%",
-                  height: "2px",
-                  background: mainColor,
-                  borderRadius: "2px",
-                  transition: "width 0.25s ease",
-                }}
-              />
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {/* Desktop Buttons */}
-      {!isMobile && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: isTabletMid ? "8px" : "12px",
-            flexShrink: 0,
-          }}
-        >
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
+      <div
+        className="navbar-desktop-links"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+          flex: 1,
+          justifyContent: "center",
+          minWidth: 0,
+        }}
+      >
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={(e) => handleNavClick(e, link.href)}
             style={{
-              padding: isTabletMid ? "4px 10px" : "6px 12px",
-              borderRadius: "12px",
-              background: theme === "dark" ? "#fff" : mainColor,
-              color: theme === "dark" ? "#0f172a" : "#fff",
-              border: "none",
-              cursor: "pointer",
-              fontWeight: 600,
-              fontSize: isTabletMid ? "0.75rem" : "0.8rem",
-              transition: "all 0.3s ease",
               display: "flex",
               alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            {theme === "dark" ? <FiSun /> : <FiMoon />}
-            {theme === "dark" ? "Light" : "Dark"}
-          </button>
-
-          {/* Consultationss */}
-          <Link
-            href="/contact"
-            style={{
-              padding: isTabletMid ? "6px 16px" : "8px 20px",
-              fontSize: isTabletMid ? "0.8rem" : "0.88rem",
+              gap: "4px",
+              position: "relative",
+              color: isLinkActive(link.href) ? mainColor : navTextColor,
               fontWeight: 600,
-              borderRadius: "16px",
-              background: mainColor,
-              color: "#fff",
+              fontSize: "0.9rem",
               textDecoration: "none",
+              padding: "4px 6px",
+              borderRadius: "6px",
               transition: "all 0.25s ease",
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = mainColor; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = isLinkActive(link.href) ? mainColor : navTextColor; }}
           >
-            Start Your Project
-          </Link>
-
-         {/* Calendly Button */}
-<CalendlyButton mainColor={mainColor} />
-        </div>
-      )}
-
-      {/* Mobile menu */}
-      {isMobile && (
-        <>
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: mainColor,
-              display: "flex",
-              alignItems: "center",
-              padding: "4px",
-            }}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <FiX size={26} /> : <FiMenu size={26} />}
-          </button>
-
-          {menuOpen && (
-            <div
+            {link.icon} {link.name}
+            <span
               style={{
                 position: "absolute",
-                top: "100%",
+                bottom: -2,
                 left: 0,
-                right: 0,
-                background: theme === "dark" ? "rgba(10,15,43,0.97)" : "rgba(255,255,255,0.97)",
-                backdropFilter: "blur(16px)",
-                borderRadius: "0 0 12px 12px",
-                padding: "16px 24px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "6px",
-                alignItems: "center",
-                zIndex: 1000,
+                width: isLinkActive(link.href) ? "100%" : "0%",
+                height: "2px",
+                background: mainColor,
+                borderRadius: "2px",
+                transition: "width 0.25s ease",
               }}
-            >
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    handleNavClick(e, link.href);
-                    setMenuOpen(false);
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    justifyContent: "center",
-                    color: isLinkActive(link.href) ? mainColor : navTextColor,
-                    fontWeight: 600,
-                    fontSize: "1rem",
-                    textDecoration: "none",
-                    padding: "10px 8px",
-                    borderRadius: "8px",
-                    width: "100%",
-                    textAlign: "center",
-                    borderBottom: `1px solid ${
-                      theme === "dark"
-                        ? "rgba(255,255,255,0.07)"
-                        : "rgba(0,0,0,0.07)"
-                    }`,
-                  }}
-                >
-                  {link.icon} {link.name}
-                </Link>
-              ))}
+            />
+          </Link>
+        ))}
+      </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  openCalendly();
+      {/* Desktop Buttons */}
+      <div
+        className="navbar-desktop-actions"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          flexShrink: 0,
+        }}
+      >
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "12px",
+            background: theme === "dark" ? "#fff" : mainColor,
+            color: theme === "dark" ? "#0f172a" : "#fff",
+            border: "none",
+            cursor: "pointer",
+            fontWeight: 600,
+            fontSize: "0.8rem",
+            transition: "all 0.3s ease",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+          }}
+        >
+          {theme === "dark" ? <FiSun /> : <FiMoon />}
+          {theme === "dark" ? "Light" : "Dark"}
+        </button>
+
+        {/* Consultationss */}
+        <Link
+          href="/contact"
+          style={{
+            padding: "8px 20px",
+            fontSize: "0.88rem",
+            fontWeight: 600,
+            borderRadius: "16px",
+            background: mainColor,
+            color: "#fff",
+            textDecoration: "none",
+            transition: "all 0.25s ease",
+          }}
+        >
+          Start Your Project
+        </Link>
+
+       {/* Calendly Button */}
+<CalendlyButton mainColor={mainColor} />
+      </div>
+
+      {/* Mobile menu */}
+      <>
+        <button
+          className="navbar-mobile-toggle"
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: mainColor,
+            display: "flex",
+            alignItems: "center",
+            padding: "4px",
+          }}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <FiX size={26} /> : <FiMenu size={26} />}
+        </button>
+
+        {menuOpen && (
+          <div
+            className="navbar-mobile-menu"
+            style={{
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              right: 0,
+              background: theme === "dark" ? "rgba(10,15,43,0.97)" : "rgba(255,255,255,0.97)",
+              backdropFilter: "blur(16px)",
+              borderRadius: "0 0 12px 12px",
+              padding: "16px 24px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "6px",
+              alignItems: "center",
+              zIndex: 1000,
+            }}
+          >
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={(e) => {
+                  handleNavClick(e, link.href);
                   setMenuOpen(false);
                 }}
                 style={{
@@ -363,7 +317,7 @@ export default function Navbar() {
                   alignItems: "center",
                   gap: "8px",
                   justifyContent: "center",
-                  color: navTextColor,
+                  color: isLinkActive(link.href) ? mainColor : navTextColor,
                   fontWeight: 600,
                   fontSize: "1rem",
                   textDecoration: "none",
@@ -371,84 +325,113 @@ export default function Navbar() {
                   borderRadius: "8px",
                   width: "100%",
                   textAlign: "center",
-                  borderBottom:
+                  borderBottom: `1px solid ${
                     theme === "dark"
-                      ? "1px solid rgba(255,255,255,0.07)"
-                      : "1px solid rgba(0,0,0,0.07)",
-                  background: "transparent",
+                      ? "rgba(255,255,255,0.07)"
+                      : "rgba(0,0,0,0.07)"
+                  }`,
+                }}
+              >
+                {link.icon} {link.name}
+              </Link>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => {
+                openCalendly();
+                setMenuOpen(false);
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                justifyContent: "center",
+                color: navTextColor,
+                fontWeight: 600,
+                fontSize: "1rem",
+                textDecoration: "none",
+                padding: "10px 8px",
+                borderRadius: "8px",
+                width: "100%",
+                textAlign: "center",
+                borderBottom:
+                  theme === "dark"
+                    ? "1px solid rgba(255,255,255,0.07)"
+                    : "1px solid rgba(0,0,0,0.07)",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                marginTop: "2px",
+              }}
+            >
+              <FiCalendar size={14} /> Schedule Your Free Consultation
+            </button>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                marginTop: "12px",
+                width: "100%",
+              }}
+            >
+              <button
+                onClick={toggleTheme}
+                style={{
+                  flex: 1,
+                  padding: "10px 14px",
+                  borderRadius: "12px",
+                  background: theme === "dark" ? "#fff" : mainColor,
+                  color: theme === "dark" ? "#0f172a" : "#fff",
                   border: "none",
                   cursor: "pointer",
-                  marginTop: "2px",
-                }}
-              >
-                <FiCalendar size={14} /> Schedule Your Free Consultation
-              </button>
-
-              <div
-                style={{
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
-                  marginTop: "12px",
-                  width: "100%",
-                }}
-              >
-                <button
-                  onClick={toggleTheme}
-                  style={{
-                    flex: 1,
-                    padding: "10px 14px",
-                    borderRadius: "12px",
-                    background: theme === "dark" ? "#fff" : mainColor,
-                    color: theme === "dark" ? "#0f172a" : "#fff",
-                    border: "none",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    fontSize: "0.9rem",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "6px",
-                  }}
-                >
-                  {theme === "dark" ? <FiSun /> : <FiMoon />}
-                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                </button>
-
-                <Link
-                  href="/contact"
-                  onClick={() => setMenuOpen(false)}
-                  style={{
-                    flex: 2,
-                    padding: "10px 14px",
-                    fontSize: "0.9rem",
-                    fontWeight: 600,
-                    borderRadius: "12px",
-                    background: mainColor,
-                    color: "#fff",
-                    textDecoration: "none",
-                    textAlign: "center",
-                  }}
-                >
-                  Start a Project
-                </Link>
-              </div>
-
-              {/* Mobile Calendly button inside menu for calendar visibility */}
-              <div
-                style={{
-                  marginTop: "10px",
-                  width: "100%",
-                  display: "flex",
                   justifyContent: "center",
+                  gap: "6px",
                 }}
               >
-                {/* Calendly button is handled as a menu item on mobile */}
-              </div>
+                {theme === "dark" ? <FiSun /> : <FiMoon />}
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </button>
+
+              <Link
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  flex: 2,
+                  padding: "10px 14px",
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
+                  borderRadius: "12px",
+                  background: mainColor,
+                  color: "#fff",
+                  textDecoration: "none",
+                  textAlign: "center",
+                }}
+              >
+                Start a Project
+              </Link>
             </div>
-          )}
-        </>
-      )}
+
+            {/* Mobile Calendly button inside menu for calendar visibility */}
+            <div
+              style={{
+                marginTop: "10px",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {/* Calendly button is handled as a menu item on mobile */}
+            </div>
+          </div>
+        )}
+      </>
     </nav>
   );
 }

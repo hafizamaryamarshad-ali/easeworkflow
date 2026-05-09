@@ -5,66 +5,18 @@ import { useState, useEffect } from "react";
 import { useTheme } from "./theme/ThemeProvider";
 
 const reviewMetrics = [
-  [
-    { value: "85%", label: "cost reduction" },
-    { value: "200%", label: "faster workflow" },
-    { value: "91%", label: "performance boost" },
-  ],
-  [
-    { value: "87%", label: "cost reduction" },
-    { value: "180%", label: "faster workflow" },
-    { value: "92%", label: "performance boost" },
-  ],
-  [
-    { value: "82%", label: "cost reduction" },
-    { value: "210%", label: "faster workflow" },
-    { value: "89%", label: "performance boost" },
-  ],
-  [
-    { value: "90%", label: "cost reduction" },
-    { value: "195%", label: "faster workflow" },
-    { value: "94%", label: "performance boost" },
-  ],
-  [
-    { value: "88%", label: "cost reduction" },
-    { value: "205%", label: "faster workflow" },
-    { value: "90%", label: "performance boost" },
-  ],
-  [
-    { value: "84%", label: "cost reduction" },
-    { value: "175%", label: "faster workflow" },
-    { value: "93%", label: "performance boost" },
-  ],
-  [
-    { value: "91%", label: "cost reduction" },
-    { value: "220%", label: "faster workflow" },
-    { value: "95%", label: "performance boost" },
-  ],
-  [
-    { value: "86%", label: "cost reduction" },
-    { value: "190%", label: "faster workflow" },
-    { value: "88%", label: "performance boost" },
-  ],
-  [
-    { value: "83%", label: "cost reduction" },
-    { value: "215%", label: "faster workflow" },
-    { value: "96%", label: "performance boost" },
-  ],
-  [
-    { value: "89%", label: "cost reduction" },
-    { value: "230%", label: "faster workflow" },
-    { value: "92%", label: "performance boost" },
-  ],
-  [
-    { value: "81%", label: "cost reduction" },
-    { value: "185%", label: "faster workflow" },
-    { value: "90%", label: "performance boost" },
-  ],
-  [
-    { value: "92%", label: "cost reduction" },
-    { value: "240%", label: "faster workflow" },
-    { value: "97%", label: "performance boost" },
-  ],
+  { value: "60%", label: "admin reduction" },
+  { value: "87%", label: "compliance speedup" },
+  { value: "89%", label: "visibility boost" },
+  { value: "195%", label: "workflow lift" },
+  { value: "88%", label: "follow-up reduction" },
+  { value: "175%", label: "integration speed" },
+  { value: "220%", label: "front desk speedup" },
+  { value: "90%", label: "operational confidence" },
+  { value: "215%", label: "onboarding speed" },
+  { value: "92%", label: "ai trust boost" },
+  { value: "89%", label: "audit reduction" },
+  { value: "240%", label: "automation speed" },
 ];
 
 const chats = [
@@ -192,7 +144,7 @@ const chats = [
 
 const chatsWithMetrics = chats.map((chat, index) => ({
   ...chat,
-  metrics: reviewMetrics[index] ?? reviewMetrics[0],
+  metric: reviewMetrics[index] ?? reviewMetrics[0],
 }));
 
 const doubleChats = [...chatsWithMetrics, ...chatsWithMetrics, ...chatsWithMetrics];
@@ -437,9 +389,7 @@ export default function TestimonialChat() {
                   pointerEvents: "none",
                 }} />
                 <div style={{ position: "relative", zIndex: 1, width: "100%" }}>
-                {activeChat.metrics.map((metric, index) => (
                   <div
-                    key={metric.label}
                     style={{
                       display: isSmallScreen ? "grid" : "flex",
                       gridTemplateColumns: isSmallScreen ? "auto 1fr" : undefined,
@@ -447,19 +397,15 @@ export default function TestimonialChat() {
                       justifyContent: isSmallScreen ? "start" : "space-between",
                       width: "100%",
                       gap: isSmallScreen ? "6px 12px" : "14px",
-                      padding: index === 1 ? (isSmallScreen ? "10px 0" : "8px 0") : "0",
-                      borderTop: index === 1 ? `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}` : "none",
-                      borderBottom: index === 1 ? `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}` : "none",
                     }}
                   >
-                    <span style={{ letterSpacing: "-0.03em", fontSize: isSmallScreen ? (index === 1 ? "1.1rem" : "1rem") : (index === 1 ? "1.25rem" : "1.1rem"), lineHeight: 1.1 }}>
-                      {metric.value}
+                    <span style={{ letterSpacing: "-0.03em", fontSize: isSmallScreen ? "1rem" : "1.1rem", lineHeight: 1.1 }}>
+                      {activeChat.metric.value}
                     </span>
                     <span style={{ color: colors.mainText, opacity: 0.72, fontSize: isSmallScreen ? "0.7rem" : "0.78rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", lineHeight: 1.2 }}>
-                      {metric.label}
+                      {activeChat.metric.label}
                     </span>
                   </div>
-                ))}
                 </div>
               </div>
 
