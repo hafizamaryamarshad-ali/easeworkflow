@@ -28,6 +28,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const [isMobile, setIsMobile] = useState(false);
 
   // Detect scroll
   useEffect(() => {
@@ -39,6 +40,18 @@ export default function Navbar() {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  // Detect mobile viewport so the mobile toggle only appears on small screens
+  useEffect(() => {
+    const checkIsMobile = () => {
+      if (typeof window === "undefined") return;
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
 
   const openCalendly = () => {
     window.open("https://calendly.com/iamumershaheen/30min", "_blank");
@@ -276,7 +289,7 @@ export default function Navbar() {
             border: "none",
             cursor: "pointer",
             color: mainColor,
-            display: "flex",
+            display: isMobile ? "flex" : "none",
             alignItems: "center",
             padding: "4px",
           }}
@@ -285,7 +298,7 @@ export default function Navbar() {
           {menuOpen ? <FiX size={26} /> : <FiMenu size={26} />}
         </button>
 
-        {menuOpen && (
+        {menuOpen && isMobile && (
           <div
             className="navbar-mobile-menu"
             style={{
