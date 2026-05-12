@@ -1062,6 +1062,49 @@ h3 {
   overflow: hidden;
 }
 
+/* ================================
+   Z-INDEX HIERARCHY
+================================= */
+
+.side-buttons {
+  z-index: 9999;
+}
+
+/* ================================
+   LOADING SCREEN & PAGE TRANSITIONS
+================================= */
+
+/* Prevent white flash during page transitions */
+html {
+  background: var(--color-bg);
+}
+
+body {
+  background: var(--color-bg);
+}
+
+/* Smooth page transition */
+@media (prefers-reduced-motion: no-preference) {
+  main {
+    animation: fadeIn 0.4s ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Loading screen z-index */
+[data-loading-screen] {
+  z-index: 9999 !important;
+  pointer-events: none;
+}
+
 .workflow-stage__fill {
   position: absolute;
   inset: 0;
