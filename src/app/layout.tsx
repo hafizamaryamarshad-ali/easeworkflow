@@ -4,9 +4,6 @@ import Footer from "../Footer";
 import ThemeProvider from "../theme/ThemeProvider";
 import BackButton from "../BackButton";
 import SideButtons from "../../src/SideButtons"; // ✅ ADDED
-import LoadingScreen from "@/components/LoadingScreen";
-import { LoadingProvider } from "@/providers/LoadingContext";
-import { RouteTransitionListener } from "@/components/RouteTransitionListener";
 import Script from "next/script";
 import type { Metadata } from "next";
 import "swiper/css";
@@ -80,15 +77,11 @@ export default function RootLayout({
         }}
       >
         <ThemeProvider>
-          <LoadingProvider>
-            <RouteTransitionListener />
-            <LoadingScreen />
-            <Navbar />
-            <SideButtons /> {/* ✅ ADDED */}
-            <BackButton />
-            <main>{children}</main>
-            <Footer />
-          </LoadingProvider>
+          <Navbar />
+          <SideButtons /> {/* ✅ ADDED */}
+          <BackButton />
+          <main>{children}</main>
+          <Footer />
         </ThemeProvider>
 
         <Script
