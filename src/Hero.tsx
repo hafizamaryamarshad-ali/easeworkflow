@@ -692,6 +692,7 @@ export default function Hero() {
               >
                 See Live Projects
               </Link>
+
             </motion.div>
 
             <motion.div

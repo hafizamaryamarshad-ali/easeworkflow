@@ -197,6 +197,41 @@ export default function Footer() {
               >
                 Start Project →
               </button>
+
+              <a
+                href="https://cloudworkflow.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "12px",
+                  padding: "12px 22px",
+                  borderRadius: "999px",
+                  background: "rgba(56, 189, 248, 0.18)",
+                  color: "#38bdf8",
+                  textDecoration: "none",
+                  fontWeight: 700,
+                  border: "1px solid rgba(56, 189, 248, 0.34)",
+                  transition: "transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease",
+                  boxShadow: "0 10px 24px rgba(15,23,42,0.12)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#38bdf8";
+                  e.currentTarget.style.color = "#000";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 16px 32px rgba(56,189,248,0.24)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(56, 189, 248, 0.18)";
+                  e.currentTarget.style.color = "#38bdf8";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 10px 24px rgba(15,23,42,0.12)";
+                }}
+              >
+                Explore Other Services →
+              </a>
             </div>
 
           </div>

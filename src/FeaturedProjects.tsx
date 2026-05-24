@@ -134,25 +134,79 @@ export default function FeaturedProjects() {
         )}
       </div>
 
-      {/* BUTTON */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => router.push("/projects")}
+      <div
         style={{
           marginTop: "30px",
-          padding: "12px 36px",
-          borderRadius: "999px",
-          border: "none",
-          background: "linear-gradient(90deg,#0ea5e9,#6366f1)",
-          color: "#fff",
-          fontWeight: 700,
-          cursor: "pointer",
-          boxShadow: "0 10px 25px rgba(14,165,233,0.25)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "14px",
+          flexWrap: "wrap",
         }}
       >
-        See All Projects →
-      </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => router.push("/projects")}
+          style={{
+            padding: "12px 36px",
+            borderRadius: "999px",
+            border: "none",
+            background: "linear-gradient(90deg,#0ea5e9,#6366f1)",
+            color: "#fff",
+            fontWeight: 700,
+            cursor: "pointer",
+            boxShadow: "0 10px 25px rgba(14,165,233,0.25)",
+          }}
+        >
+          See All Projects →
+        </motion.button>
+
+        <a
+          href="https://cloudworkflow.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            padding: "14px 22px",
+            fontWeight: 700,
+            fontSize: "0.96rem",
+            borderRadius: "999px",
+            border: isDark ? "1.5px solid rgba(56,189,248,0.55)" : "1.5px solid rgba(59,130,246,0.35)",
+            background: isDark ? "rgba(15,23,42,0.78)" : "rgba(248,250,252,0.98)",
+            color: isDark ? "#e5f6ff" : "#1d4ed8",
+            textDecoration: "none",
+            transition: "transform 0.2s ease-out, box-shadow 0.2s ease-out, background 0.2s ease-out, color 0.2s ease-out",
+            backdropFilter: "blur(14px)",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            boxShadow:
+              isDark
+                ? "0 12px 28px rgba(15,23,42,0.48)"
+                : "0 12px 26px rgba(148,163,184,0.36)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background =
+              isDark ? "rgba(15,23,42,0.9)" : "#e0edff";
+            e.currentTarget.style.color = isDark ? "#f9fafb" : "#1e3a8a";
+            e.currentTarget.style.boxShadow = isDark
+              ? "0 16px 36px rgba(15,23,42,0.72)"
+              : "0 16px 34px rgba(148,163,184,0.56)";
+            e.currentTarget.style.transform = "translateY(-2px)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background =
+              isDark ? "rgba(15,23,42,0.78)" : "rgba(248,250,252,0.98)";
+            e.currentTarget.style.color = isDark ? "#e5f6ff" : "#1d4ed8";
+            e.currentTarget.style.boxShadow = isDark
+              ? "0 12px 28px rgba(15,23,42,0.48)"
+              : "0 12px 26px rgba(148,163,184,0.36)";
+            e.currentTarget.style.transform = "translateY(0)";
+          }}
+        >
+          Explore Other Services →
+        </a>
+      </div>
 
       <style jsx global>{`
         .featured-projects-mobile {
