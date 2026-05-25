@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="sendData()">Send Test Data</button>
+
+<script>
+function sendData() {
+  fetch("http://localhost:5000/track", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      page: "/home",
+      device: "Chrome",
+      browser: "Chrome",
+      country: "Pakistan"
+    })
+  })
+  .then(res => res.json())
+  .then(data => alert("Data Sent!"))
+}
+</script>
+
+</body>
+</html>

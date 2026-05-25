@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import ThemeProvider from "../theme/ThemeProvider";
 import BackButton from "../BackButton";
 import SideButtons from "../../src/SideButtons"; // ✅ ADDED
+import VisitorTracker from "../VisitorTracker";
 import Script from "next/script";
 import type { Metadata } from "next";
 import "swiper/css";
@@ -77,6 +78,7 @@ export default function RootLayout({
         }}
       >
         <ThemeProvider>
+          <VisitorTracker />
           <Navbar />
           <SideButtons /> {/* ✅ ADDED */}
           <BackButton />
