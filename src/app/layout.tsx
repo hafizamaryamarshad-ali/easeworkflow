@@ -6,6 +6,7 @@ import BackButton from "../BackButton";
 import SideButtons from "../../src/SideButtons"; // ✅ ADDED
 import VisitorTracker from "../VisitorTracker";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -85,6 +86,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
         </ThemeProvider>
+        <Analytics />
 
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
