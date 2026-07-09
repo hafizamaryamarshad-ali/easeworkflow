@@ -5,6 +5,7 @@ import type React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { PortableText } from "@portabletext/react";
+import { jsPDF } from "jspdf";
 import {
   FiCheck,
   FiUsers,
@@ -18,6 +19,108 @@ import {
 } from "react-icons/fi";
 import { fetchCaseStudies, type CaseStudy } from "../../../lib/fetchCaseStudies";
 import { useTheme } from "../../../theme/ThemeProvider";
+
+const portableTextToPlain = (value: unknown): string => {
+  if (!Array.isArray(value)) {
+    return typeof value === "string" ? value : "";
+  }
+
+  return value
+    .flatMap((block) => {
+      if (!block || block._type !== "block" || !Array.isArray(block.children)) {
+        return [];
+      }
+
+      return [
+        block.children
+          .map((child: { text?: unknown }) => (typeof child.text === "string" ? child.text : ""))
+          .join(""),
+      ];
+    })
+    .filter(Boolean)
+    .join("\n\n")
+    .trim();
+};
+
+const addWrappedText = (
+  doc: jsPDF,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+  pageHeight: number,
+) => {
+  const lines = doc.splitTextToSize(text, maxWidth) as string[];
+
+  lines.forEach((line) => {
+    if (y > pageHeight - 18) {
+      doc.addPage();
+      y = 18;
+    }
+
+    doc.text(line, x, y);
+    y += lineHeight;
+  });
+
+  return y;
+};
+
+const buildCaseStudyPdf = (study: CaseStudy) => {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const marginX = 16;
+  let y = 20;
+
+  const title = study.metaTitle || study.title;
+  const summary = portableTextToPlain(study.summary);
+  const problem = portableTextToPlain(study.problem);
+  const solution = portableTextToPlain(study.explanation?.length ? study.explanation : study.solution);
+  const results = portableTextToPlain(study.results);
+  const sections = [
+    { label: "Client", value: study.client },
+    { label: "Industry", value: study.industry },
+    { label: "Summary", value: summary },
+    { label: "Problem", value: problem },
+    { label: "Solution", value: solution },
+    { label: "Results", value: results },
+    { label: "Tools", value: Array.isArray(study.tools) ? study.tools.join(", ") : "" },
+  ].filter((section) => section.value && section.value.trim().length > 0);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  y = addWrappedText(doc, title, marginX, y, pageWidth - marginX * 2, 8, pageHeight) + 2;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  if (study.industry) {
+    doc.text(study.industry, marginX, y);
+    y += 8;
+  }
+
+  doc.setDrawColor(180, 180, 180);
+  doc.line(marginX, y, pageWidth - marginX, y);
+  y += 10;
+
+  sections.forEach((section) => {
+    if (y > pageHeight - 30) {
+      doc.addPage();
+      y = 18;
+    }
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text(section.label, marginX, y);
+    y += 6;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    y = addWrappedText(doc, section.value, marginX, y, pageWidth - marginX * 2, 6, pageHeight) + 4;
+  });
+
+  doc.save(`${(study.slug || title).replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "case-study"}.pdf`);
+};
 
 // Inline SVG icons for Problem & Solution cards
 const ProblemIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -208,6 +311,7 @@ export default function CaseStudyDetail() {
   const hasProblemCards = Array.isArray(study.problemCards) && study.problemCards.length > 0;
   const hasSolutionCards = Array.isArray(study.solutionCards) && study.solutionCards.length > 0;
   const hasKeyFeatures = Array.isArray(study.keyFeatures) && study.keyFeatures.length > 0;
+  const handleDownloadPdf = () => buildCaseStudyPdf(study);
 
   const colors = {
     bg: isDark ? "#0a0c10" : "#f5f7fb",
@@ -270,6 +374,31 @@ export default function CaseStudyDetail() {
         >
           {study.title}
         </motion.h1>
+
+        <motion.button
+          type="button"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          onClick={handleDownloadPdf}
+          style={{
+            margin: "0 auto 36px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            padding: "12px 18px",
+            borderRadius: "999px",
+            border: `1px solid ${colors.accent}`,
+            background: colors.accent,
+            color: "#fff",
+            fontWeight: 700,
+            cursor: "pointer",
+            boxShadow: "0 12px 30px rgba(79, 70, 229, 0.28)",
+          }}
+        >
+          Download Case Study PDF
+        </motion.button>
 
         {/* Auto-Slider */}
         {hasSliderImages && (
