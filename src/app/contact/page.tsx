@@ -643,7 +643,7 @@ export default function ContactPage() {
                 {
                   icon: <FiMail size={18} />,
                   title: "Primary Email",
-                  lines: ["hi@easeworkflow.com"],
+                  lines: ["hello@easeworkflow.com"],
                 },
                 {
                   icon: <FiPhone size={18} />,

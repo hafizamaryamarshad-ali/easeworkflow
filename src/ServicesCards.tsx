@@ -1,45 +1,59 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaRobot, FaCalendarAlt, FaVideo } from "react-icons/fa";
+import {
+  FaClipboardList,
+  FaFileMedicalAlt,
+  FaShieldAlt,
+} from "react-icons/fa";
 import { useRouter } from "next/navigation";
-
 const services = [
   {
-    title: "EMR Integration",
+    title: "Patient Intake",
     description:
-      "Centralize patient data with secure, real-time EMR integration for better clinical decisions and efficiency.",
-    points: ["Real-time patient records", "Secure data sync", "AI-assisted insights"],
+      "Automate CRM to EHR/EMR data entry, reducing manual work and speeding up patient intake.",
+    points: [
+      "CRM to EHR/EMR automation",
+      "Reduced manual work",
+      "Faster patient onboarding",
+    ],
     image: "/images/4.png",
-    icon: <FaRobot />,
+    icon: <FaClipboardList />,
   },
   {
-    title: "Telemedicine",
+    title: "SOAP Notes",
     description:
-      "Deliver seamless remote consultations with secure and reliable communication.",
-    points: ["Video consultations", "Secure calls", "Instant access"],
+      "Generate SOAP notes from recorded doctor conversations and automatically update the EHR/EMR.",
+    points: [
+      "AI-generated SOAP notes",
+      "Automatic EHR updates",
+      "Conversation transcription",
+    ],
     image: "/images/6.png",
-    icon: <FaVideo />,
+    icon: <FaFileMedicalAlt />,
   },
   {
-    title: "Smart Scheduling",
+    title: "Insurance Verification",
     description:
-      "Automated scheduling and follow-ups to reduce manual effort and optimize patient flow.",
-    points: ["Auto reminders", "Smart booking", "Reduced no-shows"],
+      "Verify patient insurance before appointments or while walk-in patients are waiting.",
+    points: [
+      "Eligibility verification",
+      "Real-time insurance checks",
+      "Faster patient processing",
+    ],
     image: "/images/5.png",
-    icon: <FaCalendarAlt />,
+    icon: <FaShieldAlt />,
   },
 ];
 
 const leftImages = ["/images/schedulingg.png", "/images/our-services.png"];
 
 const leftDescription =
-  "Centralize patient data with secure, real-time EMR integration for better clinical decisions and efficiency.";
-
+  "Automate patient intake, generate accurate SOAP notes from doctor conversations, and verify insurance eligibility before every visit. Reduce administrative work, improve accuracy, and help your team deliver a faster patient experience.";
 const leftPoints = [
-  "Real-time patient records",
-  "Secure data sync",
-  "AI-assisted insights",
+  "Automated CRM to EHR/EMR patient intake",
+  "AI-generated SOAP notes with automatic EHR updates",
+  "Real-time insurance verification before every visit",
 ];
 
 const cardVariants = {
@@ -290,7 +304,7 @@ export default function Services() {
         {/* TEXT */}
         <div>
           <p style={{ color: "#0ea5e9", fontWeight: 600 }}>
-            More than 25 Years of Experience
+            More than 10 Years of Experience
           </p>
 
           <h2 style={{ fontSize: "2.4rem", fontWeight: 800 }}>

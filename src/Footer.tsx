@@ -199,7 +199,7 @@ export default function Footer() {
               </button>
 
               <a
-                href="https://cloudworkflow.vercel.app/"
+                href="https://solutions.easeworkflow.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -274,7 +274,7 @@ export default function Footer() {
                 }}
               >
                 {[
-                  { label: "General Inquiries", email: "hi@easeworkflow.com" },
+                  { label: "General Inquiries", email: "hello@easeworkflow.com" },
                   { label: "Support", email: "support@easeworkflow.com" },
                   { label: "Business / Founder", email: "umer@easeworkflow.com" },
                 ].map((item, idx) => (
