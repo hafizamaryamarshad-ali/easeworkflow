@@ -34,7 +34,7 @@ export default function FeaturedProjects() {
       className="featured-projects-section"
       style={{
         padding: "30px 15px 50px",
-        background: isDark ? "#020617" : "#f1f5f9",
+        background: isDark ? "#020617" : "#f8fafc",
         color: isDark ? "#fff" : "#0f172a",
         textAlign: "center",
       }}
@@ -298,30 +298,42 @@ export default function FeaturedProjects() {
   );
 }
 
-/* ================= PREMIUM CARD ================= */
+/* ================= PREMIUM SaaS GRADIENTS ================= */
 
-// Light theme uses soft but colorful SaaS-style gradients
-// inspired by Tailwind shades (blue-50, indigo-50, purple-50, etc.).
-// Goal: colorful yet gentle on a light background.
-const lightGradients = [
-  // from-blue-50 via-white to-purple-50
-  "linear-gradient(135deg, #eff6ff 0%, #ffffff 48%, #faf5ff 100%)",
-  // from-indigo-50 to-blue-100
-  "linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%)",
-  // from-pink-50 to-purple-100
-  "linear-gradient(135deg, #fdf2f8 0%, #e9d5ff 100%)",
-  // soft teal / cyan accent
-  "linear-gradient(135deg, #ecfeff 0%, #e0f2fe 100%)",
-  // warm subtle amber / rose
-  "linear-gradient(135deg, #fff7ed 0%, #fef2f2 100%)",
+const softLightGradients = [
+  "linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%)", 
+  "linear-gradient(180deg, #f3e8ff 0%, #e9d5ff 100%)", 
+  "linear-gradient(180deg, #ffedd5 0%, #fed7aa 100%)", 
+  "linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%)", 
+  "linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%)", 
+  "linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%)", 
+  "linear-gradient(180deg, #fef2f2 0%, #fee2e2 100%)", 
+  "linear-gradient(180deg, #f0fdfa 0%, #ccfbf1 100%)", 
+  "linear-gradient(180deg, #fefce8 0%, #fef9c3 100%)", 
 ];
 
-const darkGradients = [
-  "linear-gradient(135deg, #1e293b, #0f172a)",
-  "linear-gradient(135deg, #0f766e, #022c22)",
-  "linear-gradient(135deg, #7e22ce, #312e81)",
-  "linear-gradient(135deg, #b91c1c, #7f1d1d)",
-  "linear-gradient(135deg, #0369a1, #020617)",
+const softDarkGradients = [
+  "radial-gradient(ellipse at bottom right, rgba(6, 182, 212, 0.15) 0%, #0b1329 80%)",  
+  "radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.15) 0%, #0b1329 80%)", 
+  "radial-gradient(ellipse at bottom right, rgba(249, 115, 22, 0.12) 0%, #0b1329 80%)",  
+  "radial-gradient(ellipse at bottom right, rgba(5, 150, 105, 0.15) 0%, #0b1329 80%)",  
+  "radial-gradient(ellipse at bottom right, rgba(100, 116, 139, 0.15) 0%, #0b1329 80%)", 
+  "radial-gradient(ellipse at bottom right, rgba(37, 99, 213, 0.15) 0%, #0b1329 80%)",  
+  "radial-gradient(ellipse at bottom right, rgba(220, 38, 38, 0.12) 0%, #0b1329 80%)",  
+  "radial-gradient(ellipse at bottom right, rgba(13, 148, 136, 0.15) 0%, #0b1329 80%)",  
+  "radial-gradient(ellipse at bottom right, rgba(234, 179, 8, 0.12) 0%, #0b1329 80%)",   
+];
+
+const darkBorderColors = [
+  "rgba(6, 182, 212, 0.2)",
+  "rgba(168, 85, 247, 0.2)",
+  "rgba(249, 115, 22, 0.15)",
+  "rgba(5, 150, 105, 0.2)",
+  "rgba(100, 116, 139, 0.2)",
+  "rgba(37, 99, 213, 0.2)",
+  "rgba(220, 38, 38, 0.15)",
+  "rgba(13, 148, 136, 0.2)",
+  "rgba(234, 179, 8, 0.15)",
 ];
 
 function TiltCard({
@@ -337,8 +349,13 @@ function TiltCard({
   gradientIndex: number;
   mobile?: boolean;
 }) {
-  const palette = isDark ? darkGradients : lightGradients;
-  const background = palette[gradientIndex % palette.length];
+  const bottomPanelGradient = isDark 
+    ? softDarkGradients[gradientIndex % softDarkGradients.length]
+    : softLightGradients[gradientIndex % softLightGradients.length];
+
+  const activeBorder = isDark 
+    ? darkBorderColors[gradientIndex % darkBorderColors.length]
+    : "rgba(15, 23, 42, 0.06)";
 
   return (
     <motion.div
@@ -348,8 +365,11 @@ function TiltCard({
       whileHover={{
         scale: 1.03,
         boxShadow: isDark
-          ? "0 30px 80px rgba(0,0,0,0.65)"
-          : "0 20px 50px rgba(15,23,42,0.2)",
+          ? "0 40px 90px rgba(0,0,0,0.75)"
+          : "0 25px 55px rgba(148,163,184,0.18)",
+        borderColor: isDark 
+          ? darkBorderColors[gradientIndex % darkBorderColors.length].replace("0.2", "0.4") 
+          : "rgba(15, 23, 42, 0.12)",
       }}
       whileTap={{ scale: 0.98 }}
       transition={{
@@ -369,81 +389,82 @@ function TiltCard({
         width: mobile ? "100%" : "380px",
         minWidth: mobile ? 0 : "300px",
         maxWidth: mobile ? "100%" : "380px",
-        borderRadius: "22px",
+        borderRadius: "24px",
         overflow: "hidden",
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
-        background,
-        border: isDark
-          ? "1px solid rgba(56,189,248,0.25)"
-          : "1px solid rgba(191,219,254,0.9)",
-        transition: "box-shadow 0.25s ease, transform 0.25s ease",
+        background: isDark ? "#0b1329" : "#ffffff", 
+        border: `1px solid ${activeBorder}`,
+        transition: "box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease",
         boxShadow: isDark
-          ? "0 24px 60px rgba(0,0,0,0.55)"
-          : "0 10px 30px rgba(148,163,184,0.25)",
+          ? "0 24px 50px rgba(0,0,0,0.55)"
+          : "0 14px 38px rgba(148,163,184,0.08)",
         transformOrigin: "center",
-        willChange: "transform, box-shadow",
+        willChange: "transform, box-shadow, border-color",
       }}
     >
-      {/* IMAGE */}
+      {/* TOP CONTAINER FOR CLEAN IMAGES */}
       <div
         style={{
           position: "relative",
-          height: mobile ? "clamp(160px, 44vw, 200px)" : "180px",
+          height: mobile ? "160px" : "185px",
+          background: isDark ? "#090d16" : "#f1f5f9",
           flexShrink: 0,
+          overflow: "hidden"
         }}
       >
-        <Image
-          src={project.thumbnailUrl || "/placeholder.png"}
-          alt={project.title}
-          fill
-          style={{ objectFit: "cover" }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.55), transparent)",
-          }}
-        />
+        {project.thumbnailUrl ? (
+          <Image
+            src={project.thumbnailUrl}
+            alt={project.title}
+            fill
+            priority
+            style={{ 
+              objectFit: "cover",
+              objectPosition: "top center"
+            }}
+          />
+        ) : (
+          <div style={{ fontSize: "2.5rem", opacity: 0.15, display: "flex", height: "100%", alignItems: "center", justifyContent: "center" }}>✦</div>
+        )}
       </div>
 
-      {/* CONTENT */}
+      {/* BOTTOM CONTAINER WITH SOFT SAAS/AURORA BLENDS */}
       <div
         style={{
-          padding: "18px",
+          padding: "24px 22px 22px",
           textAlign: "left",
           display: "flex",
           flexDirection: "column",
           flex: 1,
+          background: bottomPanelGradient,
         }}
       >
         <span
           style={{
-            fontSize: "11px",
-            padding: "5px 12px",
+            fontSize: "10px",
+            alignSelf: "flex-start",
+            padding: "4px 12px",
             borderRadius: "999px",
-            background: isDark
-              ? "rgba(56,189,248,0.15)"
-              : "rgba(56,189,248,0.12)",
-            color: "#38bdf8",
-            border: isDark
-              ? "1px solid rgba(56,189,248,0.3)"
-              : "1px solid rgba(56,189,248,0.4)",
-            fontWeight: 600,
+            background: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.6)",
+            color: isDark ? "#94a3b8" : "#475569",
+            border: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(15,23,42,0.06)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
           }}
         >
-          ✦ {project.industry || "Featured"}
+          ✦ {project.industry || "Automation"}
         </span>
 
         <h3
           style={{
-            marginTop: "10px",
-            fontSize: "1.3rem",
+            marginTop: "12px",
+            fontSize: "1.25rem",
             fontWeight: 800,
-            color: isDark ? "#e5e7eb" : "#111827",
+            color: isDark ? "#f8fafc" : "#1e293b",
+            lineHeight: "1.35",
           }}
         >
           {project.title}
@@ -451,9 +472,11 @@ function TiltCard({
 
         <p
           style={{
-            fontSize: "0.9rem",
-            color: isDark ? "rgba(226,232,240,0.8)" : "#4b5563",
-            marginTop: "6px",
+            fontSize: "0.88rem",
+            color: isDark ? "#94a3b8" : "#475569",
+            marginTop: "8px",
+            lineHeight: "1.55",
+            flex: 1,
           }}
         >
           {project.shortDesc}
@@ -461,17 +484,20 @@ function TiltCard({
 
         <div
           style={{
-            marginTop: "auto",
+            marginTop: "20px",
+            paddingTop: "14px",
+            borderTop: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(15,23,42,0.06)",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <span style={{ fontSize: "0.75rem", color: "#22c55e" }}>
-            ● Live Project
+          <span style={{ fontSize: "0.78rem", color: "#10b981", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+            Live Project
           </span>
 
-          <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>
+          <span style={{ fontSize: "0.8rem", color: isDark ? "#38bdf8" : "#4f46e5", fontWeight: 700 }}>
             Click to view →
           </span>
         </div>
