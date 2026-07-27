@@ -7,7 +7,7 @@ import {
   FaCalendarAlt,
   FaPlay,
   FaStar,
-  FaLink,
+  FaNetworkWired,
   FaLock,
   FaHeadset,
 } from "react-icons/fa";
@@ -18,7 +18,7 @@ import Chatbot from "./Chatbot";
 function ComplianceModal({ onClose }: { onClose: () => void }) {
   const { theme } = useTheme();
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(5);
+  const [seconds, setSeconds] = useState(5);
 
   const closeCompliance = useCallback(() => {
     try {
@@ -32,17 +32,15 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
   }, [dontShowAgain, onClose]);
 
   useEffect(() => {
-    if (secondsLeft <= 0) {
+    if (seconds <= 0) {
       closeCompliance();
       return;
     }
-
     const timer = setTimeout(() => {
-      setSecondsLeft((prev) => prev - 1);
+      setSeconds((prev) => prev - 1);
     }, 1000);
-
     return () => clearTimeout(timer);
-  }, [secondsLeft, closeCompliance]);
+  }, [seconds, closeCompliance]);
 
   return (
     <motion.div
@@ -52,80 +50,114 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
       style={{
         position: "fixed",
         inset: 0,
-        background: theme === "dark" ? "rgba(15,23,42,0.75)" : "rgba(15,23,42,0.4)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
+        background: "rgba(15, 23, 42, 0.65)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 50,
+        padding: "1rem",
       }}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96 }}
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 10 }}
         style={{
-          width: "min(520px, 92vw)",
-          borderRadius: 28,
-          padding: "28px 32px",
-          background: theme === "dark" ? "#0f172a" : "#f0f5ff",
+          width: "min(460px, 92vw)",
+          borderRadius: 24,
+          padding: "22px 26px",
+          background: theme === "dark" ? "#0f172a" : "#ffffff",
           color: theme === "dark" ? "#f8fafc" : "#0f172a",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
-          border: theme === "dark" ? "1px solid #1e293b" : "1px solid #dbeafe",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+          border: theme === "dark" ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.06)",
         }}
       >
-        {/* Top Header Controls */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span
             style={{
-              padding: "6px 16px",
+              padding: "3px 12px",
               borderRadius: 999,
-              border: "1px solid #3b82f6",
+              background: "rgba(37, 99, 235, 0.15)",
               color: "#2563eb",
-              fontSize: "0.78rem",
+              fontSize: "0.7rem",
               fontWeight: 700,
-              letterSpacing: "0.05em",
+              letterSpacing: "0.06em",
               textTransform: "uppercase",
-              background: "transparent",
             }}
           >
-            CLOSES IN {secondsLeft}S
+            CLOSES IN {seconds}S
           </span>
 
           <button
             onClick={closeCompliance}
             style={{
-              padding: "6px 18px",
+              padding: "3px 12px",
               borderRadius: 999,
-              border: "1px solid #3b82f6",
-              color: "#2563eb",
+              border: "none",
               background: "transparent",
+              color: theme === "dark" ? "#94a3b8" : "#64748b",
               cursor: "pointer",
-              fontSize: "0.78rem",
-              fontWeight: 700,
+              fontSize: "0.75rem",
+              fontWeight: 600,
               letterSpacing: "0.05em",
-              textTransform: "uppercase",
             }}
           >
             SKIP
           </button>
         </div>
 
-        {/* Don't Show Again Toggle Pill */}
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
+        <div style={{ marginTop: 12 }}>
+          <h3
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: "1.05rem",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+              margin: 0,
+            }}
+          >
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                background: "#eff6ff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#2563eb",
+              }}
+            >
+              <FaShieldAlt size={13} />
+            </div>
+            Data Protection & HIPAA
+          </h3>
+
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: theme === "dark" ? "#94a3b8" : "#475569",
+              marginTop: 8,
+              lineHeight: 1.45,
+            }}
+          >
+            EaseWorkflow implements strict data protection protocols, end-to-end encryption, and HIPAA-aware architecture to keep patient records secure.
+          </p>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "flex-start", marginTop: 14, paddingTop: 10, borderTop: theme === "dark" ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)" }}>
           <label
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              padding: "6px 14px",
-              borderRadius: 999,
-              background: "rgba(219, 234, 254, 0.6)",
-              border: "1px solid #bfdbfe",
-              fontSize: "0.85rem",
-              fontWeight: 600,
-              color: "#1e293b",
+              fontSize: "0.8rem",
+              fontWeight: 500,
+              color: theme === "dark" ? "#94a3b8" : "#64748b",
               cursor: "pointer",
             }}
           >
@@ -133,51 +165,10 @@ function ComplianceModal({ onClose }: { onClose: () => void }) {
               type="checkbox"
               checked={dontShowAgain}
               onChange={(e) => setDontShowAgain(e.target.checked)}
-              style={{ width: 15, height: 15, accentColor: "#2563eb", cursor: "pointer" }}
+              style={{ width: 13, height: 13, accentColor: "#2563eb", cursor: "pointer" }}
             />
-            Don't show again
+            Don't show this again
           </label>
-        </div>
-
-        {/* Title Section */}
-        <div style={{ marginTop: 16 }}>
-          <h3
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              fontSize: "1.2rem",
-              fontWeight: 700,
-              margin: 0,
-            }}
-          >
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: "#dbeafe",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#2563eb",
-              }}
-            >
-              <FaShieldAlt size={18} />
-            </div>
-            DPA & Data Protection
-          </h3>
-
-          <p
-            style={{
-              fontSize: "0.95rem",
-              color: theme === "dark" ? "#cbd5e1" : "#475569",
-              marginTop: 18,
-              lineHeight: 1.6,
-            }}
-          >
-            Our platform is built with a strong commitment to data protection. We implement a HIPAA-aware architecture, secure data handling practices, and encrypted storage to ensure the highest level of privacy, security, and compliance. Your trust and data safety are our top priority.
-          </p>
         </div>
       </motion.div>
     </motion.div>
@@ -215,207 +206,367 @@ export default function Hero() {
           overflow: "hidden",
           minHeight: "calc(100vh - 70px)",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          padding: "16px 24px 32px 24px",
+          justifyContent: "flex-start",
+          padding: "clamp(12px, 3vh, 24px) clamp(16px, 5vw, 64px) 24px",
           background: isDark
-            ? "radial-gradient(circle at top, #020617 0%, #0f172a 100%)"
-            : "radial-gradient(circle at 10% 20%, #f0f7ff 0%, #f8fafc 90%)",
+            ? "radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 100%)"
+            : "radial-gradient(circle at 50% 0%, #e0e7ff 0%, #f8fafc 100%)",
           color: isDark ? "#f8fafc" : "#0f172a",
         }}
       >
+        {/* Subtle Background Grid Lines */}
         <div
           style={{
-            maxWidth: 1280,
+            position: "absolute",
+            inset: 0,
+            backgroundImage: isDark
+              ? "linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px)"
+              : "linear-gradient(to right, rgba(37, 99, 235, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(37, 99, 235, 0.04) 1px, transparent 1px)",
+            backgroundSize: "44px 44px",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* TOP CENTERED HEADER CONTENT */}
+        <div
+          style={{
+            maxWidth: 880,
             width: "100%",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(420px, 1fr))",
-            gap: 32,
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
+            textAlign: "center",
+            gap: 12,
+            position: "relative",
+            zIndex: 2,
           }}
         >
-          {/* LEFT COLUMN: Main Text Content */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            {/* Top Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "5px 16px",
+              borderRadius: 999,
+              background: isDark ? "rgba(37,99,235,0.2)" : "rgba(255, 255, 255, 0.9)",
+              border: "1px solid rgba(147, 197, 253, 0.4)",
+              backdropFilter: "blur(10px)",
+              color: "#2563eb",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              letterSpacing: "0.02em",
+              textAlign: "center",
+            }}
+          >
+            <FaShieldAlt size={11} /> Trusted by Modern Healthcare Clinics
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+            style={{
+              fontSize: "clamp(2rem, 5vw, 3.8rem)",
+              fontWeight: 800,
+              lineHeight: 1.1,
+              letterSpacing: "-0.035em",
+              margin: 0,
+              width: "100%",
+            }}
+          >
+            Automate Your Clinic. <br />
+            <span
+              style={{
+                background: "linear-gradient(135deg, #2563eb 0%, #60a5fa 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Focus on Your Patients.
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            style={{
+              fontSize: "clamp(0.88rem, 1.15vw, 1.05rem)",
+              lineHeight: 1.5,
+              color: isDark ? "#cbd5e1" : "#475569",
+              maxWidth: 700,
+              margin: 0,
+              padding: "0 8px",
+            }}
+          >
+            EaseWorkflow automates scheduling, patient intake, insurance verification, documentation, and follow-ups so your team spends less time on admin and more time on what truly matters.
+          </motion.p>
+
+          {/* ACTION BUTTONS */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 2,
+              width: "100%",
+            }}
+          >
+            <a
+              href="/demo"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: 8,
-                padding: "6px 14px",
+                padding: "11px 26px",
                 borderRadius: 999,
-                background: isDark ? "rgba(37,99,235,0.15)" : "#eff6ff",
-                border: "1px solid #bfdbfe",
-                color: "#2563eb",
-                fontSize: "0.82rem",
+                background: "#2563eb",
+                color: "#ffffff",
                 fontWeight: 600,
-                width: "fit-content",
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                boxShadow: "0 10px 25px rgba(37,99,235,0.35)",
+                transition: "transform 0.2s ease, background-color 0.2s ease",
               }}
             >
-              <FaShieldAlt /> Trusted by Modern Healthcare Clinics
-            </motion.div>
+              <FaCalendarAlt size={12} /> Book Free Demo
+            </a>
 
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+            <a
+              href="/case-studies"
               style={{
-                fontSize: "clamp(2.2rem, 3.8vw, 3.4rem)",
-                fontWeight: 800,
-                lineHeight: 1.12,
-                letterSpacing: "-0.03em",
-                margin: 0,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                padding: "11px 26px",
+                borderRadius: 999,
+                background: isDark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.04)",
+                color: isDark ? "#f8fafc" : "#0f172a",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                border: isDark ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(15,23,42,0.12)",
+                transition: "background-color 0.2s ease",
               }}
             >
-              Automate Your Clinic. <br />
-              Focus on{" "}
-              <span style={{ color: "#2563eb", display: "inline-block" }}>
-                Your Patients.
-              </span>
-            </motion.h1>
+              <FaPlay size={10} color="#2563eb" /> See Case Studies
+            </a>
+          </motion.div>
 
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              style={{
-                fontSize: "1rem",
-                lineHeight: 1.5,
-                color: isDark ? "#cbd5e1" : "#475569",
-                maxWidth: 500,
-                margin: 0,
-              }}
-            >
-              EaseWorkflow automates scheduling, patient intake, insurance verification, documentation, and follow-ups so your team spends less time on admin and more time on what truly matters.
-            </motion.p>
-
-            {/* Action Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center", marginTop: 4 }}
-            >
-              <a
-                href="/booking"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px 24px",
-                  borderRadius: 999,
-                  background: "#2563eb",
-                  color: "#ffffff",
-                  fontWeight: 600,
-                  fontSize: "0.95rem",
-                  textDecoration: "none",
-                  boxShadow: "0 10px 25px rgba(37,99,235,0.3)",
-                  transition: "transform 0.2s, background-color 0.2s",
-                }}
-              >
-                <FaCalendarAlt /> Book Free Demo
-              </a>
-
-              <Link
-                href="/case-studies"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px 24px",
-                  borderRadius: 999,
-                  border: "1.5px solid #2563eb",
-                  background: "transparent",
-                  color: "#2563eb",
-                  fontWeight: 600,
-                  fontSize: "0.95rem",
-                  textDecoration: "none",
-                }}
-              >
-                <FaPlay size={10} /> See Case Studies
-              </Link>
-            </motion.div>
-
-            {/* Rating Stars */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 2 }}
-            >
-              <div style={{ display: "flex", gap: 3, color: "#f59e0b", fontSize: "0.85rem" }}>
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} />
-                ))}
-              </div>
-              <span style={{ fontSize: "0.88rem", fontWeight: 600, color: isDark ? "#94a3b8" : "#64748b" }}>
-                4.9 from 1,600+ verified reviews
-              </span>
-            </motion.div>
-
-            {/* Bottom Trust Indicators */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))",
-                gap: 10,
-                paddingTop: 16,
-                borderTop: isDark ? "1px solid #1e293b" : "1px solid #e2e8f0",
-                marginTop: 6,
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.78rem", fontWeight: 600 }}>
-                <FaShieldAlt style={{ color: "#2563eb" }} /> HIPAA Compliant
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.78rem", fontWeight: 600 }}>
-                <FaLink style={{ color: "#2563eb" }} /> Works with EMR
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.78rem", fontWeight: 600 }}>
-                <FaLock style={{ color: "#2563eb" }} /> Secure & Encrypted
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.78rem", fontWeight: 600 }}>
-                <FaHeadset style={{ color: "#2563eb" }} /> 24/7 Support
-              </div>
-            </motion.div>
-          </div>
-
-          {/* RIGHT COLUMN: Clean Hero Image Container */}
+          {/* REVIEWS BADGE */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.4 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 2,
+              fontSize: "0.84rem",
+              fontWeight: 500,
+              color: isDark ? "#94a3b8" : "#64748b",
+            }}
+          >
+            <div style={{ display: "flex", gap: 3, color: "#f59e0b" }}>
+              {[...Array(5)].map((_, i) => (
+                <FaStar key={i} size={12} />
+              ))}
+            </div>
+            <span><strong style={{ color: isDark ? "#f8fafc" : "#0f172a" }}>4.9</strong> from 1,600+ verified reviews</span>
+          </motion.div>
+        </div>
+
+        {/* BOTTOM SECTION: Product Mockup with Radiant Glow & Responsive Floating Cards */}
+        <div
+          style={{
+            maxWidth: 1050,
+            width: "100%",
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            marginTop: "20px",
+            zIndex: 2,
+          }}
+        >
+          {/* RADIANT BACKDROP GLOW BEHIND PRODUCT IMAGE */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "10%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "min(650px, 90vw)",
+              height: "220px",
+              background: isDark
+                ? "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.35) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 75%)"
+                : "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.22) 0%, rgba(96, 165, 250, 0.08) 55%, transparent 80%)",
+              filter: "blur(30px)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             style={{
               position: "relative",
               width: "100%",
-              height: 440,
-              borderRadius: 28,
-              overflow: "hidden",
-              boxShadow: "0 20px 40px -10px rgba(0, 0, 0, 0.12)",
-              border: isDark ? "1px solid #334155" : "1px solid #e2e8f0",
-              background: "#ffffff",
+              maxWidth: 680,
+              height: "clamp(220px, 28vh, 320px)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
+              zIndex: 2,
             }}
           >
             <img
-              src="/images/new hero.png"
-              alt="Clinic Automation Platform"
+              src="/images/hero-doctors-group.png"
+              alt="EaseWorkflow Dashboard Mockup"
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
+                objectFit: "contain",
+                objectPosition: "bottom center",
+                display: "block",
               }}
             />
+
+            {/* FLOATING CARD 1 (Top Left) - Hidden on very small screens via CSS/Inline media handling if needed, or compact style */}
+            <div
+              className="floating-card-desktop"
+              style={{
+                position: "absolute",
+                top: "15%",
+                left: "clamp(-4%, 1vw, 2%)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                borderRadius: 12,
+                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
+                backdropFilter: "blur(14px)",
+                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
+                border: "1px solid rgba(147, 197, 253, 0.3)",
+                zIndex: 3,
+              }}
+            >
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
+                <FaShieldAlt size={11} />
+              </div>
+              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
+                HIPAA Compliant
+              </span>
+            </div>
+
+            {/* FLOATING CARD 2 (Bottom Left) */}
+            <div
+              className="floating-card-desktop"
+              style={{
+                position: "absolute",
+                bottom: "18%",
+                left: "clamp(-6%, 0vw, 1%)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                borderRadius: 12,
+                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
+                backdropFilter: "blur(14px)",
+                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
+                border: "1px solid rgba(147, 197, 253, 0.3)",
+                zIndex: 3,
+              }}
+            >
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
+                <FaNetworkWired size={11} />
+              </div>
+              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
+                Works with EMR
+              </span>
+            </div>
+
+            {/* FLOATING CARD 3 (Top Right) */}
+            <div
+              className="floating-card-desktop"
+              style={{
+                position: "absolute",
+                top: "15%",
+                right: "clamp(-4%, 1vw, 2%)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                borderRadius: 12,
+                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
+                backdropFilter: "blur(14px)",
+                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
+                border: "1px solid rgba(147, 197, 253, 0.3)",
+                zIndex: 3,
+              }}
+            >
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
+                <FaLock size={11} />
+              </div>
+              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
+                Secure & Encrypted
+              </span>
+            </div>
+
+            {/* FLOATING CARD 4 (Bottom Right) */}
+            <div
+              className="floating-card-desktop"
+              style={{
+                position: "absolute",
+                bottom: "18%",
+                right: "clamp(-6%, 0vw, 1%)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                borderRadius: 12,
+                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
+                backdropFilter: "blur(14px)",
+                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
+                border: "1px solid rgba(147, 197, 253, 0.3)",
+                zIndex: 3,
+              }}
+            >
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
+                <FaHeadset size={11} />
+              </div>
+              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
+                24/7 Support
+              </span>
+            </div>
           </motion.div>
         </div>
       </section>
 
       <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
+      {/* Optional CSS snippet to hide floating cards gracefully on extremely small mobile screens if needed */}
+      <style jsx global>{`
+        @media (max-width: 640px) {
+          .floating-card-desktop {
+            display: none !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
