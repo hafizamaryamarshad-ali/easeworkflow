@@ -7,11 +7,7 @@ import {
   FaCalendarAlt,
   FaPlay,
   FaStar,
-  FaNetworkWired,
-  FaLock,
-  FaHeadset,
 } from "react-icons/fa";
-import Link from "next/link";
 import { useTheme } from "./theme/ThemeProvider";
 import Chatbot from "./Chatbot";
 
@@ -192,6 +188,15 @@ export default function Hero() {
   }, []);
 
   const isDark = theme === "dark";
+
+  // Added `invertInDark` property specifically for the 1st (Practice Fusion) and 4th (Athenahealth) logos
+  const floatingLogos = [
+    { name: "Practice Fusion", src: "/images/logos/practice-fusion.png", customHeight: "76px", delay: 0, invertInDark: true },
+    { name: "Availity", src: "/images/logos/availity.png", customHeight: "68px", delay: 0.5, invertInDark: false },
+    { name: "Kareo", src: "/images/logos/kareo.png", customHeight: "110px", delay: 1, invertInDark: false },
+    { name: "Athenahealth", src: "/images/logos/athenahealth.png", customHeight: "108px", delay: 1.5, invertInDark: true },
+    { name: "Epic", src: "/images/logos/epic.png", customHeight: "60px", delay: 2, invertInDark: false },
+  ];
 
   return (
     <>
@@ -388,185 +393,88 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* BOTTOM SECTION: Product Mockup with Radiant Glow & Responsive Floating Cards */}
+        {/* BOTTOM FLOATING LOGOS SECTION */}
         <div
           style={{
-            maxWidth: 1050,
+            maxWidth: 1100,
             width: "100%",
             position: "relative",
             display: "flex",
+            alignItems: "center",
             justifyContent: "center",
-            alignItems: "flex-end",
-            marginTop: "20px",
+            marginTop: "50px",
+            height: "120px",
             zIndex: 2,
           }}
         >
-          {/* RADIANT BACKDROP GLOW BEHIND PRODUCT IMAGE */}
+          {/* RADIANT BACKDROP GLOW */}
           <div
             style={{
               position: "absolute",
-              bottom: "10%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "min(650px, 90vw)",
-              height: "220px",
+              width: "min(750px, 90vw)",
+              height: "180px",
               background: isDark
-                ? "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.35) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 75%)"
-                : "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.22) 0%, rgba(96, 165, 250, 0.08) 55%, transparent 80%)",
-              filter: "blur(30px)",
+                ? "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.4) 0%, transparent 70%)"
+                : "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.2) 0%, transparent 75%)",
+              filter: "blur(35px)",
               pointerEvents: "none",
               zIndex: 1,
             }}
           />
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          <div
             style={{
-              position: "relative",
-              width: "100%",
-              maxWidth: 680,
-              height: "clamp(220px, 28vh, 320px)",
               display: "flex",
+              alignItems: "center",
               justifyContent: "center",
-              alignItems: "flex-end",
+              gap: "clamp(24px, 5vw, 60px)",
+              position: "relative",
               zIndex: 2,
+              width: "100%",
             }}
           >
-            <img
-              src="/images/hero-doctors-group.png"
-              alt="EaseWorkflow Dashboard Mockup"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                objectPosition: "bottom center",
-                display: "block",
-              }}
-            />
-
-            {/* FLOATING CARD 1 (Top Left) - Hidden on very small screens via CSS/Inline media handling if needed, or compact style */}
-            <div
-              className="floating-card-desktop"
-              style={{
-                position: "absolute",
-                top: "15%",
-                left: "clamp(-4%, 1vw, 2%)",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "8px 12px",
-                borderRadius: 12,
-                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
-                backdropFilter: "blur(14px)",
-                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
-                border: "1px solid rgba(147, 197, 253, 0.3)",
-                zIndex: 3,
-              }}
-            >
-              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
-                <FaShieldAlt size={11} />
-              </div>
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
-                HIPAA Compliant
-              </span>
-            </div>
-
-            {/* FLOATING CARD 2 (Bottom Left) */}
-            <div
-              className="floating-card-desktop"
-              style={{
-                position: "absolute",
-                bottom: "18%",
-                left: "clamp(-6%, 0vw, 1%)",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "8px 12px",
-                borderRadius: 12,
-                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
-                backdropFilter: "blur(14px)",
-                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
-                border: "1px solid rgba(147, 197, 253, 0.3)",
-                zIndex: 3,
-              }}
-            >
-              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
-                <FaNetworkWired size={11} />
-              </div>
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
-                Works with EMR
-              </span>
-            </div>
-
-            {/* FLOATING CARD 3 (Top Right) */}
-            <div
-              className="floating-card-desktop"
-              style={{
-                position: "absolute",
-                top: "15%",
-                right: "clamp(-4%, 1vw, 2%)",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "8px 12px",
-                borderRadius: 12,
-                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
-                backdropFilter: "blur(14px)",
-                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
-                border: "1px solid rgba(147, 197, 253, 0.3)",
-                zIndex: 3,
-              }}
-            >
-              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
-                <FaLock size={11} />
-              </div>
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
-                Secure & Encrypted
-              </span>
-            </div>
-
-            {/* FLOATING CARD 4 (Bottom Right) */}
-            <div
-              className="floating-card-desktop"
-              style={{
-                position: "absolute",
-                bottom: "18%",
-                right: "clamp(-6%, 0vw, 1%)",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "8px 12px",
-                borderRadius: 12,
-                background: isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.96)",
-                backdropFilter: "blur(14px)",
-                boxShadow: "0 14px 35px rgba(0,0,0,0.15)",
-                border: "1px solid rgba(147, 197, 253, 0.3)",
-                zIndex: 3,
-              }}
-            >
-              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(37, 99, 235, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2563eb" }}>
-                <FaHeadset size={11} />
-              </div>
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isDark ? "#f8fafc" : "#0f172a", whiteSpace: "nowrap" }}>
-                24/7 Support
-              </span>
-            </div>
-          </motion.div>
+            {floatingLogos.map((logo, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{
+                  opacity: 1,
+                  y: [0, -8, 0],
+                }}
+                transition={{
+                  opacity: { duration: 0.5, delay: logo.delay },
+                  y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: logo.delay }
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "4px",
+                }}
+              >
+                <img
+                  src={logo.src}
+                  alt={logo.name}
+                  style={{
+                    height: logo.customHeight,
+                    width: "auto",
+                    objectFit: "contain",
+                    // If invertInDark is true and dark theme is active, apply brightness(0) invert(1) to make it pure white
+                    filter: isDark
+                      ? logo.invertInDark
+                        ? "brightness(0) invert(1) drop-shadow(0 0 12px rgba(255,255,255,0.35))"
+                        : "drop-shadow(0 0 12px rgba(255,255,255,0.25)) drop-shadow(0 4px 14px rgba(0,0,0,0.6))"
+                      : "drop-shadow(0 4px 12px rgba(0,0,0,0.15))",
+                    opacity: isDark ? 0.98 : 0.95,
+                  }}
+                />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-
-      {/* Optional CSS snippet to hide floating cards gracefully on extremely small mobile screens if needed */}
-      <style jsx global>{`
-        @media (max-width: 640px) {
-          .floating-card-desktop {
-            display: none !important;
-          }
-        }
-      `}</style>
     </>
   );
 }
