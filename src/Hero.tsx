@@ -175,6 +175,7 @@ export default function Hero() {
   const [showCompliance, setShowCompliance] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { theme } = useTheme();
+  const [centerHero, setCenterHero] = useState(false);
 
   useEffect(() => {
     try {
@@ -188,6 +189,20 @@ export default function Hero() {
   }, []);
 
   const isDark = theme === "dark";
+
+  useEffect(() => {
+    function updateCentering() {
+      if (typeof window === "undefined") return;
+      const h = window.innerHeight;
+      const w = window.innerWidth;
+      // Center hero vertically on tall viewports or very wide screens
+      setCenterHero(h >= 760 || w >= 1400 || h / w > 0.6);
+    }
+
+    updateCentering();
+    window.addEventListener("resize", updateCentering);
+    return () => window.removeEventListener("resize", updateCentering);
+  }, []);
 
   // Added `invertInDark` property specifically for the 1st (Practice Fusion) and 4th (Athenahealth) logos
   const floatingLogos = [
@@ -213,8 +228,8 @@ export default function Hero() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "flex-start",
-          padding: "clamp(12px, 3vh, 24px) clamp(16px, 5vw, 64px) 24px",
+          justifyContent: centerHero ? "center" : "flex-start",
+          padding: "clamp(20px, 6vh, 48px) clamp(16px, 5vw, 64px) 24px",
           background: isDark
             ? "radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 100%)"
             : "radial-gradient(circle at 50% 0%, #e0e7ff 0%, #f8fafc 100%)",
@@ -237,47 +252,28 @@ export default function Hero() {
         {/* TOP CENTERED HEADER CONTENT */}
         <div
           style={{
-            maxWidth: 880,
+            maxWidth: "min(1100px, 94%)",
             width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
             gap: 12,
+            marginTop: "clamp(8px, 3vh, 36px)",
             position: "relative",
             zIndex: 2,
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "5px 16px",
-              borderRadius: 999,
-              background: isDark ? "rgba(37,99,235,0.2)" : "rgba(255, 255, 255, 0.9)",
-              border: "1px solid rgba(147, 197, 253, 0.4)",
-              backdropFilter: "blur(10px)",
-              color: "#2563eb",
-              fontSize: "0.75rem",
-              fontWeight: 700,
-              letterSpacing: "0.02em",
-              textAlign: "center",
-            }}
-          >
-            <FaShieldAlt size={11} /> Trusted by Modern Healthcare Clinics
-          </motion.div>
+          
 
           <motion.h1
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.4 }}
             style={{
-              fontSize: "clamp(2rem, 5vw, 3.8rem)",
+              fontSize: "clamp(2rem, 3.5vw, 5rem)",
               fontWeight: 800,
-              lineHeight: 1.1,
+              lineHeight: 1.05,
               letterSpacing: "-0.035em",
               margin: 0,
               width: "100%",
@@ -300,10 +296,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.4 }}
             style={{
-              fontSize: "clamp(0.88rem, 1.15vw, 1.05rem)",
+              fontSize: "clamp(0.9rem, 1.1vw, 1.25rem)",
               lineHeight: 1.5,
               color: isDark ? "#cbd5e1" : "#475569",
-              maxWidth: 700,
+              maxWidth: "min(820px, 92%)",
               margin: 0,
               padding: "0 8px",
             }}
@@ -333,12 +329,12 @@ export default function Hero() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
-                padding: "11px 26px",
+                padding: "clamp(10px, 1.6vh, 14px) clamp(20px, 2.6vw, 32px)",
                 borderRadius: 999,
                 background: "#2563eb",
                 color: "#ffffff",
                 fontWeight: 600,
-                fontSize: "0.9rem",
+                fontSize: "clamp(0.9rem, 0.9vw, 1.05rem)",
                 textDecoration: "none",
                 boxShadow: "0 10px 25px rgba(37,99,235,0.35)",
                 transition: "transform 0.2s ease, background-color 0.2s ease",
@@ -354,12 +350,12 @@ export default function Hero() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
-                padding: "11px 26px",
+                padding: "clamp(10px, 1.6vh, 14px) clamp(20px, 2.6vw, 32px)",
                 borderRadius: 999,
                 background: isDark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.04)",
                 color: isDark ? "#f8fafc" : "#0f172a",
                 fontWeight: 600,
-                fontSize: "0.9rem",
+                fontSize: "clamp(0.9rem, 0.9vw, 1.05rem)",
                 textDecoration: "none",
                 border: isDark ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(15,23,42,0.12)",
                 transition: "background-color 0.2s ease",
@@ -402,8 +398,8 @@ export default function Hero() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: "50px",
-            height: "120px",
+            marginTop: "clamp(28px, 5vh, 80px)",
+            height: "clamp(100px, 12vh, 180px)",
             zIndex: 2,
           }}
         >
