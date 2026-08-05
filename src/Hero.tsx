@@ -258,8 +258,9 @@ export default function Hero() {
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
-            gap: 12,
-            marginTop: "clamp(8px, 3vh, 36px)",
+            gap: "clamp(14px, 2.5vh, 40px)",
+            marginTop: "clamp(12px, 3vh, 48px)",
+            transform: centerHero ? "translateY(6vh)" : "translateY(0)",
             position: "relative",
             zIndex: 2,
           }}
@@ -270,14 +271,14 @@ export default function Hero() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.4 }}
-            style={{
-              fontSize: "clamp(2rem, 3.5vw, 5rem)",
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: "-0.035em",
-              margin: 0,
-              width: "100%",
-            }}
+              style={{
+                fontSize: "clamp(2rem, 3.5vw, 5rem)",
+                fontWeight: 800,
+                lineHeight: 1.03,
+                letterSpacing: "-0.035em",
+                margin: 0,
+                width: "100%",
+              }}
           >
             Automate Your Clinic. <br />
             <span
@@ -296,8 +297,8 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.4 }}
             style={{
-              fontSize: "clamp(0.9rem, 1.1vw, 1.25rem)",
-              lineHeight: 1.5,
+              fontSize: "clamp(0.95rem, 1.05vw, 1.28rem)",
+              lineHeight: 1.6,
               color: isDark ? "#cbd5e1" : "#475569",
               maxWidth: "min(820px, 92%)",
               margin: 0,
@@ -315,10 +316,10 @@ export default function Hero() {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: 12,
+              gap: "clamp(12px, 1.6vh, 28px)",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 2,
+              marginTop: "clamp(10px, 2vh, 28px)",
               width: "100%",
             }}
           >
@@ -374,7 +375,7 @@ export default function Hero() {
               display: "flex",
               alignItems: "center",
               gap: 8,
-              marginTop: 2,
+              marginTop: "clamp(12px, 2.2vh, 26px)",
               fontSize: "0.84rem",
               fontWeight: 500,
               color: isDark ? "#94a3b8" : "#64748b",
@@ -398,8 +399,8 @@ export default function Hero() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: "clamp(28px, 5vh, 80px)",
-            height: "clamp(100px, 12vh, 180px)",
+            marginTop: "clamp(36px, 8vh, 120px)",
+            height: "clamp(100px, 14vh, 220px)",
             zIndex: 2,
           }}
         >
