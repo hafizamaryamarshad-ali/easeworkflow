@@ -4,59 +4,51 @@ import Footer from "../Footer";
 import ThemeProvider from "../theme/ThemeProvider";
 import BackButton from "../BackButton";
 import SideButtons from "../../src/SideButtons"; // ✅ ADDED
-import VisitorTracker from "../VisitorTracker";
 import Script from "next/script";
-import { Analytics } from "@vercel/analytics/next";
-import type { Metadata } from "next";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://easeworkflow.com"),
+const timestamp = new Date().toISOString().split('T')[0]; // Cache bust with date
 
-  // ✅ FIX: Canonical (Google confusion solve)
-  alternates: {
-    canonical: "https://easeworkflow.com",
-  },
-
-  // ✅ FIX: Strong favicon signals for Google
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
-
-  title: {
-    default: "EaseWorkflow",
-    template: "%s | EaseWorkflow",
-  },
+export const metadata = {
+  title: "EaseWorkflow - Healthcare Automation",
   description:
-    "EaseWorkflow helps healthcare teams automate clinic workflows with practical, production-ready software.",
-
-  openGraph: {
-    type: "website",
-    siteName: "EaseWorkflow",
-    url: "https://easeworkflow.com",
-    title: "EaseWorkflow",
-    description:
-      "EaseWorkflow helps healthcare teams automate clinic workflows with practical, production-ready software.",
-    images: [
+    "Automate your clinic's workflow with EaseWorkflow. Trusted by US clinics for healthcare automation solutions.",
+  icons: {
+    icon: [
       {
-        url: "/images/telemedicine.jpg",
-        width: 1200,
-        height: 630,
-        alt: "EaseWorkflow",
+        url: `/favicon.ico?v=${timestamp}`,
+        sizes: "any",
+      },
+      {
+        url: `/logo18.png?v=${timestamp}`,
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: `/apple-touch-icon.png?v=${timestamp}`,
+        sizes: "180x180",
+        type: "image/png",
       },
     ],
   },
-
-  twitter: {
-    card: "summary_large_image",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
     title: "EaseWorkflow",
-    description:
-      "EaseWorkflow helps healthcare teams automate clinic workflows with practical, production-ready software.",
-    images: ["/images/telemedicine.jpg"],
+  },
+  openGraph: {
+    images: [
+      {
+        url: `/logo18.png?v=${timestamp}`,
+        width: 512,
+        height: 512,
+        alt: "EaseWorkflow Logo",
+      },
+    ],
   },
 };
 
@@ -67,11 +59,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-      </head>
       <body
         style={{
           margin: 0,
@@ -79,15 +66,13 @@ export default function RootLayout({
         }}
       >
         <ThemeProvider>
-          <VisitorTracker />
           <Navbar />
           <SideButtons /> {/* ✅ ADDED */}
           <BackButton />
           <main>{children}</main>
           <Footer />
         </ThemeProvider>
-        <Analytics />
-
+         {/* ✅ ADD THIS (VERY IMPORTANT) */}
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="lazyOnload"
