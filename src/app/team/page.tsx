@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, Braces, Bot, BriefcaseBusiness, Megaphone, Network } from "lucide-react";
+import { ArrowRight, Braces, Bot, BriefcaseBusiness, Crown, Megaphone, Network } from "lucide-react";
 import Link from "next/link";
 import "./team.css";
 
@@ -10,11 +10,18 @@ export const metadata: Metadata = {
 
 const team = [
   {
+    name: "Muhammad Umer",
+    role: "CEO & Co-Founder",
+    initials: "MU",
+    icon: Crown,
+    accent: "cyan",
+  },
+  {
     name: "Nabeel Tahir",
-    role: "Chief Technology Officer (CTO)",
+    role: "CTO & Co-Founder",
     initials: "NT",
     icon: Network,
-    accent: "cyan",
+    accent: "indigo",
   },
   {
     name: "Husnain Habib",
@@ -62,27 +69,11 @@ export default function TeamPage() {
       </section>
 
       <section className="team-content" aria-label="EaseWorkflow team members">
-        <article className="founder-card">
-          <div className="founder-monogram-panel" aria-hidden="true">
-            <span className="founder-monogram">MU</span>
-          </div>
-          <div className="founder-copy">
-            <span className="founder-label">Founder · Leadership</span>
-            <h2>Muhammad Umer</h2>
-            <p className="founder-role">CEO &amp; Founder</p>
-            <div className="founder-rule" />
-            <p className="founder-note">
-              Leading EaseWorkflow with a clear vision: make powerful technology
-              feel simple, useful, and human.
-            </p>
-          </div>
-        </article>
-
         <div className="team-grid">
           {team.map(({ name, role, initials, icon: Icon, accent }, index) => (
             <article className={`member-card member-${accent}`} key={name}>
               <div className="member-topline">
-                <span className="member-number">0{index + 2}</span>
+                <span className="member-number">0{index + 1}</span>
                 <span className="member-icon" aria-hidden="true"><Icon size={20} strokeWidth={1.8} /></span>
               </div>
               <div className="member-monogram" aria-hidden="true">{initials}</div>
