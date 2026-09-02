@@ -17,6 +17,7 @@ import {
   FiX,
   FiLock,
   FiCalendar,
+  FiUsers,
 } from "react-icons/fi";
 import { useTheme } from "./theme/ThemeProvider";
 import Image from "next/image";
@@ -104,6 +105,7 @@ export default function Navbar() {
     { name: "Blog", href: "/blog", icon: <FiPenTool size={14} /> },
     { name: "Contact", href: "/contact", icon: <FiMail size={14} /> },
     { name: "About", href: "/about", icon: <FiInfo size={14} /> },
+    { name: "Team", href: "/team", icon: <FiUsers size={14} /> },
   ];
 
   // Match the hero section's blue accent and glassy gradient feel

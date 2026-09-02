@@ -144,6 +144,7 @@ export default function Footer() {
                   { href: "/", label: "Home" },
                   { href: "/projects", label: "Projects" },
                   { href: "/contact", label: "Contact" },
+                  { href: "/team", label: "Team" },
                   { href: "/#privacy", label: "Privacy" },
                 ].map((item, i) => (
                   <Link
