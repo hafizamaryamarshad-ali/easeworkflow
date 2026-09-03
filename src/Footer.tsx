@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "./theme/ThemeProvider";
+import { EASEWORKFLOW_LINKEDIN_URL } from "./data/socialLinks";
 // Social icons
 import { FiLinkedin, FiInstagram, FiGithub } from "react-icons/fi";
 import { FaYoutube } from "react-icons/fa";
@@ -17,7 +18,7 @@ export default function Footer() {
   const socialLinks = [
     { 
       icon: <FiLinkedin size={18} />, 
-      href: "http://linkedin.com/company/easeworkflow", 
+      href: EASEWORKFLOW_LINKEDIN_URL,
       label: "EaseWorkflow LinkedIn", 
       isPrimary: true 
     },
