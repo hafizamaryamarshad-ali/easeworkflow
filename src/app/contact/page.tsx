@@ -11,11 +11,11 @@ export default function ContactPage() {
   const primaryColor = "#0ea5e9";
 
   const [budgetOpen, setBudgetOpen] = useState(false);
-  const [budgetLabel, setBudgetLabel] = useState("Estimated budget");
+  const [budgetLabel, setBudgetLabel] = useState("Estimated budget *");
   const budgetSelectRef = useRef<HTMLSelectElement | null>(null);
 
   const [contactOpen, setContactOpen] = useState(false);
-  const [contactLabel, setContactLabel] = useState("Preferred contact method");
+  const [contactLabel, setContactLabel] = useState("Preferred contact method: Email *");
   const contactSelectRef = useRef<HTMLSelectElement | null>(null);
 
   const [showSuccess, setShowSuccess] = useState(false);
@@ -81,7 +81,6 @@ export default function ContactPage() {
     const name = String(formData.get("yourName") ?? "").trim();
     const email = String(formData.get("workEmail") ?? "").trim();
     const phone = String(formData.get("phoneNumber") ?? "").trim();
-    const shortMessage = String(formData.get("introMessage") ?? "").trim();
     const company = String(formData.get("companyName") ?? "").trim();
     const timeline = String(formData.get("timeline") ?? "").trim();
     const projectDescription = String(formData.get("projectDescription") ?? "").trim();
@@ -115,7 +114,6 @@ export default function ContactPage() {
     const basePayload: Record<string, string> = {
       name,
       email,
-      short_message: shortMessage,
       estimated_budget: estimatedBudgetForApi,
       project_description: projectDescription,
       preferred_contact_method: preferredContactForApi,
@@ -126,17 +124,14 @@ export default function ContactPage() {
 
     const payload = Object.fromEntries(
       Object.entries(basePayload).filter(([key, value]) => {
-        if (["phone", "company", "timeline"].includes(key)) {
+        if (["phone", "timeline"].includes(key)) {
           return value !== "";
         }
         return true;
       })
     );
 
-    console.log("Contact form payload:", payload);
-
-    const apiUrl = "https://api.easeworkflow.com/api/contact";
-    console.log("Submitting contact form to:", apiUrl);
+    const apiUrl = "/api/contact";
 
     try {
       const response = await fetch(apiUrl, {
@@ -156,8 +151,6 @@ export default function ContactPage() {
         responseBody = rawText;
       }
 
-      console.log("Contact form API response:", response.status, responseBody);
-
       if (!response.ok) {
         const apiErrorMessage =
           (responseBody &&
@@ -176,8 +169,8 @@ export default function ContactPage() {
       setShowSuccess(true);
       window.setTimeout(() => setShowSuccess(false), 3500);
       form.reset();
-      setBudgetLabel("Estimated budget");
-      setContactLabel("Preferred contact method");
+      setBudgetLabel("Estimated budget *");
+      setContactLabel("Preferred contact method: Email *");
       setBudgetOpen(false);
       setContactOpen(false);
     } catch (error) {
@@ -194,7 +187,7 @@ export default function ContactPage() {
   };
 
   const budgetOptions = [
-    { label: "Estimated budget", value: "", disabled: true },
+    { label: "Estimated budget *", value: "", disabled: true },
     { label: "$1,000 – $5,000", value: "1k-5k" },
     { label: "$5,000 – $10,000", value: "5k-10k" },
     { label: "$10,000 – $15,000", value: "10k-15k" },
@@ -202,9 +195,8 @@ export default function ContactPage() {
   ];
 
   const contactOptions = [
-    { label: "Preferred contact method", value: "", disabled: true },
-    { label: "Email", value: "email" },
-    { label: "WhatsApp", value: "whatsapp" },
+    { label: "Email", value: "email", disabled: false },
+    { label: "WhatsApp", value: "whatsapp", disabled: false },
   ];
 
   return (
@@ -344,20 +336,32 @@ export default function ContactPage() {
                 zIndex: 10,
               }}
             >
+              <p
+                style={{
+                  margin: "0 0 12px",
+                  color: theme === "dark" ? "#94a3b8" : "#64748b",
+                  fontSize: "0.76rem",
+                  textAlign: "right",
+                }}
+              >
+                <span style={{ color: primaryColor, fontWeight: 800 }}>*</span> Required fields
+              </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <input
                   type="text"
                   name="yourName"
-                  placeholder="Your Name"
+                  placeholder="Your Name *"
                   required
+                  maxLength={200}
                   style={inputStyle}
                 />
 
                 <input
                   type="email"
                   name="workEmail"
-                  placeholder="Work Email"
+                  placeholder="Work Email *"
                   required
+                  maxLength={254}
                   style={inputStyle}
                 />
 
@@ -365,20 +369,16 @@ export default function ContactPage() {
                   type="tel"
                   name="phoneNumber"
                   placeholder="Phone Number (optional)"
+                  maxLength={50}
                   style={inputStyle}
-                />
-
-                <textarea
-                  name="introMessage"
-                  placeholder="Tell us briefly what you’d like to improve."
-                  rows={4}
-                  style={{ ...inputStyle, resize: "none" }}
                 />
 
                 <input
                   type="text"
                   name="companyName"
-                  placeholder="Company / Business Name (optional)"
+                  placeholder="Company / Business Name *"
+                  required
+                  maxLength={200}
                   style={inputStyle}
                 />
 
@@ -419,7 +419,7 @@ export default function ContactPage() {
                       background: "transparent",
                     }}
                   >
-                    <span style={{ opacity: budgetLabel === "Estimated budget" ? 0.7 : 1 }}>
+                    <span style={{ opacity: budgetLabel === "Estimated budget *" ? 0.7 : 1 }}>
                       {budgetLabel}
                     </span>
                     <span style={{ fontSize: "0.8rem" }}>▼</span>
@@ -449,7 +449,7 @@ export default function ContactPage() {
                                 if (budgetSelectRef.current) {
                                   budgetSelectRef.current.value = opt.value;
                                 }
-                                setBudgetLabel(opt.label);
+                                setBudgetLabel(`${opt.label} *`);
                                 setBudgetOpen(false);
                               }}
                               style={{
@@ -481,12 +481,13 @@ export default function ContactPage() {
                   type="text"
                   name="timeline"
                   placeholder="Timeline (optional)"
+                  maxLength={100}
                   style={inputStyle}
                 />
 
                 <textarea
                   name="projectDescription"
-                  placeholder="Project description (goals, scope, current tools)."
+                  placeholder="Tell us about your project, goals, scope, and current tools. *"
                   rows={5}
                   required
                   style={{ ...inputStyle, resize: "none" }}
@@ -498,7 +499,7 @@ export default function ContactPage() {
                     ref={contactSelectRef}
                     required
                     name="preferredContactMethod"
-                    defaultValue=""
+                    defaultValue="email"
                     style={{
                       ...inputStyle,
                       paddingRight: "40px",
@@ -529,7 +530,7 @@ export default function ContactPage() {
                       background: "transparent",
                     }}
                   >
-                    <span style={{ opacity: contactLabel === "Preferred contact method" ? 0.7 : 1 }}>
+                    <span>
                       {contactLabel}
                     </span>
                     <span style={{ fontSize: "0.8rem" }}>▼</span>
@@ -559,7 +560,7 @@ export default function ContactPage() {
                                 if (contactSelectRef.current) {
                                   contactSelectRef.current.value = opt.value;
                                 }
-                                setContactLabel(opt.label);
+                                setContactLabel(`Preferred contact method: ${opt.label} *`);
                                 setContactOpen(false);
                               }}
                               style={{
