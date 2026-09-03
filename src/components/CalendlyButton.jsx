@@ -1,21 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function CalendlyButton({ mainColor }) {
   const [isHovered, setIsHovered] = useState(false);
 
-  const openCalendly = () => {
-    window.open(
-      "https://calendly.com/umer-easeworkflow/30min",
-      "_blank"
-    );
-  };
-
   return (
     <div style={{ position: "relative", display: "inline-flex", overflow: "visible", zIndex: 30 }}>
-      <div
-        onClick={openCalendly}
+      <Link
+        href="/booking"
+        aria-label="Book a free consultation"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
@@ -30,10 +25,11 @@ export default function CalendlyButton({ mainColor }) {
           background: mainColor,
           color: "#fff",
           cursor: "pointer",
+          textDecoration: "none",
         }}
       >
         📅
-      </div>
+      </Link>
 
       <div
         style={{

@@ -54,10 +54,6 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
-  const openCalendly = () => {
-    window.open("https://calendly.com/iamumershaheen/30min", "_blank");
-  };
-
   const isLinkActive = (href: string) => {
     // Ignore pure hash links for active state
     if (href.startsWith("#")) return false;
@@ -351,12 +347,9 @@ export default function Navbar() {
               </Link>
             ))}
 
-            <button
-              type="button"
-              onClick={() => {
-                openCalendly();
-                setMenuOpen(false);
-              }}
+            <Link
+              href="/booking"
+              onClick={() => setMenuOpen(false)}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -381,7 +374,7 @@ export default function Navbar() {
               }}
             >
               <FiCalendar size={14} /> Schedule Your Free Consultation
-            </button>
+            </Link>
 
             <div
               style={{
