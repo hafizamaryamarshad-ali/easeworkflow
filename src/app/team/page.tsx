@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const team = [
   {
     name: "Muhammad Umer",
-    role: "CEO & Co-Founder",
+    role: "CEO & Founder",
     initials: "MU",
     icon: Crown,
     accent: "cyan",
