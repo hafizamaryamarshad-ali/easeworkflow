@@ -24,6 +24,7 @@ export default function CaseStudiesClient({ initialCaseStudies = [] }: { initial
   const isDark = theme === "dark";
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(initialCaseStudies);
   const [loading, setLoading] = useState(initialCaseStudies.length === 0);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -35,8 +36,12 @@ export default function CaseStudiesClient({ initialCaseStudies = [] }: { initial
         if (isMounted) {
           setCaseStudies(data.filter((study) => Boolean(study.slug)));
         }
-      } catch {
-        if (isMounted) setCaseStudies([]);
+      } catch (error) {
+        console.error("Unable to load case studies", error);
+        if (isMounted) {
+          setCaseStudies([]);
+          setLoadError("Case studies could not be loaded. Please refresh the page.");
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -62,8 +67,8 @@ export default function CaseStudiesClient({ initialCaseStudies = [] }: { initial
           Healthcare Automation Solutions We Delivered
         </h1>
         <p style={{ opacity: 0.7, maxWidth: "650px", margin: "10px auto" }}>
-          Real-world healthcare systems designed for European clinics — focused
-          on automation, compliance, and better patient outcomes.
+          Real-world automation and integration work for private clinics,
+          regardless of location or the systems they already use.
         </p>
       </div>
 
@@ -80,7 +85,20 @@ export default function CaseStudiesClient({ initialCaseStudies = [] }: { initial
         </p>
       )}
 
-      {!loading && caseStudies.length === 0 && (
+      {!loading && loadError && (
+        <p
+          role="alert"
+          style={{
+            textAlign: "center",
+            color: "#ef4444",
+            marginBottom: "40px",
+          }}
+        >
+          {loadError}
+        </p>
+      )}
+
+      {!loading && !loadError && caseStudies.length === 0 && (
         <p
           style={{
             textAlign: "center",

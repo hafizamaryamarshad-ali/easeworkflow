@@ -3,7 +3,7 @@
 import Hero from "../Hero";
 import PainPoints from "../PainPoints";
 import ServicesCards from "../ServicesCards";
-// import CaseStudyPreview from "../CaseStudyPreview";
+import CaseStudyHighlights from "../CaseStudyHighlights";
 import WhyEaseWorkflow from "../FeaturedProjects";
 import CTASection from "../CTASection";
 import PrivacySection from "../PrivacySection";
@@ -36,6 +36,7 @@ export default function HomeClient() {
 			<Hero />
 			<PainPoints />
 			<ServicesCards />
+			<CaseStudyHighlights />
 			<ProcessSection />
 			<PrivacySection />
 			<Testimonials />

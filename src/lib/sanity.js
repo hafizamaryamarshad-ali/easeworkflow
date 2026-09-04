@@ -66,36 +66,44 @@ export async function sanityFetch(query, params = {}, debugLabel = "query") {
   const isBrowser = typeof window !== "undefined";
 
   if (isBrowser) {
-    const response = await fetch("/api/sanity/query", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, params, debugLabel }),
-      cache: "no-store",
-    });
+    try {
+      const response = await fetch("/api/sanity/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, params, debugLabel }),
+        cache: "no-store",
+      });
 
-    if (!response.ok) {
-      let details = "";
-      try {
-        const payload = await response.json();
-        details = payload?.error ? ` ${payload.error}` : "";
-      } catch {
-        details = "";
+      if (!response.ok) {
+        let details = "";
+        try {
+          const payload = await response.json();
+          details = payload?.error ? ` ${payload.error}` : "";
+        } catch {
+          details = "";
+        }
+
+        throw new Error(`[Sanity:${debugLabel}] Request failed (${response.status}).${details}`);
       }
 
-      throw new Error(`[Sanity:${debugLabel}] Request failed (${response.status}).${details}`);
+      const payload = await response.json();
+      const result = payload?.result ?? null;
+
+      if (isProduction) {
+        console.info(`[Sanity:${debugLabel}] Browser proxy response`, {
+          resultType: Array.isArray(result) ? "array" : typeof result,
+          count: Array.isArray(result) ? result.length : result ? 1 : 0,
+        });
+      }
+
+      return result;
+    } catch (proxyError) {
+      console.warn(
+        `[Sanity:${debugLabel}] Server proxy unavailable; retrying through the public Sanity client.`,
+        proxyError
+      );
+      return client.fetch(query, params);
     }
-
-    const payload = await response.json();
-    const result = payload?.result ?? null;
-
-    if (isProduction) {
-      console.info(`[Sanity:${debugLabel}] Browser proxy response`, {
-        resultType: Array.isArray(result) ? "array" : typeof result,
-        count: Array.isArray(result) ? result.length : result ? 1 : 0,
-      });
-    }
-
-    return result;
   }
 
   const result = await client.fetch(query, params);

@@ -1,9 +1,5 @@
 import "./globals.css";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
-import ThemeProvider from "../theme/ThemeProvider";
-import BackButton from "../BackButton";
-import SideButtons from "../../src/SideButtons"; // ✅ ADDED
+import SiteLayout from "./SiteLayout";
 import Script from "next/script";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -78,14 +74,7 @@ export default function RootLayout({
           fontFamily: "'Inter', sans-serif",
         }}
       >
-        <ThemeProvider>
-          <Navbar />
-          <SideButtons /> {/* ✅ ADDED */}
-          <BackButton />
-          <main>{children}</main>
-          <Footer />
-        </ThemeProvider>
-         {/* ✅ ADD THIS (VERY IMPORTANT) */}
+        <SiteLayout>{children}</SiteLayout>
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="lazyOnload"

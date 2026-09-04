@@ -17,6 +17,7 @@ import {
   FiMessageCircle,
   FiTrendingUp,
   FiCpu,
+  FiDownload,
 } from "react-icons/fi";
 import { fetchCaseStudies, type CaseStudy } from "../../../lib/fetchCaseStudies";
 import { useTheme } from "../../../theme/ThemeProvider";
@@ -48,12 +49,20 @@ const caseStudyResources: Record<string, { project: string; article: string }> =
   },
 };
 
+const normalizePdfText = (value: string) =>
+  value
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/\u2026/g, "...")
+    .replace(/\u00A0/g, " ");
+
 const portableTextToPlain = (value: unknown): string => {
   if (!Array.isArray(value)) {
     return typeof value === "string" ? value : "";
   }
 
-  return value
+  const text = value
     .flatMap((block) => {
       if (!block || block._type !== "block" || !Array.isArray(block.children)) {
         return [];
@@ -68,7 +77,20 @@ const portableTextToPlain = (value: unknown): string => {
     .filter(Boolean)
     .join("\n\n")
     .trim();
+
+  return normalizePdfText(text);
 };
+
+const titledItemsToPlain = (
+  items: Array<{ title?: string; content?: unknown; description?: unknown }>,
+) =>
+  items
+    .map((item) => {
+      const title = normalizePdfText(item.title?.trim() || "Untitled item");
+      const body = portableTextToPlain(item.content ?? item.description);
+      return body ? `${title}\n${body}` : title;
+    })
+    .join("\n\n");
 
 const addWrappedText = (
   doc: jsPDF,
@@ -101,21 +123,54 @@ const buildCaseStudyPdf = (study: CaseStudy) => {
   const marginX = 16;
   let y = 20;
 
-  const title = study.metaTitle || study.title;
+  const title = normalizePdfText(study.title);
   const summary = portableTextToPlain(study.summary);
   const problem = portableTextToPlain(study.problem);
-  const solution = portableTextToPlain(study.explanation?.length ? study.explanation : study.solution);
+  const solution = portableTextToPlain(study.solution);
+  const explanation = portableTextToPlain(study.explanation);
   const results = portableTextToPlain(study.results);
+  const mediaReferences = [
+    study.featuredImageUrl,
+    ...(study.galleryImageUrls || []),
+    ...(study.videoUrls || []),
+  ].filter((value): value is string => Boolean(value));
   const sections = [
-    { label: "Client", value: study.client },
-    { label: "Industry", value: study.industry },
+    {
+      label: "Backup details",
+      value: `Sanity document ID: ${study._id}\nSlug: ${study.slug}\nGenerated: ${new Date().toISOString()}`,
+    },
+    { label: "Client", value: normalizePdfText(study.client || "") },
+    { label: "Industry", value: normalizePdfText(study.industry || "") },
+    { label: "Meta title", value: normalizePdfText(study.metaTitle || "") },
+    { label: "Meta description", value: normalizePdfText(study.metaDescription || "") },
+    { label: "Tags", value: Array.isArray(study.tags) ? normalizePdfText(study.tags.join(", ")) : "" },
     { label: "Summary", value: summary },
-    { label: "Problem", value: problem },
-    { label: "Solution", value: solution },
+    { label: "Problem overview", value: problem },
+    { label: "Problem sections", value: titledItemsToPlain(study.problemSections || []) },
+    { label: "Problem cards", value: titledItemsToPlain(study.problemCards || []) },
+    { label: "Solution overview", value: solution },
+    { label: "Workflow explanation", value: explanation },
+    { label: "Solution cards", value: titledItemsToPlain(study.solutionCards || []) },
+    { label: "Key features", value: titledItemsToPlain(study.keyFeatures || []) },
     { label: "Results", value: results },
     { label: "Tools", value: Array.isArray(study.tools) ? study.tools.join(", ") : "" },
+    { label: "Media references", value: mediaReferences.join("\n") },
   ].filter((section) => section.value && section.value.trim().length > 0);
 
+  doc.setProperties({
+    title: `${title} - Case Study Backup`,
+    subject: "EaseWorkflow case-study content backup",
+    author: "EaseWorkflow",
+    keywords: study.tags.join(", "),
+  });
+
+  doc.setTextColor(79, 70, 229);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("EASEWORKFLOW CASE STUDY BACKUP", marginX, y);
+  y += 9;
+
+  doc.setTextColor(15, 23, 42);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
   y = addWrappedText(doc, title, marginX, y, pageWidth - marginX * 2, 8, pageHeight) + 2;
@@ -123,7 +178,7 @@ const buildCaseStudyPdf = (study: CaseStudy) => {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   if (study.industry) {
-    doc.text(study.industry, marginX, y);
+    doc.text(normalizePdfText(study.industry), marginX, y);
     y += 8;
   }
 
@@ -147,7 +202,22 @@ const buildCaseStudyPdf = (study: CaseStudy) => {
     y = addWrappedText(doc, section.value, marginX, y, pageWidth - marginX * 2, 6, pageHeight) + 4;
   });
 
-  doc.save(`${(study.slug || title).replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "case-study"}.pdf`);
+  const pageCount = doc.getNumberOfPages();
+  for (let page = 1; page <= pageCount; page += 1) {
+    doc.setPage(page);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(100, 116, 139);
+    doc.text(
+      `EaseWorkflow case-study backup | Page ${page} of ${pageCount}`,
+      marginX,
+      pageHeight - 8,
+    );
+  }
+
+  doc.save(
+    `${(study.slug || title).replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "case-study"}-backup.pdf`,
+  );
 };
 
 // Inline SVG icons for Problem & Solution cards
@@ -428,6 +498,7 @@ export default function CaseStudyDetailClient({ initialStudy }: { initialStudy: 
             boxShadow: "0 12px 30px rgba(79, 70, 229, 0.28)",
           }}
         >
+          <FiDownload aria-hidden="true" />
           Download Case Study PDF
         </motion.button>
 
