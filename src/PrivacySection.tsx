@@ -163,7 +163,7 @@ export default function PrivacySection() {
             <FiCheckCircle size={14} /> DPA Agreement Guaranteed
           </motion.div>
 
-          <motion.h1
+          <motion.h2
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             style={{
@@ -177,7 +177,7 @@ export default function PrivacySection() {
           >
             Privacy & <br />
             Data Protection
-          </motion.h1>
+          </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, x: -20 }}
@@ -419,7 +419,7 @@ export default function PrivacySection() {
           >
             <img
               src="images/security-illustration.png"
-              alt="security"
+              alt="Healthcare data security with encrypted storage and access controls"
               style={{
                 width: "100%",
                 objectFit: "contain",

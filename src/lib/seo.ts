@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { BlogPost } from "../lib/fetchBlogs";
 
-const DEFAULT_SITE_URL = "https://easeworkflow.com";
+const DEFAULT_SITE_URL = "https://www.easeworkflow.com";
 const DEFAULT_OG_IMAGE_PATH = "/images/telemedicine.jpg";
 
 export const siteUrl = (() => {
@@ -18,6 +18,56 @@ export const absoluteUrl = (path: string): string => {
 
 const cleanText = (value?: string | null): string => value?.trim() ?? "";
 
+type PageMetadataOptions = {
+  title: string;
+  description: string;
+  path: string;
+  imageUrl?: string | null;
+  imageAlt?: string;
+  type?: "website" | "article";
+  noIndex?: boolean;
+};
+
+export const buildPageMetadata = ({
+  title,
+  description,
+  path,
+  imageUrl,
+  imageAlt,
+  type = "website",
+  noIndex = false,
+}: PageMetadataOptions): Metadata => {
+  const canonicalUrl = absoluteUrl(path);
+  const socialImage = imageUrl || absoluteUrl(DEFAULT_OG_IMAGE_PATH);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalUrl },
+    robots: noIndex ? { index: false, follow: true } : undefined,
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      type,
+      images: [
+        {
+          url: socialImage,
+          width: 1200,
+          height: 630,
+          alt: imageAlt || title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [socialImage],
+    },
+  };
+};
+
 export const getBlogSeoData = (blog: BlogPost, slug: string) => {
   const title = cleanText(blog.metaTitle) || blog.title;
   const description = cleanText(blog.metaDescription) || cleanText(blog.excerpt) || blog.title;
@@ -32,11 +82,12 @@ export const getBlogSeoData = (blog: BlogPost, slug: string) => {
     imageAlt: blog.title,
     authorName: cleanText(blog.authorName),
     publishDate: cleanText(blog.publishDate),
+    modifiedDate: cleanText(blog.updatedAt) || cleanText(blog.publishDate),
   };
 };
 
 export const buildBlogListMetadata = (): Metadata => {
-  const title = "Blog | EaseWorkflow";
+  const title = "Healthcare Automation & Clinic Workflow Blog | EaseWorkflow";
   const description =
     "Insights on healthcare automation, clinic workflows, and practical technology guidance from EaseWorkflow.";
   const canonicalUrl = absoluteUrl("/blog");
@@ -76,35 +127,11 @@ export const buildBlogDetailMetadata = (blog: BlogPost | null, slug: string): Me
     const title = "Blog | EaseWorkflow";
     const description =
       "Insights on healthcare automation, clinic workflows, and practical technology guidance from EaseWorkflow.";
-    const canonicalUrl = absoluteUrl(`/blog/${slug}`);
-    const imageUrl = absoluteUrl(DEFAULT_OG_IMAGE_PATH);
 
     return {
       title,
       description,
-      alternates: {
-        canonical: canonicalUrl,
-      },
-      openGraph: {
-        title,
-        description,
-        url: canonicalUrl,
-        type: "article",
-        images: [
-          {
-            url: imageUrl,
-            width: 1200,
-            height: 630,
-            alt: title,
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: [imageUrl],
-      },
+      robots: { index: false, follow: true },
     };
   }
 
@@ -122,6 +149,7 @@ export const buildBlogDetailMetadata = (blog: BlogPost | null, slug: string): Me
       url: seo.canonicalUrl,
       type: "article",
       publishedTime: seo.publishDate || undefined,
+      modifiedTime: seo.modifiedDate || undefined,
       authors: seo.authorName ? [seo.authorName] : undefined,
       images: [
         {
@@ -160,7 +188,7 @@ export const buildBlogPostingJsonLd = (blog: BlogPost | null, slug: string) => {
         }
       : undefined,
     datePublished: seo.publishDate || undefined,
-    dateModified: seo.publishDate || undefined,
+    dateModified: seo.modifiedDate || undefined,
     image: [seo.imageUrl],
     mainEntityOfPage: seo.canonicalUrl,
     url: seo.canonicalUrl,
@@ -168,6 +196,10 @@ export const buildBlogPostingJsonLd = (blog: BlogPost | null, slug: string) => {
       "@type": "Organization",
       name: "EaseWorkflow",
       url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/favicon-512.png"),
+      },
     },
   };
 };

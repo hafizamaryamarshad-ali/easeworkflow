@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi"; // Arrow icon for button
-import { fetchProjects } from "../../../lib/fetchProjects";
+import { fetchProjects, type Project } from "../../../lib/fetchProjects";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 type ProjectCard = {
@@ -22,9 +22,23 @@ type ProjectCard = {
   updated: string;
 };
 
-export default function ProjectsList() {
-  const router = useRouter();
-  const [projects, setProjects] = useState<ProjectCard[]>([]);
+const mapProjects = (items: Project[]): ProjectCard[] =>
+  items.map((project) => ({
+    id: project._id,
+    slug: project.slug,
+    title: project.title,
+    shortDesc: project.shortDesc,
+    longDesc: typeof project.longDesc === "string" ? project.longDesc : "",
+    video: project.videoUrl ?? (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? ""),
+    thumbnail: project.thumbnailUrl ?? "",
+    clientName: project.clientName,
+    industry: project.industry,
+    technologies: Array.isArray(project.technologies) ? project.technologies : [],
+    updated: project.updated,
+  }));
+
+export default function ProjectsList({ initialProjects = [] }: { initialProjects?: Project[] }) {
+  const [projects, setProjects] = useState<ProjectCard[]>(() => mapProjects(initialProjects));
   const { theme } = useTheme();
   const [windowWidth, setWindowWidth] = useState(0);
   const [flashlightPos, setFlashlightPos] = useState<{ [key: string]: { x: number; y: number; active: boolean } }>({});
@@ -38,27 +52,14 @@ export default function ProjectsList() {
 
   useEffect(() => {
     let isMounted = true;
+    if (initialProjects.length > 0) return;
+
     const loadProjects = async () => {
       try {
         const fetchedProjects = await fetchProjects();
         if (!isMounted) return;
 
-        const mappedProjects: ProjectCard[] = fetchedProjects.map((project) => ({
-          id: project._id,
-          slug: project.slug,
-          title: project.title,
-          shortDesc: project.shortDesc,
-          longDesc:
-            typeof project.longDesc === "string"
-              ? project.longDesc
-              : "",
-          video: project.videoUrl ?? (typeof project.video === "string" ? project.video : project.video?.asset?.url ?? ""),
-          thumbnail: project.thumbnailUrl ?? "",
-          clientName: project.clientName,
-          industry: project.industry,
-          technologies: Array.isArray(project.technologies) ? project.technologies : [],
-          updated: project.updated,
-        }));
+        const mappedProjects = mapProjects(fetchedProjects);
 
         setProjects(mappedProjects);
       } catch {
@@ -67,7 +68,7 @@ export default function ProjectsList() {
     };
     loadProjects();
     return () => { isMounted = false; };
-  }, []);
+  }, [initialProjects.length]);
 
   const sectionBg = { dark: "var(--bg-gradient-dark)", light: "var(--color-bg-light)" };
   const textColor = { dark: "var(--color-text-primary)", light: "var(--color-text-dark)" };
@@ -153,14 +154,23 @@ export default function ProjectsList() {
           {projects.map((project, i) => {
             const pos = flashlightPos[project.id] || { x: 0, y: 0, active: false };
             return (
-            <motion.div
+            <Link
               key={project.id}
+              href={`/projects/${project.slug || project.id}`}
+              style={{
+                width: windowWidth < 640 ? "100%" : "320px",
+                display: "flex",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ boxShadow: cardShadow[theme] }}
               style={{
-                width: windowWidth < 640 ? "100%" : "320px",
+                width: "100%",
                 borderRadius: "20px",
                 background: cardBg[theme],
                 backdropFilter: theme === "dark" ? "blur(20px)" : "none",
@@ -177,7 +187,6 @@ export default function ProjectsList() {
               onMouseMove={(e) => handleFlashlightMove(project.id, e)}
               onMouseEnter={() => handleFlashlightEnter(project.id)}
               onMouseLeave={() => handleFlashlightLeave(project.id)}
-              onClick={() => router.push(`/projects/${project.slug || project.id}`)}
             >
               <div
                 className="flashlight-spotlight"
@@ -288,6 +297,7 @@ export default function ProjectsList() {
                 </div>
               </div>
             </motion.div>
+            </Link>
             );
           })}
         </div>

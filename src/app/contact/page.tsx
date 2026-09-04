@@ -276,7 +276,7 @@ export default function ContactPage() {
       <div style={{ maxWidth: "1080px", margin: "0 auto", position: "relative", zIndex: 1 }}>
         {/* HEADER */}
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <motion.h2
+          <motion.h1
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
@@ -288,7 +288,7 @@ export default function ContactPage() {
             }}
           >
             Let’s talk about your workflow
-          </motion.h2>
+          </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}

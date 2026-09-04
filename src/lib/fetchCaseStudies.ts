@@ -34,6 +34,7 @@ type CaseStudyQueryResult = {
   keyFeatures?: { title?: string; content?: any[] | string | null }[] | null;
   tools: string[] | null;
   results: (string | any)[] | null;
+  updatedAt?: string | null;
   galleryImageUrls?: string[] | null;
   videoUrls?: string[] | null;
 };
@@ -58,6 +59,7 @@ export type CaseStudy = {
   keyFeatures: { title: string; content: any[] }[];
   tools: string[];
   results: any[];
+  updatedAt: string;
   featuredImageUrl: string | null;
   galleryImageUrls: string[];
   videoUrls: string[];
@@ -106,7 +108,8 @@ const caseStudiesQuery = groq`
     solutionCards,
     keyFeatures,
     tools,
-    results
+    results,
+    "updatedAt": _updatedAt
   }
 `;
 
@@ -211,6 +214,7 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
         results: Array.isArray(study.results)
           ? study.results.flatMap((item) => toBlocks(item))
           : [],
+        updatedAt: study.updatedAt ?? "",
         featuredImageUrl: resolveFeaturedImageUrl(study.featuredImage),
         galleryImageUrls: Array.isArray(study.galleryImageUrls)
           ? study.galleryImageUrls.filter(Boolean)

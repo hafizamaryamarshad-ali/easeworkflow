@@ -8,6 +8,7 @@ import { useTheme } from "../../../theme/ThemeProvider";
 import { FaStethoscope, FaPills, FaHeart } from "react-icons/fa";
 import MediaCarousel, { type MediaItem } from "../../../MediaCarousel";
 import { PortableText } from "@portabletext/react";
+import Link from "next/link";
 
 type ThemeMode = "dark" | "light";
 
@@ -66,6 +67,45 @@ function BlogMediaSection({ blog }: { blog: BlogPost }) {
 
 type BlogDetailClientProps = {
   initialBlog?: BlogPost | null;
+};
+
+const portableTextComponents = {
+  block: {
+    h1: ({ children }: { children?: ReactNode }) => <h2>{children}</h2>,
+  },
+};
+
+const relatedResources: Record<string, { href: string; label: string }[]> = {
+  "medical-document-upload-automation": [
+    { href: "/projects/medical-document-upload-automation", label: "Medical document upload automation system" },
+    { href: "/case-studies/medical-document-upload-automation-case-study", label: "Medical document automation case study" },
+    { href: "/blog/emr-automation-clinic-operations", label: "How EMR automation improves clinic operations" },
+  ],
+  "insurance-verification-clinic-delay": [
+    { href: "/projects/insurance-eligibility-verification-automation", label: "Insurance eligibility verification system" },
+    { href: "/case-studies/insurance-eligibility-verification-automation-case-study", label: "Insurance verification case study" },
+    { href: "/blog/clinic-administrative-automation", label: "Reducing administrative workload in clinics" },
+  ],
+  "ai-soap-notes-automation": [
+    { href: "/projects/ai-soap-notes-automation-emr-integration", label: "AI SOAP notes EMR integration project" },
+    { href: "/case-studies/ai-soap-notes-entry-automation-case-study", label: "AI SOAP notes automation case study" },
+    { href: "/blog/emr-automation-clinic-operations", label: "EMR automation for clinic operations" },
+  ],
+  "telemedicine-workflow-automation": [
+    { href: "/projects/telemedicine-appointment-encounter-automation", label: "Telemedicine workflow automation system" },
+    { href: "/case-studies/telemedicine-encounter-automation-case-study", label: "Telemedicine automation case study" },
+    { href: "/blog/scalable-healthcare-automation", label: "Scalable healthcare automation" },
+  ],
+  "healthcare-data-extraction": [
+    { href: "/projects/insurance-pharmacy-data-extraction-automation", label: "Insurance and pharmacy data extraction system" },
+    { href: "/case-studies/insurance-pharmacy-data-extraction-automation-case-study", label: "Healthcare data extraction case study" },
+    { href: "/blog/emr-automation-clinic-operations", label: "EMR automation for clinics" },
+  ],
+  "emr-automation-clinic-operations": [
+    { href: "/projects/automated-patient-registration-appointment-emr-automation", label: "EMR patient registration automation" },
+    { href: "/case-studies/emr-patient-automation-case-study", label: "EMR patient automation case study" },
+    { href: "/blog/healthcare-data-extraction", label: "Healthcare data extraction automation" },
+  ],
 };
 
 export default function BlogDetailClient({ initialBlog }: BlogDetailClientProps) {
@@ -239,7 +279,7 @@ export default function BlogDetailClient({ initialBlog }: BlogDetailClientProps)
                 // cast is safe because we validated the array shape at runtime
                 return (
                   <div style={content(subTextColor, theme)}>
-                    <PortableText value={arr as any} />
+                    <PortableText value={arr as any} components={portableTextComponents} />
                   </div>
                 );
               }
@@ -256,6 +296,21 @@ export default function BlogDetailClient({ initialBlog }: BlogDetailClientProps)
 
             return null;
           })()}
+
+          <nav aria-label="Related healthcare automation resources" style={{ marginTop: "28px" }}>
+            <h2 style={{ fontSize: "1.2rem", marginBottom: "10px" }}>Related resources</h2>
+            <ul style={{ margin: 0, paddingLeft: "20px", lineHeight: 1.8 }}>
+              <li><Link href="/services-details">Explore EaseWorkflow healthcare automation services</Link></li>
+              {(relatedResources[blog.slug] || [
+                { href: "/projects", label: "View healthcare automation projects" },
+                { href: "/case-studies", label: "Read clinic workflow automation case studies" },
+                { href: "/blog/7-digital-workflow-problems-healthcare-practice", label: "Common healthcare workflow problems" },
+              ]).map((resource) => (
+                <li key={resource.href}><Link href={resource.href}>{resource.label}</Link></li>
+              ))}
+              <li><Link href="/contact">Discuss your clinic workflow with EaseWorkflow</Link></li>
+            </ul>
+          </nav>
 
           {/* Tags */}
           {Array.isArray(blog.tags) && blog.tags.length > 0 && (

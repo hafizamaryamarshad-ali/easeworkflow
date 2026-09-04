@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FaRobot, FaCalendarAlt, FaVideo, FaCogs } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const services = [
   {
@@ -383,6 +384,12 @@ export default function ServicesDetails() {
     →
   </motion.span>
 </motion.button>
+
+        <nav aria-label="Healthcare automation proof" style={{ marginTop: "22px" }}>
+          <Link href="/projects">View implemented automation systems</Link>
+          {" · "}
+          <Link href="/case-studies">Read healthcare automation case studies</Link>
+        </nav>
 
       </div>
       {/* MODAL (YOUR EXACT FORM) */}

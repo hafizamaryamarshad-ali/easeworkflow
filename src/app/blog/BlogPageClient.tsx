@@ -8,11 +8,11 @@ import { FiChevronDown, FiClock, FiSearch } from "react-icons/fi";
 import { fetchBlogs, type BlogPost } from "../../lib/fetchBlogs";
 import { useTheme } from "../../theme/ThemeProvider";
 
-export default function BlogPageClient() {
+export default function BlogPageClient({ initialBlogs = [] }: { initialBlogs?: BlogPost[] }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<BlogPost[]>(initialBlogs);
+  const [loading, setLoading] = useState(initialBlogs.length === 0);
   const [visibleCount, setVisibleCount] = useState(9); 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -30,7 +30,9 @@ export default function BlogPageClient() {
   };
 
   useEffect(() => {
-    fetchBlogs().then(setBlogs).finally(() => setLoading(false));
+    if (initialBlogs.length === 0) {
+      fetchBlogs().then(setBlogs).finally(() => setLoading(false));
+    }
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -39,7 +41,7 @@ export default function BlogPageClient() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [initialBlogs.length]);
 
   const handleSelectFromList = (title: string) => {
     setSearchQuery(title === "All Blogs" ? "" : title);
@@ -211,4 +213,4 @@ export default function BlogPageClient() {
       )}
     </div>
   );
-}   
+}

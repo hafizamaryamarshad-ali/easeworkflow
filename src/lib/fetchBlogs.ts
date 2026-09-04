@@ -27,6 +27,7 @@ type BlogQueryResult = {
   authorName: string;
   authorBio: string;
   publishDate: string;
+  updatedAt: string;
   metaTitle: string;
   metaDescription: string;
   focusKeyword: string;
@@ -53,6 +54,7 @@ export type BlogPost = {
   authorName: string;
   authorBio: string;
   publishDate: string;
+  updatedAt: string;
   metaTitle: string;
   metaDescription: string;
   focusKeyword: string;
@@ -77,6 +79,7 @@ const blogFieldsProjection = `
   authorName,
   authorBio,
   publishDate,
+  "updatedAt": _updatedAt,
   metaTitle,
   metaDescription,
   focusKeyword,
@@ -151,6 +154,7 @@ const mapBlog = (blog: BlogQueryResult): BlogPost => ({
   authorName: blog.authorName,
   authorBio: blog.authorBio,
   publishDate: blog.publishDate,
+  updatedAt: blog.updatedAt,
   metaTitle: blog.metaTitle || blog.title,
   metaDescription: blog.metaDescription || blog.excerpt || blog.title,
   focusKeyword: blog.focusKeyword,

@@ -305,7 +305,7 @@ export default function Hero() {
               padding: "0 8px",
             }}
           >
-            EaseWorkflow automates scheduling, patient intake, insurance verification, documentation, and follow-ups so your team spends less time on admin and more time on what truly matters.
+            EaseWorkflow provides healthcare workflow automation for scheduling, patient intake, insurance verification, documentation, and follow-ups so your clinic spends less time on admin and more time on patient care.
           </motion.p>
 
           {/* ACTION BUTTONS */}
@@ -324,7 +324,7 @@ export default function Hero() {
             }}
           >
             <a
-              href="/demo"
+              href="/booking"
               style={{
                 display: "inline-flex",
                 alignItems: "center",

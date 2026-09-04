@@ -12,9 +12,10 @@ import "swiper/css/pagination";
 const timestamp = new Date().toISOString().split('T')[0]; // Cache bust with date
 
 export const metadata = {
-  title: "EaseWorkflow - Healthcare Automation",
+  metadataBase: new URL("https://www.easeworkflow.com"),
+  title: "Clinic Workflow Automation for Medical Practices | EaseWorkflow",
   description:
-    "Automate your clinic's workflow with EaseWorkflow. Trusted by US clinics for healthcare automation solutions.",
+    "Automate patient intake, EMR data entry, insurance verification, SOAP notes, and follow-ups so clinic teams spend less time on repetitive administration.",
   icons: {
     icon: [
       {
@@ -41,6 +42,11 @@ export const metadata = {
     title: "EaseWorkflow",
   },
   openGraph: {
+    title: "Clinic Workflow Automation for Medical Practices | EaseWorkflow",
+    description:
+      "Automate patient intake, EMR data entry, insurance verification, SOAP notes, and follow-ups so clinic teams spend less time on repetitive administration.",
+    url: "/",
+    type: "website",
     images: [
       {
         url: `/logo18.png?v=${timestamp}`,
@@ -49,6 +55,13 @@ export const metadata = {
         alt: "EaseWorkflow Logo",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Clinic Workflow Automation for Medical Practices | EaseWorkflow",
+    description:
+      "Automate patient intake, EMR data entry, insurance verification, SOAP notes, and follow-ups so clinic teams spend less time on repetitive administration.",
+    images: [`/images/telemedicine.jpg?v=${timestamp}`],
   },
 };
 
